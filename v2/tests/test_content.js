@@ -8,6 +8,9 @@ const skills = csv('skills.csv'), mis = csv('misconceptions.csv');
 const S = new Set(skills.map(s => s.skill_id)), M = new Set(mis.map(m => m.mis_id));
 for (const s of skills) for (const p of (s.prereq || '').split(';').filter(Boolean)) ok(S.has(p), `${s.skill_id} 前置 ${p} 不存在`);
 for (const m of mis) { ok(MQ.R[m.buggy_rule], `${m.mis_id} 规则 ${m.buggy_rule} 未实现`); for (const k of m.skills.split(';')) ok(S.has(k), `${m.mis_id} 知识点 ${k} 不存在`); }
+// 知识点总图：skills.cn_node 必须指向总图节点
+const mapNodes = new Set(csv('map/nodes.csv').map(r => r.id));
+for (const s of skills) for (const c of s.cn_node.split(';')) { const id = c.replace(/（.*$/, ''); ok(mapNodes.has(id), `${s.skill_id} cn_node ${id} 不在总图`); }
 // 每条规则的期望错答案（参数 → 期望）
 const cases = [
   ['mul_as_add', { n: 10, k: 3 }, 13], ['one_group', { n: 10, k: 3 }, 3], ['count_off', { n: 4, k: 5 }, 15],

@@ -1,0 +1,305 @@
+id,name,strand,cn,kind,prereq,key,bnu,ev,src
+N.INT.COUNT.01,按一一对应数数1–5,number,1上；旧1/新一,概念,—,未核实,同册相近,B,Q-2125-cn-kp-number
+N.INT.READ.01,认、读、写1–5,number,1上；旧3/新一,技能,N.INT.COUNT.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.INT.ORD.01,第几与几个,number,1上；旧3/新一,概念,N.INT.READ.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.INT.CMP.01,用＝、＜、＞比较5以内数,number,1上；旧3/新一,技能,N.INT.READ.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.INT.COMP.01,5以内数的分与合,number,1上；旧3/新一,策略,N.INT.READ.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.MEAN.01,合并模型与加号,number,1上；旧3/新一,概念,N.INT.COMP.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SUB.MEAN.01,去掉模型与减号,number,1上；旧3/新一,概念,N.INT.COMP.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ZERO.01,0表示没有及起点,number,1上；旧3/新一,概念,N.INT.READ.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.W5.01,5以内加法,number,1上；旧3/新一,技能,N.ADD.MEAN.01（B）；N.INT.COMP.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SUB.W5.01,5以内减法,number,1上；旧3/新一,技能,N.SUB.MEAN.01（B）；N.INT.COMP.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.INT.READ.02,认、读、写6–10,number,1上；旧5/新二,技能,N.INT.READ.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.INT.COMP.02,6–10的分与合,number,1上；旧5/新二,策略,N.INT.COMP.01（B）；N.INT.READ.02（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.W10.01,10以内加法,number,1上；旧5/新二,技能,N.ADD.W5.01（B）；N.INT.COMP.02（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SUB.W10.01,10以内减法,number,1上；旧5/新二,技能,N.SUB.W5.01（B）；N.INT.COMP.02（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MIX.W10.01,连加、连减,number,1上；旧5/新二,技能,N.ADD.W10.01（B）；N.SUB.W10.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MIX.W10.02,加减混合,number,1上；旧5/新二,技能,N.MIX.W10.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PLACE.20.01,11–20：一个十和几个一,number,1上；旧6/新四,概念,N.INT.READ.02（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.CARRY20.01,凑十法算20以内进位加,number,1上；旧8/新五,策略,N.PLACE.20.01（B）；N.ADD.W10.01（B）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SUB.BOR20.01,破十/平十算20以内退位减,number,1下；旧2/新版单元未核实,策略,N.PLACE.20.01（B/A）；N.SUB.W10.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PLACE.100.01,数到100、十进制位值,number,1下；旧4/新版未核实,概念,N.PLACE.20.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.INT.CMP.100,比较100以内数,number,1下；旧4/新版未核实,技能,N.PLACE.100.01（B/A）；N.INT.CMP.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.TENS.01,整十数加一位数或整十数,number,1下；旧6/新版未核实,技能,N.PLACE.100.01（B/A）；N.ADD.W10.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SUB.TENS.01,整十数减一位数或整十数,number,1下；旧6/新版未核实,技能,N.PLACE.100.01（B/A）；N.SUB.W10.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.100ORAL.01,两位数加一位数、整十数口算,number,1下；旧6/新版未核实,技能,N.ADD.TENS.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SUB.100ORAL.01,两位数减一位数、整十数口算,number,1下；旧6/新版未核实,技能,N.SUB.TENS.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.COL100.01,两位数加两位数竖式、不进位,number,2上；旧2/新版单元未核实,技能,N.ADD.100ORAL.01（B/A）；N.PLACE.100.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.COL100.02,两位数加两位数竖式、进位,number,2上；旧2/新版未核实,技能,N.ADD.COL100.01（B/A）；N.ADD.CARRY20.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SUB.COL100.01,两位数减两位数竖式、不退位,number,2上；旧2/新版未核实,技能,N.SUB.100ORAL.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SUB.COL100.02,两位数减两位数竖式、退位,number,2上；旧2/新版未核实,技能,N.SUB.COL100.01（B/A）；N.SUB.BOR20.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.SUB.REL.01,加减互逆与验算萌芽,number,2上；旧2/新版未核实,概念,N.ADD.COL100.02（B/A）；N.SUB.COL100.02（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.MEAN.01,相同加数连加抽象为乘法,number,2上；旧4/新版未核实,概念,N.ADD.W10.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.FACT26.01,2–6乘法口诀,number,2上；旧4、6/新版未核实,事实,N.MUL.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.FACT79.01,7–9乘法口诀,number,2上；旧6/新版未核实,事实,N.MUL.FACT26.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DIV.MEAN.01,平均分与包含分,number,2下；旧2/新版未核实,概念,N.MUL.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DIV.FACT.01,用乘法口诀求商,number,2下；旧2、4/新版未核实,技能,N.DIV.MEAN.01（B/A）；N.MUL.FACT79.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MIX.MD.01,乘除两步及带小括号,number,2下；旧5/新版未核实,技能,N.DIV.FACT.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.REM.MEAN.01,有余数除法及余数小于除数,number,2下；旧6/新版未核实,概念,N.DIV.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PLACE.10000.01,万以内数与数位顺序,number,2下；旧7/新版未核实,概念,N.PLACE.100.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.APPROX.01,近似数初步,number,2下；旧7/新版未核实,概念,N.PLACE.10000.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.SUB.ORAL100.02,整百整千加减口算,number,2下；旧7/新版未核实,技能,N.PLACE.10000.01（B/A）；N.ADD.TENS.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.ORAL.01,整十整百数乘一位数口算,number,3上；旧2/新版单元未核实,技能,N.MUL.FACT79.01（B/A）；N.PLACE.10000.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.COL1000.01,三位数加法竖式,number,3上；旧4/新版未核实,技能,N.ADD.COL100.02（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SUB.COL1000.01,三位数减法竖式,number,3上；旧4/新版未核实,技能,N.SUB.COL100.02（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ADD.SUB.CHECK.01,加减法验算,number,3上；旧4/新版未核实,策略,N.ADD.SUB.REL.01（B/A）；N.ADD.COL1000.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.MULTIDIGIT.01,多位数乘一位数不进位,number,3上；旧6/新版未核实,技能,N.MUL.ORAL.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.MULTIDIGIT.02,多位数乘一位数进位,number,3上；旧6/新版未核实,技能,N.MUL.MULTIDIGIT.01（B/A）；N.ADD.CARRY20.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.ZERO.01,0乘任何数及乘数中间、末尾有0,number,3上；旧6/新版未核实,概念,N.ZERO.01（B/A）；N.MUL.MULTIDIGIT.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.PART.01,整体等分与几分之一,number,3上；旧8/新版未核实,概念,N.DIV.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.CMPUNIT.01,同整体单位分数比较,number,3上；旧8/新版未核实,技能,N.FRAC.PART.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.SAMEADD.01,同分母分数简单加减,number,3上；旧8/新版未核实,技能,N.FRAC.PART.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DIV.ONE.01,一位数除两、三位数口算与笔算,number,3下；旧2/新版未核实,技能,N.DIV.FACT.01（B/A）；N.PLACE.10000.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DIV.ZERO.01,0除以非零数,number,3下；旧2/新版未核实,概念,N.ZERO.01（B/A）；N.DIV.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.2X2.01,两位数乘两位数口算,number,3下；旧4/新版未核实,技能,N.MUL.ORAL.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.2X2.02,两位数乘两位数笔算,number,3下；旧4/新版未核实,技能,N.MUL.2X2.01（B/A）；N.MUL.MULTIDIGIT.02（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.INIT.01,小数点与一位小数意义,number,3下；旧7/新版未核实,概念,N.FRAC.PART.01（B/A）；N.PLACE.100.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.CMP.01,一位小数大小比较,number,3下；旧7/新版未核实,技能,N.DEC.INIT.01（B/A）；N.INT.CMP.100（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.ADDSUB.01,一位小数加减,number,3下；旧7/新版未核实,技能,N.DEC.INIT.01（B/A）；N.ADD.COL100.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PLACE.BIG.01,亿以内数：读写与位值,number,4上；旧1/新版未核实,概念,N.PLACE.10000.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PLACE.BIG.02,亿以上数与数级,number,4上；旧1/新版未核实,概念,N.PLACE.BIG.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.ROUND.01,四舍五入到万或亿,number,4上；旧1/新版未核实,技能,N.APPROX.01（B/A）；N.PLACE.BIG.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.3X2.01,三位数乘两位数笔算,number,4上；旧4/新版未核实,技能,N.MUL.2X2.02（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MUL.LAW.01,积的变化规律,number,4上；旧4/新版未核实,概念,N.MUL.3X2.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DIV.2DIG.01,除数两位数的口算,number,4上；旧6/新版未核实,技能,N.DIV.ONE.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DIV.2DIG.02,除数两位数的笔算与试商,number,4上；旧6/新版未核实,技能,N.DIV.2DIG.01（B/A）；N.MUL.FACT79.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DIV.LAW.01,商不变规律,number,4上；旧6/新版未核实,概念,N.DIV.2DIG.02（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MIX.ORDER.01,四则运算顺序,number,4下；旧1/新版未核实,技能,N.MIX.MD.01（B/A）；N.ADD.COL1000.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.LAW.ADD.01,加法交换律、结合律,number,4下；旧3/新版未核实,概念,N.ADD.COL1000.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.LAW.MUL.01,乘法交换律、结合律,number,4下；旧3/新版未核实,概念,N.MUL.3X2.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.LAW.DIST.01,乘法分配律,number,4下；旧3/新版未核实,概念,N.LAW.ADD.01（B/A）；N.LAW.MUL.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.CALC.EASY.01,运用运算律简便计算,number,4下；旧3/新版未核实,策略,N.LAW.DIST.01（B/A）；N.MIX.ORDER.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.MEAN.01,小数意义与计数单位,number,4下；旧4/新版未核实,概念,N.DEC.INIT.01（B/A）；N.PLACE.BIG.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.PROP.01,小数性质：末尾添0或去0,number,4下；旧4/新版未核实,概念,N.DEC.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.MOVE.01,小数点移动引起大小变化,number,4下；旧4/新版未核实,技能,N.DEC.MEAN.01（B/A）；N.MUL.LAW.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.CONVERT.01,小数与单位换算,number,4下；旧4/新版未核实,技能,N.DEC.MOVE.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.ROUND.01,小数近似数,number,4下；旧4/新版未核实,技能,N.ROUND.01（B/A）；N.DEC.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.ADDCOL.01,小数加减笔算：数位对齐,number,4下；旧6/新版未核实,技能,N.DEC.MEAN.01（B/A）；N.DEC.ADDSUB.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.MIXADD.01,小数加减混合与简算,number,4下；旧6/新版未核实,策略,N.DEC.ADDCOL.01（B/A）；N.LAW.ADD.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.MULINT.01,小数乘整数,number,5上；旧1/新版未核实,技能,N.DEC.MOVE.01（B/A）；N.MUL.3X2.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.MULDEC.01,小数乘小数,number,5上；旧1/新版未核实,技能,N.DEC.MULINT.01（B/A）；N.DEC.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.MULROUND.01,积的近似数,number,5上；旧1/新版未核实,技能,N.DEC.MULDEC.01（B/A）；N.DEC.ROUND.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.MULLAW.01,整数运算律推广到小数,number,5上；旧1/新版未核实,概念,N.DEC.MULDEC.01（B/A）；N.LAW.DIST.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.DIVINT.01,小数除以整数,number,5上；旧3/新版未核实,技能,N.DEC.MEAN.01（B/A）；N.DIV.2DIG.02（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.DIVDEC.01,除数是小数的除法,number,5上；旧3/新版未核实,技能,N.DEC.DIVINT.01（B/A）；N.DIV.LAW.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.QUOTROUND.01,商的近似数,number,5上；旧3/新版未核实,技能,N.DEC.DIVDEC.01（B/A）；N.DEC.ROUND.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DEC.CYCLE.01,循环小数,number,5上；旧3/新版未核实,概念,N.DEC.DIVDEC.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.MIX.DEC.01,小数四则混合与简算,number,5上；旧3/新版未核实,策略,N.DEC.DIVDEC.01（B/A）；N.DEC.MULLAW.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FACTOR.01,因数和倍数,number,5下；旧2/新版未核实,概念,N.DIV.MEAN.01（B/A）；N.REM.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DIVIS.235.01,2、5、3的倍数特征,number,5下；旧2/新版未核实,事实,N.FACTOR.01（B/A）；N.PLACE.10000.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PRIME.01,质数与合数,number,5下；旧2/新版未核实,概念,N.FACTOR.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.MEAN.01,分数意义、单位“1”与分数单位,number,5下；旧4/新版未核实,概念,N.FRAC.PART.01（B/A）；N.DIV.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.DIVREL.01,分数与除法关系,number,5下；旧4/新版未核实,概念,N.FRAC.MEAN.01（B/A）；N.DIV.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.PROPERTY.01,分数基本性质,number,5下；旧4/新版未核实,概念,N.FRAC.DIVREL.01（B/A）；N.DIV.LAW.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.REDUCE.01,最大公因数与约分,number,5下；旧4/新版未核实,技能,N.FRAC.PROPERTY.01（B/A）；N.FACTOR.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.COMMON.01,最小公倍数与通分,number,5下；旧4/新版未核实,技能,N.FRAC.PROPERTY.01（B/A）；N.FACTOR.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.CMP.01,异分母分数大小比较,number,5下；旧4/新版未核实,技能,N.FRAC.COMMON.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.DEC.01,分数与小数互化,number,5下；旧4/新版未核实,技能,N.FRAC.DIVREL.01（B/A）；N.DEC.DIVINT.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.ADDLIKE.01,同分母分数加减,number,5下；旧6/新版未核实,技能,N.FRAC.MEAN.01（B/A）；N.FRAC.SAMEADD.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.ADDUNLIKE.01,异分母分数加减,number,5下；旧6/新版未核实,技能,N.FRAC.ADDLIKE.01（B/A）；N.FRAC.COMMON.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.ADDMIX.01,分数加减混合与简算,number,5下；旧6/新版未核实,策略,N.FRAC.ADDUNLIKE.01（B/A）；N.LAW.ADD.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.MUL.01,分数乘整数,number,6上；旧1/新版未核实,技能,N.FRAC.MEAN.01（B/A）；N.MUL.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.MUL.02,分数乘分数及约分,number,6上；旧1/新版未核实,技能,N.FRAC.MUL.01（B/A）；N.FRAC.REDUCE.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.RECIP.01,倒数,number,6上；旧3/新版未核实,概念,N.FRAC.MUL.02（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.DIV.01,分数除法转乘倒数,number,6上���旧3/新版未核实,技能,N.FRAC.RECIP.01（B/A）；N.DIV.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.FRAC.MIX.01,分数四则混合与运算律,number,6上；旧3/新版未核实,策略,N.FRAC.DIV.01（B/A）；N.MIX.ORDER.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.RATIO.MEAN.01,比的意义及与除法、分数关系,number,6上；旧4/新版未核实,概念,N.FRAC.DIVREL.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.RATIO.SIMPLIFY.01,比的基本性质与化简比,number,6上；旧4/新版未核实,技能,N.RATIO.MEAN.01（B/A）；N.FRAC.PROPERTY.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PERCENT.MEAN.01,百分数意义与读写,number,6上；旧6/新版未核实,概念,N.FRAC.MEAN.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PERCENT.CONVERT.01,百分数、分数、小数互化,number,6上；旧6/新版未核实,技能,N.PERCENT.MEAN.01（B/A）；N.FRAC.DEC.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PERCENT.CALC.01,求一个数的百分之几,number,6上；旧6/新版未核实,技能,N.PERCENT.CONVERT.01（B/A）；N.FRAC.MUL.02（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.NEG.INIT.01,负数初步与数轴方向,number,6下；旧1/新版未核实,概念,N.ZERO.01（B/A）；N.INT.CMP.100（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PERCENT.APP.01,折扣、成数、税率,number,6下；旧2/新版未核实,技能,N.PERCENT.CALC.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PERCENT.INTEREST.01,本金、利率、利息,number,6下；旧2/新版未核实,技能,N.PERCENT.CALC.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PROPORTION.01,比例意义与基本性质,number,6下；旧4/新版未核实,概念,N.RATIO.MEAN.01（B/A）；N.FRAC.PROPERTY.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.PROPORTION.SOLVE.01,解比例,number,6下；旧4/新版未核实,技能,N.PROPORTION.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.DIRECT.INVERSE.01,正比例与反比例,number,6下；旧4/新版未核实,概念,N.PROPORTION.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+N.SCALE.01,比例尺计算,number,6下；旧4/新版未核实,技能,N.PROPORTION.SOLVE.01（B/A）,未核实,同册相近,B,Q-2125-cn-kp-number
+QR-01,加减法数量关系（部分+部分=整体；相差）,algebra,1–2 一上至二下随加减法解决问题；新版同主题但单元号未逐册核实,数量关系/模型,数的意义→加减法意义,从题面动作辨认合并/去掉/比较；难在关系而非关键词,一上至二下随加减法,A(课标)/C(教材位次),2125-cn-kp-algebra
+QR-02,乘除法互逆与每份数×份数=总数,algebra,2–3 二上乘法；二下表内除法；新版精确单元未核实,数量关系/模型,相同加数→乘法；平均分→除法,同一情境用乘除互逆表示；区分等分除与包含除,二上乘法；二下除法,A/C,2125-cn-kp-algebra
+QR-03,倍（一个数是另一个数的几倍/求几倍数）,algebra,2–3 二上“表内乘法”渗透；三上“倍的认识”,倍/乘法模型,乘除互逆,把“倍”视为两量乘法比较；难在基准量与比较量角色,二上/三上相关单元（精确单元未核实）,C,2125-cn-kp-algebra
+QR-04,���价×数量=总价,algebra,4 四上第4单元“三位数乘两位数”,常见三量关系,乘法模型→多位数乘法,识别三量及单位；由具体数算式过渡到文字/字母公式,四上“乘法”相关单元（精确号未核实）,B/C,2125-cn-kp-algebra
+QR-05,速度×时间=路程,algebra,4 四上第4单元“三位数乘两位数”,常见三量关系,乘法模型→复合单位,理解速度单位及三量互求；难在平均速度与简单速度模型边界,四上“路程、时间与速度”（常见为第6单元；印次待核）,B/C,2125-cn-kp-algebra
+QR-06,工作效率×工作时间=工作总量（工程模型）,algebra,6 六上“分数除法”末工程问题；人教新版六上未核实,常见三量关系,速度/单价三量结构→分数乘除,把总工作量抽象为1；难在效率叠加与“合作时间”建模,六上“分数混合运算/解决问题”渗透,C/U,2125-cn-kp-algebra
+QR-07,归一/归总（先求一份或总量）,algebra,3–5 三下“两位数乘两位数—解决问题”及后续渗透；新版精确位次未核实,数量关系策略,乘除互逆→多步运算,找不变量并决定先除后乘/先乘后除；防止把策略固化为题型,三至五年级解决问题渗透,C,2125-cn-kp-algebra
+PA-01,植树问题（两端/一端/封闭）,algebra,5 五上第7单元“数学广角—植树问题”；新版五上相应位置未核实,数学广角/离散模型,一一对应→间隔与端点,棵数与间隔数映射；难在边界条件改变,通常为“数学好玩”或综合实践渗透（独立单元未核实）,C/U,2125-cn-kp-algebra
+PA-02,鸡兔同笼,algebra,4–6 四下第9单元“数学广角—鸡兔同笼”,数学广角/枚举与方程先声,列表枚举→倍与差,列表/假设/方程多表征；重点是模型解释而非口诀,五上“尝试与猜测—鸡兔同笼”（常见版）,C,2125-cn-kp-algebra
+PA-03,找次品/抽屉原理等广角,algebra,5–6 五下“数学广角—找次品”；六下“数学广角—鸽巢问题”,数学广角/推理,分类计数→最坏情形,不是代数主干；可作经营游戏概率/优化支线,北师大版多在“数学好玩”且项目不同,C,2125-cn-kp-algebra
+ALG-01,用符号或空格表示未知量,algebra,1–4 低年级填未知加数/因数；四年级运算定律用字母表示,代数准备,等号意义→运算互逆,把未知量当对象；难在等号被误解为“写答案”,低年级填数；四上运算律字母式,A/C,2125-cn-kp-algebra
+ALG-02,用字母表示数、数量关系、公式与规律,algebra,4–5 旧版五上第5单元；新版（2024审定）五上第5单元“简易方程”之1,代数初步,QR-04/05→ALG-01,字母可表示变化量/任意数/未知数；规范写乘法；难在字母多重角色,四下“认识方程”中用字母表示数,A(新版五上目录可交叉)/B,2125-cn-kp-algebra
+EQ-01,等式与方程的意义,algebra,4–5 旧版/新版五上第5单元“简易方程”,方程,ALG-02→相等关系,方程须同时“含未知数且为等式”；不要以未知数位置或运算符分类,四下“认识方程”,B,2125-cn-kp-algebra
+EQ-02,等式性质,algebra,5 旧版/新版五上第5单元,方程变换,天平直观→EQ-01,两边同时同运算并注意除数非0；难在把算术逆运算口令误当无依据“移项”,四下“认识方程”,A/B,2125-cn-kp-algebra
+EQ-03,解一步/两步简易方程,algebra,4–5 旧版/新版五上第5单元,方程求解,EQ-02→四则互逆,保持等式同解并检验；系数、括号和两步结构的顺序,四下“认识方程”,B,2125-cn-kp-algebra
+EQ-04,列方程解决实际问题,algebra,4–6 五上第5单元“实际问题与方程”；六年级分数问题继续,方程建模,QR-03–07→ALG-02→EQ-01,先设元再写等量关系；难在从“已知推未知”转为同时表征已知与未知,四下“认识方程”；五下“分数除法”问题继续,B,2125-cn-kp-algebra
+FR-01,分数作为部分—整体与测量数,algebra,3–5 三上“分数的初步认识”；五下“分数的意义和性质”,分数,平均分→除法,单位“1”、分数单位与整体依赖；为比/百分数奠基,三下“分数的初步认识”；五上“分数的意义”,A/C,2125-cn-kp-algebra
+FR-02,分数与除法（a÷b=a/b,algebra,b≠0） 5,五上“分数的意义”,统一表示,FR-01→除法意义,五下第4单元“分数的意义和性质”,商的数与除法运算相联；难在分数既是数又可表示除法结果,2125-cn-kp-algebra
+RAT-01,比的意义、比各部分、比值,algebra,6 六上第4单元“比”；人教新版六上未核实,比,乘法比较→FR-02,比表示两个量的乘法关系；比值是数；同类量与异类量比的单位解释,六上“比的认识”（常见第6单元）,A(课标)/C(单元),2125-cn-kp-algebra
+RAT-02,比的基本性质与化简比,algebra,6 六上第4单元,比,FR-02→商不变性质→RAT-01,比的前后项同乘除非零数；区分化简比与求比值,六上“比的认识”,C,2125-cn-kp-algebra
+RAT-03,按比分配,algebra,6 六上第4单元,比应用,RAT-01→分数乘法,把总份数转化为各部分占整体分率；难在部分比与部分—整体比转换,六上“比的认识/比的应用”,A/C,2125-cn-kp-algebra
+PCT-01,百分数意义及分数/小数互化,algebra,6 六上第6单元“百分数（一）”,百分数,FR-01/02→小数,百分数是分母固定为100的比率表达；不能泛化为带单位数量,六上“百分数的认识”（常见第7单元）,A/C,2125-cn-kp-algebra
+PCT-02,百分率、折扣、税率、利率与增减百分比,algebra,6 六上第6单元；六下第2单元“百分数（二）”,百分数应用,PCT-01→数量关系,明确基准量（100%）和百分点/百分比之别；连续变化不能简单相加,六上/六下百分数应用（册次依版）,B/C,2125-cn-kp-algebra
+PROP-01,比例的意义与基本性质,algebra,6 六下第4单元“比例”；人教新版六下未核实,比例,RAT-01/02→等值分数,两个比相等；内项积=外项积源自等式与分数性质,六下“比例”（常见第2单元）,A/C,2125-cn-kp-algebra
+PROP-02,正比例关系 y/x=k,algebra,6 六下第4单元,函数准备,QR三量关系→PROP-01→坐标/表格,识别两变量与不变量；用表、式、图互译；勿把“同时增大”当充分条件,六下“正比例与反比例”,A/C,2125-cn-kp-algebra
+PROP-03,反比例关系 xy=k,algebra,6 六下第4单元,函数准备,乘积关系→PROP-01,固定总价/路程/工作量等情境；区分反比例与一般负相关,六下“正比例与反比例”,A/C,2125-cn-kp-algebra
+NEG-01,生活中的负数（温度、海拔、收支）,algebra,4–6 旧版六下第1单元“负数”；新版六下未核实,负数初步,数轴方向→0作基准,正负表示相反意义；0既非正也非负；比较大小依赖方向,四上“生活中的负数”（常见第7单元）,A/C,2125-cn-kp-algebra
+NEG-02,有理数、数轴、相反数、绝对值,algebra,7 人教七上第1章“有理数”（2024审定新版仍在七上，节次须以实书核）,数系,NEG-01→分数小数,从情境负数提升为数系；绝对值的距离意义；负数大小,七上第2章“有理数及其运算”（常见版）,A/B,2125-cn-kp-algebra
+NEG-03,有理数四则与乘方,algebra,7 人教七上第1章,运算,NEG-02→小学四则,符号法则、运算律扩张到有理数；难在负号/减号/性质符号区分,北师大七上第2章,B,2125-cn-kp-algebra
+EXPR-01,代数式、单项式、多项式、同类项,algebra,7 人教七上第2章“整式的加减”,代数式/整式,ALG-02→NEG-03,式是关系的对象；次数、系数、项；合并同类项只改系数,北师大七上第3章“整式及其加减”,B,2125-cn-kp-algebra
+EXPR-02,去括号与整式加减,algebra,7 人教七上第2章,整式运算,EXPR-01→分配律,把分配律用于符号式；括号前负号是高频难点,北师大七上第3章,B,2125-cn-kp-algebra
+LEQ-01,一元一次方程及解法,algebra,7 人教七上第3章“一元一次方程”,方程,EQ-03→EXPR-02→NEG-03,等式性质系统化；去分母/括号、移项、合并、系数化1；每步保持同解,北师大七上第5章“一元一次方程”,B,2125-cn-kp-algebra
+LEQ-02,一元一次方程应用,algebra,7 人教七上第3章各节,方程建模,EQ-04→LEQ-01→QR/RAT/PCT,把工程、行程、配套、盈亏统一为等量关系；检验数学解与情境可接受性,北师大七上第5章,B,2125-cn-kp-algebra
+POLY-01,整式乘法（幂法则、单项式/多项式乘法）,algebra,8 人教八上第14章“整式的乘法与因式分解”,整式运算,EXPR-01/02→乘法分配律,指数与系数分别处理；几何面积模型连接展开式,北师大七下第1章“整式的乘除”（常见版）,B/C,2125-cn-kp-algebra
+POLY-02,乘法公式与因式分解,algebra,8 人教八上第14章,整式运算,POLY-01,展开与因式分解互逆；识别结构而非机械套式,北师大七下第1章及八下“因式分解”（版本位次待��）,B/C,2125-cn-kp-algebra
+G1A-01,用上/下描述物体相对位置,geometry_stats,一上 二 位置,位置与方向,生活方位词,参照物改变后关系会反转,一上 位置与顺序,C,2127-cn-kp-geometry-stats
+G1A-02,用前/后描述相对位置,geometry_stats,一上 二 位置,位置与方向,G1A-01,分清观察者朝向与参照物,一上 位置与顺序,C,2127-cn-kp-geometry-stats
+G1A-03,用左/右描述相对位置,geometry_stats,一上 二 位置,位置与方向,G1A-01,自身左右迁移到他人左右,一上 位置与顺序,C,2127-cn-kp-geometry-stats
+G1A-04,辨认长方体和正方体,geometry_stats,一上 四 认识图形（一）,立体图形,实物分类,按面与棱的直观特征分类,一上 认识图形,B,2127-cn-kp-geometry-stats
+G1A-05,辨认圆柱和球,geometry_stats,一上 四 认识图形（一）,立体图形,G1A-04,圆柱与球滚动特征及摆放差异,一上 认识图形,B,2127-cn-kp-geometry-stats
+G1A-06,用立体图形拼搭组合,geometry_stats,一上 四 认识图形（一）,图形操作,G1A-04~05,从实物操作形成空间表象,一上 有趣的立体图形,C,2127-cn-kp-geometry-stats
+M1A-01,认识整时,geometry_stats,一上 七 认识钟表,时间,数序与钟面,时针分针作用及两种记录法,一上 小明的一天,B,2127-cn-kp-geometry-stats
+G1B-01,从立体表面抽象长方形/正方形,geometry_stats,一下 一 认识图形（二）,平面图形,G1A-04,区分“形”与承载它的实物,一下 有趣的图形,B,2127-cn-kp-geometry-stats
+G1B-02,辨认三角形和圆,geometry_stats,一下 一 认识图形（二）,平面图形,G1B-01,按边界特征而非朝向辨认,一下 有趣的图形,B,2127-cn-kp-geometry-stats
+G1B-03,用平面图形拼组和分割,geometry_stats,一下 一 认识图形（二）,图形操作,G1B-01~02,部分—整体关系,一下 动手做,C,2127-cn-kp-geometry-stats
+M1B-01,认识人民币元角分,geometry_stats,一下 五 认识人民币,货币,100以内数,元角分关系及真实支付,一下 加与减情境中穿插/购物,B,2127-cn-kp-geometry-stats
+M1B-02,元角分简单换算,geometry_stats,一下 五 认识人民币,货币换算,M1B-01,十进关系与小数写法暂不混用,一下 购物,C,2127-cn-kp-geometry-stats
+S1B-01,按单一标准分类并计数,geometry_stats,一下 三 分类与整理,数据分类,物体属性,分类标准必须互斥且不遗漏,一下 分类,B,2127-cn-kp-geometry-stats
+S1B-02,用象形符号或简单表呈现分类结果,geometry_stats,一下 三 分类与整理,统计表达,S1B-01,一一对应及读出“多几/少几”,一下 分类,C,2127-cn-kp-geometry-stats
+M2A-01,认识厘米并用尺测量,geometry_stats,二上 一 长度单位 新版单元号待纸本核,长度,G1图形直观,零刻度/单位端点与读数,二上 测量,B,2127-cn-kp-geometry-stats
+M2A-02,认识米及米厘米关系,geometry_stats,二上 一 长度单位 同上,长度换算,M2A-01,建立1米表象并用100厘米解释进率,二上 测量,B,2127-cn-kp-geometry-stats
+M2A-03,估测物体长度并选择单位,geometry_stats,二上 一 长度单位 同上,量感,M2A-01~02,估计—实测—修正循环,二上 测量,C,2127-cn-kp-geometry-stats
+G2A-01,认识角及顶点和两条边,geometry_stats,二上 三 角的初步认识 新版单元号待核,角,线段直观,角的大小与边长无关,二下 认识图形,B,2127-cn-kp-geometry-stats
+G2A-02,辨认直角并用三角尺检验,geometry_stats,二上 三 角的初步认识 同上,角,G2A-01,对齐顶点和一边,二下 认识图形,C,2127-cn-kp-geometry-stats
+G2A-03,直观辨认锐角和钝角,geometry_stats,二上 三 角的初步认识 同上,角,G2A-02,以直角为基准而非凭朝向,二下 认识图形,C,2127-cn-kp-geometry-stats
+G2A-04,从一个方向观察简单物体,geometry_stats,二上 五 观察物体（一） 待核,空间观念,G1立体图形,视图与观察位置对应,二上 观察物体,B,2127-cn-kp-geometry-stats
+M2A-04,认识时和分及1时=60分,geometry_stats,二上 七 认识时间 待核,时间,M1A-01与5的乘法,分钟不是十进单位,二上 时间,B,2127-cn-kp-geometry-stats
+M2A-05,读写几时几分并计算简单经过时间,geometry_stats,二上 七 认识时间 待核,时间,M2A-04,跨整时的经过时间,二上 时间,C,2127-cn-kp-geometry-stats
+S2B-01,调查并用记录符号收集数据,geometry_stats,二下 一 数据收集整理 新版单元号待核,数据收集,S1分类,调查问题与分类标准,二下 调查与记录,B,2127-cn-kp-geometry-stats
+S2B-02,读简单统计表并作比较,geometry_stats,二下 一 数据收集整理 同上,统计表,S2B-01,总数校验和根据数据回答,二下 ���查与记录,B,2127-cn-kp-geometry-stats
+G2B-01,辨认轴对称现象,geometry_stats,二下 三 图形的运动（一） 待核,图形运动,G1平面图形,生活中的近似对称与数学轴对称,二上 图形的变化/二下方向与位置附近,C,2127-cn-kp-geometry-stats
+G2B-02,识别平移现象,geometry_stats,二下 三 图形的运动（一） 待核,图形运动,G2B-01,图形方向和形状不变,二上 图形的变化,C,2127-cn-kp-geometry-stats
+G2B-03,识别旋转现象,geometry_stats,二下 三 图形的运动（一） 待核,图形运动,G2B-02,区分平移与绕点转动,二上 图形的变化,C,2127-cn-kp-geometry-stats
+M2B-01,认识克和千克,geometry_stats,二下 八 克和千克 待核,质量,数与比较,建立1克/1千克表象,二下 测量质量相关单元,B,2127-cn-kp-geometry-stats
+M2B-02,称量、估测并作克千克换算,geometry_stats,二下 八 克和千克 待核,量感,M2B-01,选择秤与单位；1千克=1000克,二下 测量,C,2127-cn-kp-geometry-stats
+M3A-01,认识秒及1分=60秒,geometry_stats,三上 一 时分秒 新版三上公开目录应以2025纸本核,时间,M2A-04,秒的实际量感和非十进进率,三上 年月日/时间相关,B,2127-cn-kp-geometry-stats
+M3A-02,计算简单经过时间,geometry_stats,三上 一 时分秒 同上,时间,M3A-01,跨分跨时的起止时刻,三上 时间表,C,2127-cn-kp-geometry-stats
+M3A-03,认识毫米和分米,geometry_stats,三上 三 测量 同上,长度,M2A-01~03,单位层级与实物表象,二下/三上 测量,B,2127-cn-kp-geometry-stats
+M3A-04,毫米分米厘米米换算,geometry_stats,三上 三 测量 同上,单位换算,M3A-03,只换单位不改变实际量,测量,C,2127-cn-kp-geometry-stats
+M3A-05,认识千米并估计较长距离,geometry_stats,三上 三 测量 同上,长度量感,M3A-04,直线距离、路程和生活参照,三上 里程表相关,B,2127-cn-kp-geometry-stats
+M3A-06,认识吨并作吨千克换算,geometry_stats,三上 三 测量 同上,质量,M2B-01,吨的表象及1000进率,三上 吨的认识,B,2127-cn-kp-geometry-stats
+G3A-01,认识四边形及长方形正方形特征,geometry_stats,三上 七 长方形和正方形 同上,平面图形,G2角与线段,边与角的必要属性,二下 认识图形,B,2127-cn-kp-geometry-stats
+G3A-02,认识周长并用测量/化曲为直求周长,geometry_stats,三上 七 长方形和正方形 同上,周长,G3A-01与长度,封闭图形“一周”的长度,五上/三上 周长,B,2127-cn-kp-geometry-stats
+G3A-03,推导长方形周长公式,geometry_stats,三上 七 长方形和正方形 同上,周长,G3A-02,公式来自边长结构而非死记,周长,C,2127-cn-kp-geometry-stats
+G3A-04,计算正方形周长并解决问题,geometry_stats,三上 七 长方形和正方形 同上,周长,G3A-03,周长固定与边长变化,周长,C,2127-cn-kp-geometry-stats
+G3B-01,用东南西北描述方向,geometry_stats,三下 一 位置与方向（一） 新版三下以2026纸本为准,位置与方向,G1位置,现实方向与图上方向,三上 方向与位置,B,2127-cn-kp-geometry-stats
+G3B-02,认识东北/东南/西北/西南,geometry_stats,三下 一 位置与方向（一） 同上,位置与方向,G3B-01,八方向之间关系,三上 方向与位置,C,2127-cn-kp-geometry-stats
+G3B-03,看简单路线图描述行走路线,geometry_stats,三下 一 位置与方向（一） 同上,地图技能,G3B-02,参照点随移动而改变,三上 方向与位置,C,2127-cn-kp-geometry-stats
+M3B-01,认识年、月、日及大小月,geometry_stats,三下 六 年月日 同上,时间,M2时间,历法单位不等长,三上 年月日,B,2127-cn-kp-geometry-stats
+M3B-02,判断平年闰年并认识24时计时法,geometry_stats,三下 六 年月日 同上,时间,M3B-01,闰年规则及普通/24时转换,三上 年月日,C,2127-cn-kp-geometry-stats
+A3B-01,认识面积并区分周长,geometry_stats,三下 五 面积 同上,面积,G3A-02,边界长度与表面大小是不同属性,三下 面积,B,2127-cn-kp-geometry-stats
+A3B-02,用方格或统一单位比较面积,geometry_stats,三下 五 面积 同上,面积测量,A3B-01,单位必须相同且铺满无重叠,三下 面积,B,2127-cn-kp-geometry-stats
+A3B-03,认识平方厘米/分米/米,geometry_stats,三下 五 面积 同上,面积单位,A3B-02,平方单位不是“长度单位加平方符号”,三下 面积单位,B,2127-cn-kp-geometry-stats
+A3B-04,由方格阵列推导长方形面积=长×宽,geometry_stats,三下 五 面积 同上,面积公式,A3B-03与乘法,长宽分别表示每行个数和行数,三下 长方形面积,B,2127-cn-kp-geometry-stats
+A3B-05,推导正方形面积=边长×边长,geometry_stats,三下 五 面积 同上,面积公式,A3B-04,面积公式与周长公式区分,三下 面积,C,2127-cn-kp-geometry-stats
+A3B-06,作相邻面积单位简单换算,geometry_stats,三下 五 面积 同上,单位换算,A3B-03~05,长度进率10对应面积进率100,三下 面积,C,2127-cn-kp-geometry-stats
+S3B-01,读写二维复式统计表,geometry_stats,三下 八 复式统计表 同上,统计表,S2简单表,行列变量和交叉单元格,三下 数据的整理和表示,B,2127-cn-kp-geometry-stats
+A4A-01,认识公顷并与平方米换算,geometry_stats,四上 二 公顷和平方千米 2026秋新版具体单元待纸本核,面积单位,A3B-03~06,1公顷实际尺度及10000平方米,四上 公顷平方千米,B,2127-cn-kp-geometry-stats
+A4A-02,认识平方千米并作大面积估测,geometry_stats,四上 二 公顷和平方千米 待核,面积量感,A4A-01,行政区域面积与线性距离区分,四上 公顷平方千米,B,2127-cn-kp-geometry-stats
+G4A-01,认识线段直线射线,geometry_stats,四上 三 角的度量 待核,几何对象,G3边线直观,端点数与可否测长,四上 线与角,B,2127-cn-kp-geometry-stats
+G4A-02,认识角的度量单位“度”,geometry_stats,四上 三 角的度量 待核,角,G2角,角是旋转量而不是边长,四上 线与角,B,2127-cn-kp-geometry-stats
+G4A-03,用量角器量角,geometry_stats,四上 三 角的度量 待核,角度测量,G4A-02,中心重合/零线重合/内外圈读数,四上 线与角,B,2127-cn-kp-geometry-stats
+G4A-04,用量角器画指定度数的角,geometry_stats,四上 三 角的度量 待核,作图,G4A-03,先射线后量角定位,四上 线与角,C,2127-cn-kp-geometry-stats
+G4A-05,分类锐角直角钝角平角周角,geometry_stats,四上 三 角的度量 待核,角,G4A-02,分类边界与角的大小关系,四上 线与角,B,2127-cn-kp-geometry-stats
+G4A-06,理解同一平面内平行与相交,geometry_stats,四上 五 平行四边形和梯形 待核,平行垂直,G4A-01,必须说明“同一平面内”,四上 线与角,B,2127-cn-kp-geometry-stats
+G4A-07,认识垂直、垂线和垂足,geometry_stats,四上 五 平行四边形和梯形 待核,平行垂直,G4A-06与直角,垂直是相交的特殊情形,四上 线与角,B,2127-cn-kp-geometry-stats
+G4A-08,画已知直线的垂线和平行线,geometry_stats,四上 五 平行四边形和梯形 待核,作图,G4A-06~07,工具操作和验证,四上 线与角,C,2127-cn-kp-geometry-stats
+G4A-09,认识点到直线距离,geometry_stats,四上 五 平行四边形和梯形 待核,距离,G4A-07,垂直线段最短,四上 线与角,B,2127-cn-kp-geometry-stats
+G4A-10,认识平行四边形及其高,geometry_stats,四上 五 平行四边形和梯形 待核,平面图形,G4A-06~09,一组底可对应一组高,四上 认识图形,B,2127-cn-kp-geometry-stats
+G4A-11,认识梯形及其高,geometry_stats,四上 五 平行四边形和梯形 待核,平面图形,G4A-10,仅一组对边平行及高的位置,四上 认识图形,B,2127-cn-kp-geometry-stats
+S4A-01,绘制一格代表一单位的条形统计图,geometry_stats,四上 七 条形统计图 待核,统计图,S3统计表,等宽等距与纵轴刻度,四下 数据的表示和分析,B,2127-cn-kp-geometry-stats
+S4A-02,选择一格代表多个单位并读图,geometry_stats,四上 七 条形统计图 待核,统计图,S4A-01,刻度选择可能造成视觉误判,四下 数据的表示和分析,C,2127-cn-kp-geometry-stats
+G4B-01,从不同方向观察由小正方体组成的物体,geometry_stats,四下 二 观察物体（二） 2027春待纸本核,空间观念,G2A-04,同一视图可能对应不同物体,四下 观察物体,B,2127-cn-kp-geometry-stats
+G4B-02,画简单物体的正面上面左面视图,geometry_stats,四下 二 观察物体（二） 待核,视图,G4B-01,遮挡关系和方格定位,四下 观察物体,C,2127-cn-kp-geometry-stats
+S4B-01,理解平均数是移多补少/总量公平分配,geometry_stats,四下 八 平均数与条形统计图 待核,平均数,除法与数据,平均数不一定是原数据之一,四下 平均数,B,2127-cn-kp-geometry-stats
+S4B-02,计算平均数并解释其代表性,geometry_stats,四下 八 平均数与条形统计图 待核,统计量,S4B-01,总数÷份数与极端值影响,四下 平均数,C,2127-cn-kp-geometry-stats
+S4B-03,读绘复式条形统计图,geometry_stats,四下 八 平均数与条形统计图 待核,统计图,S4A-02,图例、同类比较与跨类比较,四下 数据的表示和分析,B,2127-cn-kp-geometry-stats
+G4B-03,画轴对称图形的另一半,geometry_stats,四下 七 图形的运动（二） 待核,轴对称,G2B-01,对应点到对称轴距离相等,四下 图形的运动,B,2127-cn-kp-geometry-stats
+G4B-04,按方向和格数平移图形,geometry_stats,四下 七 图形的运动（二） 待核,平移,G2B-02,跟踪关键点而非数方格块,四下 图形的运动,C,2127-cn-kp-geometry-stats
+G4B-05,用平移割补求不规则图形周长,geometry_stats,四下 七 图形的运动（二） 待核,转化,G4B-04与周长,移动部分但保持相关长度,四下 图形的运动,C,2127-cn-kp-geometry-stats
+G5A-01,用有序数对表示方格中的位置,geometry_stats,五上 二 位置 新版册次待纸本核,坐标萌芽,G3方向与数序,先列后行及数对有序性,四上/五上 确定位置,,2127-cn-kp-geometry-stats
+G5A-02,由数对确定位置并描述移动,geometry_stats,五上 二 位置 待核,坐标萌芽,G5A-01,固定坐标原点和单位,确定位置,,2127-cn-kp-geometry-stats
+P5A-01,用一定/不可能/可能描述随机事件,geometry_stats,五上 四 可能性 待核,概率,S1分类与生活经验,随机结果与主观猜测区分,四上/五上 可能性,,2127-cn-kp-geometry-stats
+P5A-02,比较事件可能性大小,geometry_stats,五上 四 可能性 待核,概率,P5A-01与分数直观,等可能基本结果及频数证据,可能性,,2127-cn-kp-geometry-stats
+A5A-01,把平行四边形割补成长方形,geometry_stats,五上 六 多边形的面积 待核,面积转化,A3长方形面积与G4平行四边形,面积不变且底高对应,五上 多边形的面积,,2127-cn-kp-geometry-stats
+A5A-02,推导平行四边形面积=底×高,geometry_stats,五上 六 多边形的面积 待核,面积公式,A5A-01,不能用邻边相乘替代底×高,五上 多边形的面积,,2127-cn-kp-geometry-stats
+A5A-03,把三角形拼成平行四边形,geometry_stats,五上 六 多边形的面积 待核,面积转化,A5A-02,两个完全相同三角形及面积减半,五上 多边形的面积,,2127-cn-kp-geometry-stats
+A5A-04,推导三角形面积=底×高÷2,geometry_stats,五上 六 多边形的面积 待核,面积公式,A5A-03,高必须对应所选底,五上 多边形的面积,,2127-cn-kp-geometry-stats
+A5A-05,把梯形拼成平行四边形,geometry_stats,五上 六 多边形的面积 待核,面积转化,A5A-02与G4梯形,拼成图形的底为上下底之和,五上 多边形的面积,,2127-cn-kp-geometry-stats
+A5A-06,推导梯形面积=(上底+下底)×高÷2,geometry_stats,五上 六 多边形的面积 待核,面积公式,A5A-05,括号、对应高和除以2,五上 多边形的面积,,2127-cn-kp-geometry-stats
+A5A-07,分割或添补求组合图形面积,geometry_stats,五上 六 多边形的面积 待核,转化应用,A5A-02~06,分割方案不同但面积守恒,五上 组合图形面积,,2127-cn-kp-geometry-stats
+G5B-01,辨认长方体正方体的面棱顶点,geometry_stats,五下 三 长方体和正方体 待核,立体图形,G1立体图形,二维图与三维结构对应,五下 长方体（一）,,2127-cn-kp-geometry-stats
+G5B-02,认识长方体展开图,geometry_stats,五下 三 长方体和正方体 待核,空间观念,G5B-01,相对面不能相邻及折叠想象,五下 长方体（一）,,2127-cn-kp-geometry-stats
+V5B-01,认识表面积并计算长方体正方体表面积,geometry_stats,五下 三 长方体和正方体 待核,表面积,G5B-02与面积,实际问题中哪些面需要计算,五下 长方体（一）,,2127-cn-kp-geometry-stats
+V5B-02,用单位小正方体认识体积,geometry_stats,五下 三 长方体和正方体 待核,体积,A3面积单位与G5B-01,铺满三维空间且无缝无重叠,五下 长方体（二）,,2127-cn-kp-geometry-stats
+V5B-03,认识立方厘米/分米/米,geometry_stats,五下 三 长方体和正方体 待核,体积单位,V5B-02,建立单位体积实物表象,五下 长方体（二）,,2127-cn-kp-geometry-stats
+V5B-04,由立方体阵列推导长方体体积=长×宽×高,geometry_stats,五下 三 长方体和正方体 待核,体积公式,V5B-02~03与乘法,每层个数×层数的结构,五下 长方体（二）,,2127-cn-kp-geometry-stats
+V5B-05,推导正方体体积及统一为底面积×高,geometry_stats,五下 三 长方体和正方体 待核,体积公式,V5B-04,二维底面积到三维体积的升维,五下 长方体（二）,,2127-cn-kp-geometry-stats
+V5B-06,作相邻体积单位换算,geometry_stats,五下 三 长方体和正方体 待核,单位换算,V5B-03~05,长度进率10对应体积进率1000,五下 长方体（二）,,2127-cn-kp-geometry-stats
+V5B-07,认识容积和升毫升并换算,geometry_stats,五下 三 长方体和正方体 待核,容积,V5B-02~06,容器内部容量与材料体积区分,五下 长方体（二）,,2127-cn-kp-geometry-stats
+G5B-03,认识旋转中心方向和角度,geometry_stats,五下 五 图形的运动（三） 待核,旋转,G2B-03与角,三个要素缺一不可,五下 图形的运动,,2127-cn-kp-geometry-stats
+G5B-04,在方格纸上画旋转90度后的图形,geometry_stats,五下 五 图形的运动（三） 待核,作图,G5B-03,对应点到中心距离保持不变,五下 图形的运动,,2127-cn-kp-geometry-stats
+S5B-01,认识单式折线统计图,geometry_stats,五下 七 折线统计图 待核,统计图,S4条形图,点表示数值、线突出变化趋势,五下 数据的表示和分析,,2127-cn-kp-geometry-stats
+S5B-02,选择条形图或折线图表达数据,geometry_stats,五下 七 折线统计图 待核,统计表达,S5B-01,类别比较与连续变化的区别,五下 数据分析,,2127-cn-kp-geometry-stats
+G6A-01,用方向和角度描述物体位置,geometry_stats,六上 二 位置与方向（二） 新版待纸本核,位置与方向,G3八方向与G4量角,参照点/方向/角度/距离四要素,六上 确定位置,B,2127-cn-kp-geometry-stats
+G6A-02,按方向角和距离在图上确定位置,geometry_stats,六上 二 位置与方向（二） 待核,作图,G6A-01,比例、量角与长度综合,六上 确定位置,C,2127-cn-kp-geometry-stats
+G6A-03,描述含多个路段的路线,geometry_stats,六上 二 位置与方向（二） 待核,路线,G6A-02,每段重新确定参照点,六上 确定位置,C,2127-cn-kp-geometry-stats
+A6A-01,认识圆心半径直径及其关系,geometry_stats,六上 五 圆 待核,平面图形,G2圆直观与长度,同圆/等圆条件下关系成立,六上 圆,B,2127-cn-kp-geometry-stats
+A6A-02,操作发现圆周率,geometry_stats,六上 五 圆 待核,测量,A6A-01,测量误差与恒定比值π,六上 圆,B,2127-cn-kp-geometry-stats
+A6A-03,推导圆周长公式,geometry_stats,六上 五 圆 待核,周长,A6A-02,直径/半径代入和π的近似,六上 圆,C,2127-cn-kp-geometry-stats
+A6A-04,把圆等分拼近似长方形,geometry_stats,六上 五 圆 待核,面积转化,A5多边形转化与A6A-03,极限直观：份数越多越接近,六上 圆,B,2127-cn-kp-geometry-stats
+A6A-05,推导圆面积=πr²,geometry_stats,六上 五 圆 待核,面积公式,A6A-04,长对应半周长、宽对应半径,六上 圆,B,2127-cn-kp-geometry-stats
+A6A-06,认识扇形并求简单组合图形面积,geometry_stats,六上 五 圆 待核,平面图形,A6A-01~05与角,扇形边界含弧和两条半径,六上 圆,C,2127-cn-kp-geometry-stats
+S6A-01,认识扇形统计图,geometry_stats,六上 七 扇形统计图 待核,统计图,百分数与圆,S4/S5统计图,六上 数据处理,部分占总体百分比而非绝对量,2127-cn-kp-geometry-stats
+S6A-02,根据问题选择条形/折线/扇形图,geometry_stats,六上 七 扇形统计图 待核,统计表达,S6A-01,选择依据是比较/趋势/构成,六上 数据处理,C,2127-cn-kp-geometry-stats
+V6B-01,认识圆柱及侧面展开图,geometry_stats,六下 三 圆柱与圆锥 待核,立体图形,A6圆与G5展开图,侧面展开长方形的长等于底面周长,六下 圆柱与圆锥,B,2127-cn-kp-geometry-stats
+V6B-02,推导圆柱表面积,geometry_stats,六下 三 圆柱与圆锥 待核,表面积,V6B-01与A6圆面积周长,按实际情境选择底面数量,六下 圆柱与圆锥,B,2127-cn-kp-geometry-stats
+V6B-03,推导圆柱体积=底面积×高,geometry_stats,六下 三 圆柱与圆锥 待核,体积转化,V5B-05与A6A-04,切拼后近似长方体及体积保持,六下 圆柱与圆锥,B,2127-cn-kp-geometry-stats
+V6B-04,实验理解圆锥体积=同底等高圆柱的三分之一,geometry_stats,六下 三 圆柱与圆锥 待核,体积,V6B-03,三分之一只在同底等高条件成立,六下 圆柱与圆锥,B,2127-cn-kp-geometry-stats
+G6B-01,认识比例尺并在图上距离和实际距离间换算,geometry_stats,六下 四 比例 待核,测量/位置,比与单位换算,先统一单位再列比,六下 比例尺,B,2127-cn-kp-geometry-stats
+G6B-02,按比例放大或缩小图形,geometry_stats,六下 四 比例 待核,图形运动,G6B-01与相似直观,长度按k变、面积按k²变,六下 图形的放缩,C,2127-cn-kp-geometry-stats
+S6B-01,综合调查、选图、解释和质疑统计结论,geometry_stats,六下 六 整理和复习 待核,统计综合,S1~S6,样本、刻度和图形选择会影响解释,六下 总复习/数据处理,C,2127-cn-kp-geometry-stats
+P6B-01,用分数表示简单事件概率并联系频率,geometry_stats,六下 六 整理和复习中可能性 待核,概率,P5可能性与分数,理论可能性和实际频率不必完全相等,总复习,C,2127-cn-kp-geometry-stats
+G7A-01,从实物抽象几何体并分类,geometry_stats,七上,立体图形,G1/G5立体图形,按构成面和柱锥球特征抽象,,B,2127-cn-kp-geometry-stats
+G7A-02,辨认棱柱棱锥及截面,geometry_stats,七上,空间观念,G7A-01,截面由切割位置决定,,B,2127-cn-kp-geometry-stats
+G7A-03,由展开图判断立体图形,geometry_stats,七上,展开图,G5B-02,相邻面与相对面关系,,B,2127-cn-kp-geometry-stats
+G7A-04,由三视图想象简单几何体,geometry_stats,七上,视图,G4B-01~02,多个视图共同约束物体,,B,2127-cn-kp-geometry-stats
+G7A-05,理解点线面体及运动关系,geometry_stats,七上,几何基础,G7A-01,数学抽象而非物理厚度,,C,2127-cn-kp-geometry-stats
+G7A-06,比较两点间线段并认识线段最短,geometry_stats,七上,线段,G4A-01,距离定义与几何事实,,B,2127-cn-kp-geometry-stats
+G7A-07,处理中点和线段和差,geometry_stats,七上,线段,G7A-06,图形语言转代数式,,C,2127-cn-kp-geometry-stats
+G7A-08,用度分秒度量角并换算,geometry_stats,七上,角,G4角度,60进制而非十进制,,B,2127-cn-kp-geometry-stats
+G7A-09,角的和差、角平分线及余角补角,geometry_stats,七上,角,G7A-08,数量关系与位置关系区分,,B,2127-cn-kp-geometry-stats
+G7B-01,认识对顶角邻补角并求角,geometry_stats,七下,平行垂直,G4平行垂直与G7角,对顶角相等的条件,,B,2127-cn-kp-geometry-stats
+G7B-02,理解垂线性质和点到直线距离,geometry_stats,七下,距离,G7B-01与G4A-09,垂线段与垂线/距离的区别,,B,2127-cn-kp-geometry-stats
+G7B-03,认识同位角内错角同旁内角,geometry_stats,七下,角关系,G7B-01,依据截线识别而非图形朝向,,B,2127-cn-kp-geometry-stats
+G7B-04,用角关系判定两直线平行,geometry_stats,七下,推理,G7B-03,判定条件与结论方向,,B,2127-cn-kp-geometry-stats
+G7B-05,利用平行线性质求角,geometry_stats,七下,推理,G7B-04,性质与判定不可倒置,,B,2127-cn-kp-geometry-stats
+G7B-06,认识平移及其对应点线段角性质,geometry_stats,七下,图形运动,G4平移,对应关系和连接线平行等长,,B,2127-cn-kp-geometry-stats
+G7B-07,建立平面直角坐标系和有序数对,geometry_stats,七下,坐标,G5数对与数轴,原点/正方向/单位长度,,B,2127-cn-kp-geometry-stats
+G7B-08,由点求坐标、由坐标描点并判象限,geometry_stats,七下,坐标,G7B-07,横纵坐标次序与轴上点,,C,2127-cn-kp-geometry-stats
+G7B-09,用坐标表示地理位置,geometry_stats,七下,坐标应用,G7B-08,合理选择原点和单位,,B,2127-cn-kp-geometry-stats
+G7B-10,表示平移前后点的坐标变化,geometry_stats,七下,变换与坐标,G7B-06与G7B-08,左右改变x、上下改变y,,C,2127-cn-kp-geometry-stats
+S7B-01,明确总体个体样本样本容量,geometry_stats,七下,统计,G1~G6数据经验,样本不是“样本容量”,,B,2127-cn-kp-geometry-stats
+S7B-02,区分全面调查和抽样调查,geometry_stats,七下,调查,S7B-01,成本、可行性与代表性,,B,2127-cn-kp-geometry-stats
+S7B-03,设计调查问卷并进行随机抽样,geometry_stats,七下,数据收集,S7B-02,问题措辞和便利样本偏差,,C,2127-cn-kp-geometry-stats
+S7B-04,制作频数分布表,geometry_stats,七下,统计表,S7B-03,分组边界不重不漏,,B,2127-cn-kp-geometry-stats
+S7B-05,绘制频数分布直方图,geometry_stats,七下,统计图,S7B-04,直方图与条形图的连续性差别,,B,2127-cn-kp-geometry-stats
+S7B-06,根据统计图表作有边界的解释,geometry_stats,七下,数据分析,S7B-01~05,相关描述不等于因果结论,,C,2127-cn-kp-geometry-stats
+H.UNITIZE,单位化：把若干个看成一个新单位（一个十、一组 3 颗）,hub,贯穿 1–6,concept,,教材不单列；位值与乘法的共同枢纽,,C,Q-2125-learning-trajectories §5.3；cn-teaching-research §6.4
+H.EQUIPART,等分：公平分成相等的几份,hub,2下平均分；3上分数初步,concept,,分数、除法、比的共同前置,,C,Confrey；learning-trajectories §5.3
+H.ITERATE,单位分数可迭代：m/n 是 m 个 1/n,hub,3上–5下,concept,,先于一般分数大小与异分母运算,,C,Steffe & Olive；learning-trajectories §一.3
+H.NUMLINE,数的大小与数轴：每个数（含分数、小数、负数）有位置,hub,贯穿,representation,,教材以图形涂色为主，研究要求补强数轴,,C,Siegler 2011；learning-trajectories §5.3
+H.MULCOMP,乘法比较：几倍（不是多几个）,hub,3上倍的认识,concept,,倍、比、比例的共同前置,,C,Vergnaud；learning-trajectories §4.1 M4
+H.SCALE,乘法作缩放 / 算子：乘以小于 1 的数变小,hub,5上小数乘法；6上分数乘法,concept,,重复加法模型不覆盖分数与小数乘法,,C,learning-trajectories §一.3；cn-teaching-research §8.4
+H.COVAR,协变：两个量一起变、比值不变,hub,6下正比例,concept,,比例推理不是交叉相乘,,C,Lamon；learning-trajectories §一.4
+H.EQUIV,等号的关系意义：两边相等（不是“写答案”）,hub,低年级渗透；5上方程,concept,,应从低年级起用 8+4=□+5 训练,,C,Knuth；McNeil；learning-trajectories §一.5
+H.INVERSE,逆运算与未知量位置,hub,1–2 加减互逆；2下乘除互逆,concept,,方程与验算的共同枢纽,,C,learning-trajectories §5.3
+H.COUNTUNIT,计数单位：整数、小数、分数的加减都是相同计数单位相加,hub,贯穿 1–6,concept,,中国教研的强枢纽（史宁中、吴正宪）,,B/C,cn-teaching-research §2.4、§8.3

@@ -1,10 +1,10 @@
-skill_id,name,mastery_desc,kind,strand,cn_order,maps,year_min,year_max,prereq,confusable,reps,review_days,mastery_policy,status,version
-MD.ADD.01,同数连加,能把 3+3+3+3 算出并说出加了几次,procedure,calculation,CN:1年级（单元号待核）,EN-NC:Y1-Y2,1,2,,,objects;numberline,2;7;21,BKT-v1,hypothesised,1
-MD.CNT.01,按群计数（2、5、10 一数）,能 2 个、5 个、10 个一数并接着数下去,fluency,number,CN:1-2年级（待核）,EN-NC:Y1-Y2,1,2,,,objects;numberline,2;7;21,BKT-v1,hypothesised,1
-MD.MUL.01,乘法的意义（几个相同加数的和）,能把“n 组每组 k 个”写成 n×k 并解释每个数的意思,concept,calculation,CN:2上 表内乘法（待核）,EN-NC:Y2;RtP:2NF-1?(待核),2,3,MD.ADD.01;MD.CNT.01,MD.ADD.02,objects;array;bar,2;7;21,BKT-v1,hypothesised,1
-MD.MUL.02,乘法交换（n×k 与 k×n 同样多）,能用阵列转一下说明 3×10 与 10×3 相等,concept,calculation,CN:2上（待核）,EN-NC:Y2,2,3,MD.MUL.01,,array,2;7;21,BKT-v1,hypothesised,1
-MD.MUL.03,表内乘法（2–9 的乘法口诀）,2–9 乘法事实 3 秒内说出且正确率 ≥ 90%（不计时练，只记录）,fluency,calculation,CN:2上-2下（待核）,EN-NC:Y2-Y4,2,4,MD.MUL.01,,symbolic,2;7;21;60,BKT-v1,hypothesised,1
-MD.MUL.04,乘整十数与乘 10,能算 10×3、20×4 并说明为什么个位补 0,procedure,calculation,CN:3上 多位数乘一位数口算（待核）,EN-NC:Y3-Y4,3,4,MD.MUL.03,,array;placevalue,2;7;21,BKT-v1,hypothesised,1
-MD.MUL.05,多位数乘一位数,能算 23×4 并用拆数解释（20×4+3×4）,procedure,calculation,CN:3上（待核）,EN-NC:Y3-Y4,3,5,MD.MUL.04,,area;symbolic,2;7;21,BKT-v1,hypothesised,1
-MD.MUL.06,两步问题：先分别乘再相加,能算“10 个蛋糕每个 3 颗 + 4 个蛋糕每个 5 粒”共几颗并说出两步,strategy,calculation,CN:3上 解决问题（待核）,EN-NC:Y3-Y5,3,5,MD.MUL.01;MD.ADD.01,,bar,2;7;21,BKT-v1,hypothesised,1
-MD.MUL.07,倍的认识（一个数的几倍）,能说出“草莓是蛋糕的 3 倍”并求几倍是多少,concept,calculation,CN:3上 倍的认识（待核）,EN-NC:Y3,3,4,MD.MUL.01,MD.MUL.01,bar,2;7;21,BKT-v1,hypothesised,1
+skill_id,name,mastery_desc,kind,strand,cn_node,maps,year_min,year_max,prereq,confusable,reps,review_days,mastery_policy,status,version
+MD.ADD.01,同数连加,能把 3+3+3+3 算出并说出加了几次,procedure,calculation,N.MIX.W10.01,EN-NC:Y1-Y2,1,2,,,objects;numberline,2;7;21,BKT-v1,hypothesised,1
+MD.CNT.01,按群计数（2、5、10 一数）,能 2 个、5 个、10 个一数并接着数下去,fluency,number,H.UNITIZE,EN-NC:Y1-Y2,1,2,,,objects;numberline,2;7;21,BKT-v1,hypothesised,1
+MD.MUL.01,乘法的意义（几个相同加数的和）,能把“n 组每组 k 个”写成 n×k 并解释每个数的意思,concept,calculation,N.MUL.MEAN.01;H.UNITIZE,EN-NC:Y2;RtP:2NF-1?(待核),2,3,MD.ADD.01;MD.CNT.01,MD.ADD.02,objects;array;bar,2;7;21,BKT-v1,hypothesised,1
+MD.MUL.02,乘法交换（n×k 与 k×n 同样多）,能用阵列转一下说明 3×10 与 10×3 相等,concept,calculation,N.LAW.MUL.01（2上口诀阶段已渗透，4下正式）,EN-NC:Y2,2,3,MD.MUL.01,,array,2;7;21,BKT-v1,hypothesised,1
+MD.MUL.03,表内乘法（2–9 的乘法口诀）,2–9 乘法事实 3 秒内说出且正确率 ≥ 90%（不计时练，只记录）,fluency,calculation,N.MUL.FACT26.01;N.MUL.FACT79.01,EN-NC:Y2-Y4,2,4,MD.MUL.01,,symbolic,2;7;21;60,BKT-v1,hypothesised,1
+MD.MUL.04,乘整十数与乘 10,能算 10×3、20×4 并说明为什么个位补 0,procedure,calculation,N.MUL.ORAL.01,EN-NC:Y3-Y4,3,4,MD.MUL.03,,array;placevalue,2;7;21,BKT-v1,hypothesised,1
+MD.MUL.05,多位数乘一位数,能算 23×4 并用拆数解释（20×4+3×4）,procedure,calculation,N.MUL.MULTIDIGIT.01;N.MUL.MULTIDIGIT.02,EN-NC:Y3-Y4,3,5,MD.MUL.04,,area;symbolic,2;7;21,BKT-v1,hypothesised,1
+MD.MUL.06,两步问题：先分别乘再相加,能算“10 个蛋糕每个 3 颗 + 4 个蛋糕每个 5 粒”共几颗并说出两步,strategy,calculation,QR-02;N.MIX.MD.01,EN-NC:Y3-Y5,3,5,MD.MUL.01;MD.ADD.01,,bar,2;7;21,BKT-v1,hypothesised,1
+MD.MUL.07,倍的认识（一个数的几倍）,能说出“草莓是蛋糕的 3 倍”并求几倍是多少,concept,calculation,QR-03;H.MULCOMP,EN-NC:Y3,3,4,MD.MUL.01,MD.MUL.01,bar,2;7;21,BKT-v1,hypothesised,1

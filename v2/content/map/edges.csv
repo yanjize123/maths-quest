@@ -1,0 +1,387 @@
+src,dst,type,necessity,basis,q
+N.INT.COUNT.01,N.INT.READ.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.READ.01,N.INT.ORD.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.READ.01,N.INT.CMP.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.READ.01,N.INT.COMP.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.COMP.01,N.ADD.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.COMP.01,N.SUB.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.READ.01,N.ZERO.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.MEAN.01,N.ADD.W5.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.COMP.01,N.ADD.W5.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.MEAN.01,N.SUB.W5.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.COMP.01,N.SUB.W5.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.READ.01,N.INT.READ.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.COMP.01,N.INT.COMP.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.READ.02,N.INT.COMP.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.W5.01,N.ADD.W10.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.COMP.02,N.ADD.W10.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.W5.01,N.SUB.W10.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.COMP.02,N.SUB.W10.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.W10.01,N.MIX.W10.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.W10.01,N.MIX.W10.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MIX.W10.01,N.MIX.W10.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.READ.02,N.PLACE.20.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.20.01,N.ADD.CARRY20.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.W10.01,N.ADD.CARRY20.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.20.01,N.SUB.BOR20.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.W10.01,N.SUB.BOR20.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.20.01,N.PLACE.100.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.100.01,N.INT.CMP.100,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.CMP.01,N.INT.CMP.100,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.100.01,N.ADD.TENS.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.W10.01,N.ADD.TENS.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.100.01,N.SUB.TENS.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.W10.01,N.SUB.TENS.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.TENS.01,N.ADD.100ORAL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.TENS.01,N.SUB.100ORAL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.100ORAL.01,N.ADD.COL100.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.100.01,N.ADD.COL100.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.COL100.01,N.ADD.COL100.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.CARRY20.01,N.ADD.COL100.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.100ORAL.01,N.SUB.COL100.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.COL100.01,N.SUB.COL100.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.BOR20.01,N.SUB.COL100.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.COL100.02,N.ADD.SUB.REL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.COL100.02,N.ADD.SUB.REL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.W10.01,N.MUL.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.MEAN.01,N.MUL.FACT26.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.FACT26.01,N.MUL.FACT79.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.MEAN.01,N.DIV.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.MEAN.01,N.DIV.FACT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.FACT79.01,N.DIV.FACT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.FACT.01,N.MIX.MD.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.MEAN.01,N.REM.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.100.01,N.PLACE.10000.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.10000.01,N.APPROX.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.10000.01,N.ADD.SUB.ORAL100.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.TENS.01,N.ADD.SUB.ORAL100.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.FACT79.01,N.MUL.ORAL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.10000.01,N.MUL.ORAL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.COL100.02,N.ADD.COL1000.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.SUB.COL100.02,N.SUB.COL1000.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.SUB.REL.01,N.ADD.SUB.CHECK.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.COL1000.01,N.ADD.SUB.CHECK.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.ORAL.01,N.MUL.MULTIDIGIT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.MULTIDIGIT.01,N.MUL.MULTIDIGIT.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.CARRY20.01,N.MUL.MULTIDIGIT.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ZERO.01,N.MUL.ZERO.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.MULTIDIGIT.01,N.MUL.ZERO.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.MEAN.01,N.FRAC.PART.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.PART.01,N.FRAC.CMPUNIT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.PART.01,N.FRAC.SAMEADD.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.FACT.01,N.DIV.ONE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.10000.01,N.DIV.ONE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ZERO.01,N.DIV.ZERO.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.MEAN.01,N.DIV.ZERO.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.ORAL.01,N.MUL.2X2.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.2X2.01,N.MUL.2X2.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.MULTIDIGIT.02,N.MUL.2X2.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.PART.01,N.DEC.INIT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.100.01,N.DEC.INIT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.INIT.01,N.DEC.CMP.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.CMP.100,N.DEC.CMP.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.INIT.01,N.DEC.ADDSUB.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.COL100.01,N.DEC.ADDSUB.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.10000.01,N.PLACE.BIG.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.BIG.01,N.PLACE.BIG.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.APPROX.01,N.ROUND.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.BIG.01,N.ROUND.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.2X2.02,N.MUL.3X2.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.3X2.01,N.MUL.LAW.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.ONE.01,N.DIV.2DIG.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.2DIG.01,N.DIV.2DIG.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.FACT79.01,N.DIV.2DIG.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.2DIG.02,N.DIV.LAW.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MIX.MD.01,N.MIX.ORDER.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.COL1000.01,N.MIX.ORDER.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ADD.COL1000.01,N.LAW.ADD.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.3X2.01,N.LAW.MUL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.LAW.ADD.01,N.LAW.DIST.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.LAW.MUL.01,N.LAW.DIST.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.LAW.DIST.01,N.CALC.EASY.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MIX.ORDER.01,N.CALC.EASY.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.INIT.01,N.DEC.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.BIG.01,N.DEC.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MEAN.01,N.DEC.PROP.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MEAN.01,N.DEC.MOVE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.LAW.01,N.DEC.MOVE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MOVE.01,N.DEC.CONVERT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ROUND.01,N.DEC.ROUND.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MEAN.01,N.DEC.ROUND.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MEAN.01,N.DEC.ADDCOL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.ADDSUB.01,N.DEC.ADDCOL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.ADDCOL.01,N.DEC.MIXADD.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.LAW.ADD.01,N.DEC.MIXADD.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MOVE.01,N.DEC.MULINT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.3X2.01,N.DEC.MULINT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MULINT.01,N.DEC.MULDEC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MEAN.01,N.DEC.MULDEC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MULDEC.01,N.DEC.MULROUND.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.ROUND.01,N.DEC.MULROUND.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MULDEC.01,N.DEC.MULLAW.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.LAW.DIST.01,N.DEC.MULLAW.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MEAN.01,N.DEC.DIVINT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.2DIG.02,N.DEC.DIVINT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.DIVINT.01,N.DEC.DIVDEC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.LAW.01,N.DEC.DIVDEC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.DIVDEC.01,N.DEC.QUOTROUND.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.ROUND.01,N.DEC.QUOTROUND.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.DIVDEC.01,N.DEC.CYCLE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.DIVDEC.01,N.MIX.DEC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.MULLAW.01,N.MIX.DEC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.MEAN.01,N.FACTOR.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.REM.MEAN.01,N.FACTOR.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FACTOR.01,N.DIVIS.235.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PLACE.10000.01,N.DIVIS.235.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FACTOR.01,N.PRIME.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.PART.01,N.FRAC.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.MEAN.01,N.FRAC.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.MEAN.01,N.FRAC.DIVREL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.MEAN.01,N.FRAC.DIVREL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.DIVREL.01,N.FRAC.PROPERTY.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.LAW.01,N.FRAC.PROPERTY.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.PROPERTY.01,N.FRAC.REDUCE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FACTOR.01,N.FRAC.REDUCE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.PROPERTY.01,N.FRAC.COMMON.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FACTOR.01,N.FRAC.COMMON.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.COMMON.01,N.FRAC.CMP.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.DIVREL.01,N.FRAC.DEC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DEC.DIVINT.01,N.FRAC.DEC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.MEAN.01,N.FRAC.ADDLIKE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.SAMEADD.01,N.FRAC.ADDLIKE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.ADDLIKE.01,N.FRAC.ADDUNLIKE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.COMMON.01,N.FRAC.ADDUNLIKE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.ADDUNLIKE.01,N.FRAC.ADDMIX.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.LAW.ADD.01,N.FRAC.ADDMIX.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.MEAN.01,N.FRAC.MUL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MUL.MEAN.01,N.FRAC.MUL.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.MUL.01,N.FRAC.MUL.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.REDUCE.01,N.FRAC.MUL.02,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.MUL.02,N.FRAC.RECIP.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.RECIP.01,N.FRAC.DIV.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.DIV.MEAN.01,N.FRAC.DIV.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.DIV.01,N.FRAC.MIX.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.MIX.ORDER.01,N.FRAC.MIX.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.DIVREL.01,N.RATIO.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.RATIO.MEAN.01,N.RATIO.SIMPLIFY.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.PROPERTY.01,N.RATIO.SIMPLIFY.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.MEAN.01,N.PERCENT.MEAN.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PERCENT.MEAN.01,N.PERCENT.CONVERT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.DEC.01,N.PERCENT.CONVERT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PERCENT.CONVERT.01,N.PERCENT.CALC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.MUL.02,N.PERCENT.CALC.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.ZERO.01,N.NEG.INIT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.INT.CMP.100,N.NEG.INIT.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PERCENT.CALC.01,N.PERCENT.APP.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PERCENT.CALC.01,N.PERCENT.INTEREST.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.RATIO.MEAN.01,N.PROPORTION.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.FRAC.PROPERTY.01,N.PROPORTION.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PROPORTION.01,N.PROPORTION.SOLVE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PROPORTION.01,N.DIRECT.INVERSE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+N.PROPORTION.SOLVE.01,N.SCALE.01,requires,hard,Codex 表“直接前置”,Q-2125-cn-kp-number
+QR-04,ALG-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+ALG-01,ALG-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+ALG-02,EQ-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+EQ-01,EQ-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+EQ-02,EQ-03,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+QR-03,EQ-04,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+ALG-02,EQ-04,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+EQ-01,EQ-04,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+FR-02,RAT-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+FR-02,RAT-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+RAT-01,RAT-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+RAT-01,RAT-03,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+FR-01,PCT-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+PCT-01,PCT-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+RAT-01,PROP-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+PROP-01,PROP-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+PROP-01,PROP-03,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+NEG-01,NEG-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+NEG-02,NEG-03,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+ALG-02,EXPR-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+NEG-03,EXPR-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+EXPR-01,EXPR-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+EQ-03,LEQ-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+EXPR-02,LEQ-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+NEG-03,LEQ-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+EQ-04,LEQ-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+LEQ-01,LEQ-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+EXPR-01,POLY-01,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+POLY-01,POLY-02,requires,hard,Codex 表“直接前置”,2125-cn-kp-algebra
+G1A-01,G1A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G1A-01,G1A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G1A-04,G1A-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G1A-04,G1A-06,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G1A-04,G1B-01,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G1B-01,G1B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G1B-01,G1B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M1B-01,M1B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S1B-01,S1B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M2A-01,M2A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M2A-01,M2A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G2A-01,G2A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G2A-02,G2A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M1A-01,M2A-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M2A-04,M2A-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S2B-01,S2B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G2B-01,G2B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G2B-02,G2B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M2B-01,M2B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M2A-04,M3A-01,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M3A-01,M3A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M2A-01,M3A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M3A-03,M3A-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M3A-04,M3A-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M2B-01,M3A-06,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G3A-01,G3A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G3A-02,G3A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G3A-03,G3A-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G3B-01,G3B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G3B-02,G3B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+M3B-01,M3B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G3A-02,A3B-01,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A3B-01,A3B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A3B-02,A3B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A3B-03,A3B-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A3B-04,A3B-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A3B-03,A3B-06,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A3B-03,A4A-01,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A4A-01,A4A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-02,G4A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-03,G4A-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-02,G4A-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-01,G4A-06,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-06,G4A-07,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-06,G4A-08,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-07,G4A-09,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-06,G4A-10,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-10,G4A-11,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S4A-01,S4A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G2A-04,G4B-01,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4B-01,G4B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S4B-01,S4B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S4A-02,S4B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G2B-01,G4B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G2B-02,G4B-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4B-04,G4B-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G5A-01,G5A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+P5A-01,P5A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A5A-01,A5A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A5A-02,A5A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A5A-03,A5A-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A5A-02,A5A-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A5A-05,A5A-06,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A5A-02,A5A-07,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G5B-01,G5B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G5B-02,V5B-01,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G5B-01,V5B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+V5B-02,V5B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+V5B-02,V5B-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+V5B-04,V5B-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+V5B-03,V5B-06,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+V5B-02,V5B-07,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G2B-03,G5B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G5B-03,G5B-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S5B-01,S5B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G6A-01,G6A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G6A-02,G6A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A6A-01,A6A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A6A-02,A6A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A6A-03,A6A-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A6A-04,A6A-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A6A-01,A6A-06,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S6A-01,S6A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+V6B-01,V6B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+V5B-05,V6B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+A6A-04,V6B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+V6B-03,V6B-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G6B-01,G6B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7A-01,G7A-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G5B-02,G7A-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4B-01,G7A-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7A-01,G7A-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-01,G7A-06,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7A-06,G7A-07,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7A-08,G7A-09,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7B-01,G7B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G4A-09,G7B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7B-01,G7B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7B-03,G7B-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7B-04,G7B-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7B-07,G7B-08,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7B-08,G7B-09,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7B-06,G7B-10,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+G7B-08,G7B-10,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S7B-01,S7B-02,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S7B-02,S7B-03,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S7B-03,S7B-04,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S7B-04,S7B-05,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+S7B-01,S7B-06,requires,hard,Codex 表“直接前置”,2127-cn-kp-geometry-stats
+QR-01,QR-02,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+QR-02,QR-03,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+QR-02,QR-04,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+QR-02,QR-05,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+QR-03,ALG-02,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+QR-05,ALG-02,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+EQ-03,EQ-04,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+EQ-04,LEQ-01,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+QR-02,FR-01,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+FR-01,FR-02,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+RAT-02,RAT-03,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+RAT-03,PROP-01,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+LEQ-01,POLY-01,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+QR-04,PROP-02,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+QR-05,PROP-02,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+QR-06,PROP-03,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+EQ-02,PROP-01,requires,hard,代数答案 §1 强边,Q-2125-cn-kp-algebra
+N.MUL.MEAN.01,QR-02,requires,hard,乘法意义→乘除数量关系,curated
+N.DIV.MEAN.01,QR-02,requires,hard,除法意义→乘除数量关系,curated
+N.MUL.MEAN.01,QR-03,requires,hard,倍以乘法为基础,curated
+N.MUL.3X2.01,QR-04,requires,soft,单价问题的计算熟练（软前置）,curated
+N.MUL.3X2.01,QR-05,requires,soft,行程问题的计算熟练（软前置）,curated
+N.FRAC.DIV.01,QR-06,requires,hard,工程问题用分数表示效率,curated
+QR-05,QR-06,extends_domain,hard,三量关系结构相同,curated
+QR-02,QR-07,requires,hard,归一归总以乘除互逆为基础,curated
+N.INT.COUNT.01,PA-01,requires,hard,植树问题的根是点与间隔的一一对应,curated
+N.MUL.MEAN.01,PA-01,requires,soft,间隔数×间距,curated
+QR-03,PA-02,requires,soft,鸡兔同笼的假设法用到倍与差,curated
+N.ADD.SUB.REL.01,ALG-01,requires,hard,未知量填空以加减互逆为基础,curated
+N.ZERO.01,NEG-01,requires,hard,0 作基准,curated
+NEG-01,N.NEG.INIT.01,same,,两题各自编号的同一知识点,curated
+N.FRAC.MEAN.01,FR-01,same,,同一知识点,curated
+N.FRAC.DIVREL.01,FR-02,same,,同一知识点,curated
+N.RATIO.MEAN.01,RAT-01,same,,同一知识点,curated
+N.RATIO.SIMPLIFY.01,RAT-02,same,,同一知识点,curated
+N.PERCENT.MEAN.01,PCT-01,same,,同一知识点,curated
+N.PROPORTION.01,PROP-01,same,,同一知识点,curated
+N.DIRECT.INVERSE.01,PROP-02,same,,同一知识点,curated
+N.MUL.MEAN.01,N.DIV.MEAN.01,inverse_of,,乘除互逆,curated
+N.ADD.MEAN.01,N.SUB.MEAN.01,inverse_of,,加减互逆,curated
+H.UNITIZE,N.PLACE.20.01,requires,hard,十个一看成一个十,learning-trajectories §5.3
+H.UNITIZE,N.MUL.MEAN.01,requires,hard,等组乘法要协调组数与每组数,learning-trajectories §5.1
+H.EQUIPART,N.DIV.MEAN.01,requires,hard,等分除,learning-trajectories §5.1
+H.EQUIPART,N.FRAC.PART.01,requires,hard,单位分数依赖等份与整体,learning-trajectories §5.1
+H.ITERATE,N.FRAC.MEAN.01,requires,hard,一般分数=单位分数的迭代,learning-trajectories §5.1
+H.ITERATE,N.FRAC.CMP.01,requires,hard,避免分别比较分子分母,learning-trajectories §5.1
+N.FRAC.PART.01,H.ITERATE,requires,hard,先有单位分数,learning-trajectories §4.2 F2
+H.NUMLINE,N.FRAC.CMP.01,requires,hard,分数大小要有数值位置,learning-trajectories §5.1
+H.NUMLINE,N.DEC.CMP.01,requires,soft,小数大小,learning-trajectories
+H.NUMLINE,N.NEG.INIT.01,requires,hard,整数大小需要方向和位置,learning-trajectories §5.1
+N.MUL.MEAN.01,H.MULCOMP,requires,hard,乘法比较建立在乘法意义上,learning-trajectories §4.1
+H.MULCOMP,QR-03,requires,hard,倍=乘法比较,learning-trajectories §4.1 M4
+H.MULCOMP,N.RATIO.MEAN.01,requires,hard,比表示两量的乘法关系,learning-trajectories §5.1
+H.SCALE,N.FRAC.MUL.02,requires,hard,分数乘法不能只靠重复加法,learning-trajectories §5.1
+H.SCALE,N.DEC.MULDEC.01,requires,hard,小数乘小数,learning-trajectories §一.3
+H.SCALE,PCT-02,requires,hard,百分数变化是乘法缩放,learning-trajectories §5.1
+N.DEC.MULINT.01,H.SCALE,requires,soft,先有小数乘整数,curated
+H.COVAR,PROP-02,requires,hard,比例需要单位率与协变,learning-trajectories §5.1
+N.RATIO.MEAN.01,H.COVAR,requires,soft,协变以比为基础,curated
+N.ADD.W10.01,H.EQUIV,requires,soft,等号关系从低年级训练,learning-trajectories §一.5
+H.EQUIV,ALG-01,requires,hard,方程是成立条件而非计算指令,learning-trajectories §5.1
+H.EQUIV,EQ-01,requires,hard,同上,learning-trajectories §5.1
+N.ADD.SUB.REL.01,H.INVERSE,requires,hard,逆运算,curated
+H.INVERSE,EQ-03,requires,hard,解方程调用逆运算,curated
+N.MUL.FACT79.01,N.MUL.MULTIDIGIT.02,requires,soft,事实自动化只降低负荷，非概念前置,learning-trajectories §5.2
+H.COUNTUNIT,N.DEC.ADDCOL.01,supports_strategy,helpful,数位对齐=相同计数单位相加,cn-teaching-research §2.4
+H.COUNTUNIT,N.FRAC.ADDUNLIKE.01,supports_strategy,helpful,通分=化成相同分数单位,cn-teaching-research §2.4
+N.PLACE.100.01,H.COUNTUNIT,requires,soft,先有十进位值,curated
