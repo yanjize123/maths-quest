@@ -1,0 +1,9 @@
+mis_id,name_child,name_adult,skills,buggy_rule,partial_truth,counterexample,cause,look_alike,remedy_rep,back_to,fairy,source,status
+MIS.MUL.ADD,把每份的数和份数加起来了,加法代替乘法（n×k 写成 n+k）,MD.MUL.01;MD.MUL.06,mul_as_add,当其中一个数是 2 时 2+2=2×2，碰巧对,2 个蛋糕各 3 颗：一颗颗数是 6，不是 5,运算选错（只看关键词“一共”）,读错数字,objects,MD.ADD.01,yes,EEF/Ryan&Williams 运算选择类（answer.md §2）,hypothesised
+MIS.MUL.ONEGROUP,只算了一个蛋糕,只算一组（答 k 而不是 n×k）,MD.MUL.01,one_group,题目只问一个蛋糕时这样是对的,10 个蛋糕每个 3 颗：只看 1 个蛋糕是 3 颗，10 个呢？,没建立“份数”这个量,没读完题,objects,MD.MUL.01,yes,Claude 推断（L）,hypothesised
+MIS.MUL.COUNTOFF,连加时多加或少加了一组,累加计数错位（(n±1)×k）,MD.MUL.01;MD.CNT.01,count_off,—,4 个蛋糕各 5 粒：5、10、15、20 是 4 次，你数了几次？,按群计数时把起点也算一次,粗心,numberline,MD.CNT.01,yes,Claude 推断（L）,hypothesised
+MIS.MUL.NEIGHBOUR,口诀记成了旁边那一句,乘法事实提取错（答成 n×(k±1) 或 (n±1)×k）,MD.MUL.03,neighbour_fact,—,6×7：先算 6×5=30，再加 2 个 6,事实提取不牢（流畅性问题，不一定是错误理解）,与 COUNTOFF 结果相同；按题型区分：口算题记 NEIGHBOUR，故事题记 COUNTOFF,array,MD.MUL.03,yes,Claude 推断（L）,hypothesised
+MIS.MUL.ZERO,乘 10 只是在后面加个 0（以后小数会出错）,乘 10 等于末尾添 0（整数成立，小数不成立）,MD.MUL.04,append_zero_decimal,对整数完全成立,0.3×10=3，不是 0.30,规则只记形式不记位值,—,placevalue,MD.MUL.04,no,EEF 局部真理示例同类（answer.md §2）；第 1 关整数题观察不到，留到小数关,hypothesised
+MIS.TWOSTEP.HALF,只做了一半的订单,两步题只完成一步（只答第一部分的积）,MD.MUL.06,two_step_half,题目只问一种蛋糕时这样是对的,订单上有两种蛋糕，草莓和彩糖都要算进去,工作记忆负担 / 没回到问题,没读完题,bar,MD.MUL.06,yes,Claude 推断（L）,hypothesised
+MIS.MUL.TIMES_ADD,把“3 倍”当成“多 3 个”,倍数关系当加法关系（k 倍 → +k）,MD.MUL.07,times_as_more,—,蛋糕 4 个，草莓是它的 3 倍：画 3 排每排 4 个，不是 4+3,加法推理代替乘法推理（比例错误族的早期形式）,—,bar,MD.MUL.01,yes,answer.md §2 第 5 族早期形式,hypothesised
+MIS.FENCE.N,数成了脚印数，不是间隔数,植树问题：间隔数取成点数（n×d，正确 (n−1)×d）,MD.MUL.01,fence_n,首尾连成一圈时间隔数确实等于点数,2 个脚印只有 1 个间隔,计数错位,读成“走了 n 段”,numberline,MD.CNT.01,yes,Brenda 2026-11-26 实测（M）；第 6 关用,hypothesised
