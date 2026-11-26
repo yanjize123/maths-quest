@@ -15,23 +15,18 @@
  *  Summary  — per user per day, and per user per topic (formulas).
  */
 
-const GAME_COLS = ['item_id', 'item_version', 'engine_version', 'rules_version', 'seed', 'skills_snapshot', 'correct_first', 'correct_final', 'attempt_no', 'hint_level', 'mis_evidence', 'confidence', 'rep', 'action', 'level', 'scene', 'chosen', 'p_pre', 'mastery_pre', 'mastery_post', 'model', 'reward', 'abandoned', 'access'];
 const HEADERS = {
   Users: ['user', 'password', 'year', 'active', 'note'],
   Sessions: ['session', 'user', 'login', 'last_activity', 'logout', 'minutes', 'questions', 'correct', 'device'],
   Answers: ['time', 'user', 'session', 'mode', 'year', 'area', 'topic', 'question', 'answer', 'correct_answer', 'correct', 'seconds', 'hint_used', 'type'],
-  // 数学游戏新增列（P-20261126-maths-game，data_model.md §4）；旧页面不发这些字段，留空
-
   States: ['user', 'updated', 'state_json'],
 };
-HEADERS.Answers = HEADERS.Answers.concat(GAME_COLS);
 
 function setup() {
   const ss = SpreadsheetApp.getActive();
   ss.setSpreadsheetTimeZone('Europe/London');
   Object.keys(HEADERS).forEach(name => {
     const sh = ss.getSheetByName(name) || ss.insertSheet(name);
-    if (sh.getLastRow() > 0 && sh.getLastColumn() < HEADERS[name].length) sh.getRange(1, 1, 1, HEADERS[name].length).setValues([HEADERS[name]]); // 补新列表头
     if (sh.getLastRow() === 0) {
       sh.appendRow(HEADERS[name]);
       sh.getRange(1, 1, 1, HEADERS[name].length).setFontWeight('bold');
@@ -108,8 +103,7 @@ function writeEvents(ss, u, ev) {
   ev = Array.isArray(ev) ? ev : [];
   if (!ev.length) return 0;
   const rows = ev.map(x => [new Date(x.time), u.name, x.session || '', x.mode || '', x.year || '', x.area || '', x.topic || '', String(x.question || '').slice(0, 500),
-    String(x.answer || '').slice(0, 200), String(x.correct_answer || '').slice(0, 200), x.correct ? 1 : 0, Number(x.seconds) || 0, x.hint ? 1 : 0, x.type || '']
-    .concat(GAME_COLS.map(k => (x[k] === undefined || x[k] === null) ? '' : String(x[k]).slice(0, 300))));
+    String(x.answer || '').slice(0, 200), String(x.correct_answer || '').slice(0, 200), x.correct ? 1 : 0, Number(x.seconds) || 0, x.hint ? 1 : 0, x.type || '']);
   const sh = ss.getSheetByName('Answers');
   sh.getRange(sh.getLastRow() + 1, 1, rows.length, rows[0].length).setValues(rows);
   const by = {};
