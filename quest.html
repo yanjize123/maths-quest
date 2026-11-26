@@ -1,0 +1,194 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Maths Quest — Adventure</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🗺️</text></svg>">
+<style>
+:root{--bg:radial-gradient(circle at 20% 0,#3b2a7a,#1a1340 60%);--card:#2a2160;--acc:#ffcf4d;--ink:#f6f4ff;--mut:#b9b3dd;--ok:#3ddc97;--soft:#ffb86b}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:var(--bg);background-attachment:fixed;color:var(--ink);min-height:100vh}
+.wrap{max-width:820px;margin:0 auto;padding:14px 16px 40px}.hide{display:none!important}.mut{color:var(--mut)}
+.card{background:var(--card);border-radius:22px;padding:20px;box-shadow:0 10px 30px #0006;margin-bottom:14px}
+button{font:inherit;font-weight:700;border:0;border-radius:14px;padding:12px 18px;cursor:pointer;transition:transform .08s}button:active{transform:scale(.96)}
+.go{background:var(--acc);color:#222}.ghost{background:#ffffff1c;color:var(--ink)}.big{font-size:22px;padding:16px 26px;border-radius:18px}
+input{font:inherit;font-size:22px;padding:12px 14px;border-radius:14px;border:2px solid #ffffff30;background:#0003;color:var(--ink);width:100%}input:focus{outline:none;border-color:var(--acc)}
+.top{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.chip{background:#ffffff1a;border-radius:999px;padding:6px 12px;font-weight:700}
+.buddy{display:flex;gap:14px;align-items:center}.bico{font-size:64px;line-height:1;filter:drop-shadow(0 4px 8px #0006)}.bar{height:12px;background:#0004;border-radius:9px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),#ff8f6b);transition:width .6s}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tile{background:#ffffff14;border-radius:18px;padding:16px;cursor:pointer;text-align:left;color:var(--ink)}.tile .t{font-size:30px}.tile b{display:block;margin:4px 0 2px;font-size:18px}
+.quest{display:flex;align-items:center;gap:10px;margin:8px 0}.quest .bar{flex:1;margin:0}.quest.done{opacity:.75}
+.island{background:#ffffff10;border-radius:20px;padding:14px;margin:12px 0}.island h3{margin:0 0 8px}.lvls{display:flex;flex-wrap:wrap;gap:10px}
+.lvl{width:92px;min-height:92px;border-radius:18px;background:#ffffff1c;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;padding:6px;text-align:center;font-size:11px;color:var(--ink)}
+.lvl .n{font-size:22px;font-weight:800}.lvl.lock{opacity:.35;cursor:default}.lvl.boss{background:linear-gradient(135deg,#ff6b8a55,#ffcf4d55)}.lvl.s3{box-shadow:0 0 0 3px var(--acc) inset}
+.dots{display:flex;gap:6px;margin-bottom:10px}.dots i{width:22px;height:8px;border-radius:5px;background:#ffffff25}.dots i.ok{background:var(--ok)}.dots i.half{background:var(--soft)}.dots i.miss{background:#ffffff55}.dots i.cur{background:var(--acc)}
+.qt{font-size:23px;line-height:1.5;white-space:pre-line;margin:6px 0 10px}.fmt{color:var(--mut);font-size:14px;margin-bottom:8px}
+.keys{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.keys button{padding:8px 13px;background:#ffffff18;color:var(--ink);font-size:18px}
+.say{display:flex;gap:10px;align-items:flex-start;margin-top:12px}.say .bi{font-size:40px}.bubble{background:#ffffff;color:#2a2160;border-radius:16px;padding:10px 14px;font-weight:600;white-space:pre-line;line-height:1.45;position:relative}
+.bubble.okb{background:#dffbea;color:#0d4a2e}.bubble.soft{background:#fff1dc;color:#5a3600}.hint{background:#ffffff14;border-radius:12px;padding:10px 12px;margin-top:10px;white-space:pre-line}
+.float{position:fixed;font-size:28px;font-weight:900;color:var(--acc);pointer-events:none;animation:fl 1.1s ease-out forwards;z-index:50;text-shadow:0 2px 6px #0008}@keyframes fl{to{transform:translateY(-90px);opacity:0}}
+.stars{font-size:54px;letter-spacing:6px;margin:10px 0}.stars span{display:inline-block;animation:pop .45s backwards}.stars span.off{opacity:.2}@keyframes pop{from{transform:scale(0) rotate(-90deg)}}
+.chest{font-size:96px;cursor:pointer;display:inline-block;animation:wob 1s infinite}@keyframes wob{0%,100%{transform:rotate(0)}25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.prize{display:inline-block;margin:8px;padding:14px 18px;border-radius:18px;background:#ffffff18;animation:pop .5s backwards;min-width:110px}.prize .e{font-size:58px}.prize.rare{box-shadow:0 0 18px #5aa9ff}.prize.epic{box-shadow:0 0 26px #ffcf4d;background:#ffcf4d22}
+.album{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}.album div{background:#ffffff12;border-radius:14px;height:64px;display:flex;align-items:center;justify-content:center;font-size:34px;position:relative}.album .no{filter:grayscale(1) brightness(.3)}.album small{position:absolute;right:5px;bottom:2px;font-size:11px;color:var(--mut)}
+.album .r{box-shadow:0 0 0 2px #5aa9ff88 inset}.album .ep{box-shadow:0 0 0 2px #ffcf4d inset}
+canvas#cf{position:fixed;inset:0;pointer-events:none;z-index:40}.center{text-align:center}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.qt{font-size:20px}.lvl{width:78px;min-height:84px}}
+</style></head><body><canvas id="cf"></canvas><div class="wrap">
+<div id="login" class="card hide" style="max-width:460px;margin:40px auto"><h2>🗺️ Maths Quest — Adventure</h2>
+ <div class="row"><input id="lu" placeholder="Name, e.g. Brenda Yan" autocomplete="username"></div>
+ <div class="row"><input id="lp" type="password" placeholder="Password" autocomplete="current-password"></div>
+ <label class="mut" style="display:block;margin:10px 0"><input type="checkbox" id="lk" checked style="width:auto;transform:scale(1.3);margin-right:8px">Keep me logged in on this device</label>
+ <button class="go big" id="lb" onclick="doLogin()">Let's go ➜</button><p id="lm" class="mut"></p></div>
+<div id="app" class="hide">
+ <div class="top"><span class="chip" id="cName"></span><span class="chip" id="cCoins"></span><span class="chip" id="cStreak"></span><span class="chip" id="cStars"></span><span style="flex:1"></span>
+  <button class="ghost" onclick="toggleSound()" id="sndBtn">🔊</button><button class="ghost" onclick="logout()">Log out</button></div>
+ <div id="scr"></div>
+</div>
+<p class="mut center" style="font-size:13px" id="foot"></p></div>
+<script src="config.js"></script><script src="engine.js"></script><script src="game.js"></script>
+<script>
+const $=id=>document.getElementById(id),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const BACKEND=(window.MQ_BACKEND||'').trim(),KEY='mathsquest_v1',CKEY='mathsquest_cred',QKEY='mathsquest_queue';
+let DB,SESSION=null,L=null,ST=null,G=null,TH=null,RUN=null,flushing=false;
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+// ------------------------------------------------ storage & backend
+function load(){try{DB=JSON.parse(localStorage.getItem(KEY))}catch(e){}if(!DB||!DB.states)DB={players:[],goal:20,states:{}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){}}
+async function post(b){const r=await fetch(BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(b)});return r.json()}
+const qGet=()=>{try{return JSON.parse(localStorage.getItem(QKEY))||[]}catch(e){return[]}},qSet=q=>{try{localStorage.setItem(QKEY,JSON.stringify(q))}catch(e){}};
+const cred=()=>{try{return JSON.parse(localStorage.getItem(CKEY))}catch(e){return null}};
+function slim(st){const s=JSON.parse(JSON.stringify(st));s.wrong=(s.wrong||[]).slice(-30);return s}
+function showLogin(m){$('app').classList.add('hide');$('login').classList.remove('hide');$('lm').textContent=m||'';const c=cred();if(c&&!$('lu').value)$('lu').value=c.user}
+async function doLogin(auto){const user=auto?auto.user:$('lu').value.trim(),pass=auto?auto.pass:$('lp').value;if(!user||!pass){$('lm').textContent='Type your name and password.';return}
+ $('lb').disabled=true;$('lm').textContent='Opening the map…';
+ try{const r=await post({action:'login',user,pass,device:'adventure · '+navigator.userAgent});$('lb').disabled=false;
+  if(!r.ok){if(auto)localStorage.removeItem(CKEY);showLogin(r.err||'Could not log in');return}
+  SESSION={user,pass,name:r.name,year:r.year,session:r.session};if(auto||$('lk').checked)localStorage.setItem(CKEY,JSON.stringify({user,pass}));
+  const local=DB.states[r.name]?MQ.fixState(DB.states[r.name]):null,remote=r.state?MQ.fixState(r.state):null;
+  ST=(!remote||(local&&local.count>remote.count))?(local||MQ.newState()):remote;
+  if(local&&remote&&ST===remote&&!remote.game&&local.game)ST.game=local.game;
+  DB.states[r.name]=ST;save();$('lp').value='';enter();flush()}
+ catch(e){$('lb').disabled=false;showLogin('Cannot reach the server. Check the internet and try again.')}}
+function localStart(){load();if(!DB.players.length){$('scr').innerHTML='';showLogin('Ask a grown-up to set up the backend in config.js, or use the classic page to add players.');return}
+ const p=DB.players[0];SESSION={name:p.name,year:p.year,local:true};ST=DB.states[p.name]=MQ.fixState(DB.states[p.name]);enter()}
+function record(q,ans,skip,ok,secs,mode){if(!BACKEND||!SESSION||SESSION.local)return;const a=qGet();
+ a.push({id:Math.random().toString(36).slice(2),user:SESSION.name,session:SESSION.session,time:new Date().toISOString(),mode,year:q.year,area:q.strand,topic:q.topic,question:q.text,answer:skip?'(skipped)':ans,correct_answer:q.show,correct:ok?1:0,seconds:secs,hint:q.hintUsed?1:0,type:q.gen});qSet(a);flush()}
+async function flush(){if(!SESSION||SESSION.local||flushing)return;const mine=qGet().filter(e=>e.user===SESSION.name);flushing=true;
+ try{const r=await post({action:'log',user:SESSION.user,pass:SESSION.pass,events:mine,state:slim(ST)});if(r.ok){const ids=new Set(mine.map(e=>e.id));qSet(qGet().filter(e=>!ids.has(e.id)))}}catch(e){}
+ flushing=false;const n=qGet().filter(e=>e.user===SESSION.name).length;$('foot').textContent=n?`⏳ ${n} answer(s) waiting to upload`:'✓ progress saved'}
+async function logout(){if(SESSION&&!SESSION.local){const s=SESSION,mine=qGet().filter(e=>e.user===s.name);
+ try{const r=await post({action:'logout',user:s.user,pass:s.pass,session:s.session,events:mine,state:slim(ST)});if(r.ok){const ids=new Set(mine.map(e=>e.id));qSet(qGet().filter(e=>!ids.has(e.id)))}}catch(e){}}
+ SESSION=null;localStorage.removeItem(CKEY);$('lu').value='';showLogin('See you next time! 👋')}
+window.addEventListener('pagehide',()=>{if(!SESSION||SESSION.local)return;const s=SESSION,mine=qGet().filter(e=>e.user===s.name);
+ if(navigator.sendBeacon&&navigator.sendBeacon(BACKEND,new Blob([JSON.stringify({action:'logout',user:s.user,pass:s.pass,session:s.session,events:mine,state:slim(ST)})],{type:'text/plain;charset=utf-8'}))){const ids=new Set(mine.map(e=>e.id));qSet(qGet().filter(e=>!ids.has(e.id)))}SESSION=null});
+window.addEventListener('pageshow',e=>{if(e.persisted&&BACKEND&&!SESSION){const c=cred();c?doLogin(c):showLogin()}});
+setInterval(()=>{if(SESSION&&!SESSION.local&&qGet().some(e=>e.user===SESSION.name))flush()},30000);
+function persist(){DB.states[L.name]=ST;save();flush()}
+// ------------------------------------------------ sound & effects
+let AC=null;function tone(fs,dur=.12,type='sine',vol=.12){if(!G||!G.sound)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();let t=AC.currentTime;
+ for(const f of fs){const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+dur);t+=dur*.8}}catch(e){}}
+const sfx={ok:()=>tone([660,880,1175]),soft:()=>tone([392,349],.16,'triangle',.08),coin:()=>tone([1320,1760],.07,'square',.05),win:()=>tone([523,659,784,1047,1319],.14,'triangle'),chest:()=>tone([392,523,659,784,1047,1568],.1,'sine',.1)};
+function toggleSound(){G.sound=!G.sound;$('sndBtn').textContent=G.sound?'🔊':'🔇';persist()}
+function floatText(txt,el){const r=(el||$('scr')).getBoundingClientRect(),d=document.createElement('div');d.className='float';d.textContent=txt;d.style.left=(r.left+r.width/2-30)+'px';d.style.top=(r.top+20)+'px';document.body.appendChild(d);setTimeout(()=>d.remove(),1200)}
+function confetti(n=140){const c=$('cf'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;const cols=['#ffcf4d','#ff6b8a','#5aa9ff','#3ddc97','#c18cff','#ffffff'];
+ const P=Array.from({length:n},()=>({x:innerWidth/2+(Math.random()-.5)*200,y:innerHeight*.35,vx:(Math.random()-.5)*14,vy:-Math.random()*14-4,s:Math.random()*8+4,c:pick(cols),r:Math.random()*6}));let f=0;
+ (function go(){x.clearRect(0,0,c.width,c.height);for(const p of P){p.x+=p.vx;p.y+=p.vy;p.vy+=.45;p.r+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()}if(++f<110)requestAnimationFrame(go);else x.clearRect(0,0,c.width,c.height)})()}
+// ------------------------------------------------ screens
+function enter(){L={name:SESSION.name,year:SESSION.year};G=GAME.gstate(ST);TH=GAME.THEMES[GAME.themeFor(L.year)];
+ const r=document.documentElement.style;r.setProperty('--bg',TH.bg);r.setProperty('--acc',TH.acc);r.setProperty('--card',TH.card);
+ $('login').classList.add('hide');$('app').classList.remove('hide');$('sndBtn').textContent=G.sound?'🔊':'🔇';
+ const ev=GAME.touchDay(G);GAME.ensureDaily(G,ST.review.length);persist();hub(ev)}
+function chips(){$('cName').textContent=L.name.split(' ')[0];$('cCoins').textContent=`🪙 ${G.coins}`;$('cStreak').textContent=`🔥 ${G.streakDays} day${G.streakDays==1?'':'s'}`+(G.freezes?` · 🧊${G.freezes}`:'');
+ $('cStars').textContent=`⭐ ${Object.values(G.stars).reduce((a,b)=>a+b,0)+Object.values(G.boss).reduce((a,b)=>a+b,0)}`}
+function buddyHTML(){const s=GAME.stage(TH.name,ST.xp);return `<div class="buddy"><div class="bico">${s.icon}</div><div style="flex:1"><div class="mut">${TH.buddyLabel}</div><b style="font-size:22px">${s.name}</b>
+ <div class="bar"><i style="width:${s.pct}%"></i></div><div class="mut" style="font-size:13px;margin-top:4px">${s.next!=null?`${ST.xp}/${s.next} XP to grow`:'Max level!'}</div></div></div>`}
+function hub(ev){RUN=null;chips();const d=G.daily,nl=GAME.nextLevel(G,L.year),mon=ST.review.length,got=Object.keys(G.stickers).length;
+ const evmsg={start:'Welcome! Your adventure begins today 🌟',up:`🔥 ${G.streakDays}-day streak! Keep it going!`,freeze:'🧊 A freeze card saved your streak!',reset:'Welcome back! A fresh streak starts today 🌱'}[ev]||'';
+ $('scr').innerHTML=`${evmsg?`<div class="card center" style="padding:12px">${evmsg}</div>`:''}
+ <div class="card">${buddyHTML()}<div class="row"><button class="go big" onclick="startLevel(${nl.y},'${nl.gen}')">▶ Play: ${esc(MQ.G[nl.gen]().topic)} <span style="font-weight:500;font-size:15px">(Year ${nl.y})</span></button></div></div>
+ <div class="card"><b>📜 Today's quests</b>${d.quests.map(q=>`<div class="quest ${q.prog>=q.n?'done':''}"><span>${q.prog>=q.n?'✅':'⬜'}</span><span style="min-width:190px">${esc(q.label)}</span><div class="bar"><i style="width:${100*q.prog/q.n}%"></i></div><span class="mut">${q.prog}/${q.n}</span></div>`).join('')}
+ ${GAME.dailyDone(G)&&!d.claimed?`<div class="row"><button class="go" onclick="claimDaily()">🎁 Open the daily chest!</button></div>`:d.claimed?'<p class="mut">Daily chest opened — come back tomorrow for new quests ✨</p>':'<p class="mut">Finish all three to open the daily chest 🎁</p>'}</div>
+ <div class="grid"><button class="tile" onclick="mapScr()"><div class="t">🗺️</div><b>World map</b><span class="mut">Islands for Year 1 to GCSE</span></button>
+ <button class="tile" onclick="${mon?'startMonsters()':''}" style="${mon?'':'opacity:.6'}"><div class="t">👾</div><b>Mistake monsters: ${mon}</b><span class="mut">${mon?'Beat them for bonus loot!':'None right now — great job!'}</span></button>
+ <button class="tile" onclick="albumScr()"><div class="t">${TH.name=='cute'?'📒':'🧳'}</div><b>${TH.albumName}</b><span class="mut">${got} / ${GAME.albumTotal(TH.name)} collected</span></button>
+ <button class="tile" onclick="goldenChest()"><div class="t">🪙</div><b>Golden chest</b><span class="mut">Costs 150 coins · rare or epic inside</span></button></div>
+ <p class="mut center" style="margin-top:16px;font-size:13px"><a href="index.html" style="color:var(--mut)">Classic mode & placement test</a></p>`}
+function mapScr(){chips();let h=`<div class="row" style="margin:0 0 6px"><button class="ghost" onclick="hub()">⇦ Back</button></div>`;
+ const ys=[];for(let y=11;y>=1;y--)ys.push(y);
+ for(const y of ys){const open=GAME.islandOpen(G,L.year,y),gs=GAME.islandGens(y),frac=Math.round(100*GAME.islandFrac(G,y)),bs=G.boss[y]||0;
+  h+=`<div class="island" style="${open?'':'opacity:.5'}"><h3>${y==L.year?'📍 ':''}${MQ.YEAR_LABEL[y]} island ${bs==3?'👑':''} <span class="mut" style="font-size:14px;font-weight:500">${frac}% explored</span></h3>`;
+  if(!open){h+=`<p class="mut">🔒 Explore half of ${MQ.YEAR_LABEL[y-1]} island to unlock.</p></div>`;continue}
+  h+='<div class="lvls">'+gs.map((g,i)=>{const s=G.stars[g]||0,op=GAME.levelOpen(G,L.year,y,i),t=MQ.G[g]().topic;
+   return `<div class="lvl ${op?'':'lock'} ${s==3?'s3':''}" ${op?`onclick="startLevel(${y},'${g}')"`:''}><div class="n">${op?i+1:'🔒'}</div><div>${'⭐'.repeat(s)}${'☆'.repeat(3-s)}</div><div>${esc(t)}</div></div>`}).join('');
+  const bo=GAME.bossOpen(G,L.year,y);
+  h+=`<div class="lvl boss ${bo?'':'lock'}" ${bo?`onclick="startBoss(${y})"`:''}><div class="n">${bo?'🐲':'🔒'}</div><div>${'⭐'.repeat(bs)}${'☆'.repeat(3-bs)}</div><div>${TH.name=='cute'?'Boss battle':'Boss mission'}</div></div></div></div>`}
+ $('scr').innerHTML=h}
+function albumScr(){chips();const I=TH.items;let h=`<div class="row" style="margin:0 0 6px"><button class="ghost" onclick="hub()">⇦ Back</button></div><div class="card"><h2>${TH.name=='cute'?'📒':'🧳'} ${TH.albumName}</h2>`;
+ for(const [r,lab] of [['common','Common'],['rare','Rare ✨'],['epic','Epic 🌟']]){h+=`<h3>${lab}</h3><div class="album">`+I[r].map(e=>{const n=G.stickers[e]||0;return `<div class="${n?'':'no'} ${r=='rare'?'r':r=='epic'?'ep':''}">${n?e:'❔'}${n>1?`<small>×${n}</small>`:''}</div>`}).join('')+'</div>'}
+ $('scr').innerHTML=h+`<p class="mut">Duplicates turn into coins. Collect them all!</p></div>`}
+// ------------------------------------------------ playing
+function startLevel(y,gen){RUN={kind:'level',y,gen,gens:[gen],total:5,idx:0,score:0,res:[],combo:0,coins:0,title:MQ.G[gen]().topic};nextQ()}
+function startBoss(y){RUN={kind:'boss',y,gens:GAME.islandGens(y),total:8,idx:0,score:0,res:[],combo:0,coins:0,title:(TH.name=='cute'?'Boss battle — ':'Boss mission — ')+MQ.YEAR_LABEL[y]};nextQ()}
+function startMonsters(){const list=ST.review.slice().sort((a,b)=>a.due-b.due).slice(0,5).map(r=>r.gen);if(!list.length){hub();return}
+ const seen=new Set();const uniq=list.filter(g=>!seen.has(g)&&seen.add(g));ST.review=ST.review.filter(r=>!uniq.includes(r.gen));
+ RUN={kind:'monster',gens:uniq,total:uniq.length,idx:0,score:0,res:[],combo:0,coins:0,title:'👾 Monster hunt'};persist();nextQ()}
+const KEYS=['/','√','^2','^','(',')','x','n','−',',',':','.'];
+function nextQ(){const R=RUN;if(R.idx>=R.total){finish();return}
+ const gen=R.kind=='level'?R.gen:R.kind=='monster'?R.gens[R.idx]:pick(R.gens);
+ R.q=MQ.makeQuestion(gen,R.kind);R.attempt=1;R.q.shownAt=Date.now();R.locked=false;
+ const dots=Array.from({length:R.total},(_,i)=>`<i class="${i<R.res.length?R.res[i]:i==R.idx?'cur':''}"></i>`).join('');
+ $('scr').innerHTML=`<div class="row" style="margin:0 0 8px"><button class="ghost" onclick="quitRun()">✕</button><b style="font-size:18px">${esc(R.title)}</b>${R.combo>=2?`<span class="chip">⚡ Combo ×${R.combo}</span>`:''}</div>
+ <div class="card"><div class="dots">${dots}</div><div class="mut" style="font-size:13px">${R.q.emoji} Year ${R.q.year} · ${esc(R.q.topic)}</div>
+ <div class="qt">${esc(R.q.text)}</div><div class="fmt">${esc(R.q.fmt||'')}</div>
+ <input id="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Your answer">
+ <div class="keys">${KEYS.map(k=>`<button type="button" onclick="ins('${k}')">${k=='^2'?'x²':k}</button>`).join('')}</div>
+ <div class="row" id="btns"><button class="go big" onclick="submit()">Check ✔</button>${R.q.hint?'<button class="ghost" onclick="showHint()">💡 Hint</button>':''}<button class="ghost" onclick="submit(true)">I'm not sure</button></div>
+ <div id="hint" class="hint hide">💡 ${esc(R.q.hint||'')}</div><div id="say"></div></div>`;
+ say(pick(TH.buddyTalk),'');setTimeout(()=>$('ans')&&$('ans').focus(),50)}
+function say(t,cls){const s=GAME.stage(TH.name,ST.xp);$('say').innerHTML=`<div class="say"><div class="bi">${s.icon}</div><div class="bubble ${cls}">${t}</div></div>`}
+function showHint(){$('hint').classList.remove('hide');RUN.q.hintUsed=true}
+function ins(k){const a=$('ans');if(!a||a.disabled)return;const v=k=='−'?'-':k;const p=a.selectionStart??a.value.length;a.value=a.value.slice(0,p)+v+a.value.slice(a.selectionEnd??p);a.focus();a.selectionStart=a.selectionEnd=p+v.length}
+function addCoins(n,el){if(!n)return;G.coins+=n;RUN.coins+=n;floatText(`+${n} 🪙`,el);sfx.coin();chips()}
+function submit(skip){const R=RUN;if(!R||R.locked)return;const a=$('ans').value;if(!a.trim()&&!skip)return;R.locked=true;
+ const q=R.q,secs=Math.round((Date.now()-q.shownAt)/100)/10;
+ if(R.attempt===1){const r=MQ.answerQuestion(L,ST,20,q,a,!!skip);record(q,a,!!skip,r.correct,secs,R.kind);
+  GAME.bump(G,'answer',1);
+  if(r.correct){R.combo++;R.score+=1;R.res.push('ok');const bonus=R.combo>=3?Math.min(10,(R.combo-2)*2):0;addCoins(10+bonus,$('ans'));sfx.ok();
+   GAME.bump(G,'combo',R.combo,'max');if(R.kind=='monster'){G.monsters++;GAME.bump(G,'monster',1)}
+   say(pick(TH.cheer)+(bonus?`  ⚡ Combo bonus +${bonus}!`:''),'okb');doneQ()}
+  else{R.combo=0;sfx.soft();R.attempt=2;R.locked=false;q.shownAt=Date.now();$('hint').classList.remove('hide');q.hintUsed=true;$('ans').select();
+   say(pick(TH.almost),'soft');if(!q.hint)say(pick(TH.almost)+'\n(Check the answer format above.)','soft')}
+ }else{const ok=!skip&&MQ.check(q,a);record(q,a,!!skip,ok,secs,'retry');
+  if(ok){R.score+=.5;R.res.push('half');G.comebacks++;GAME.bump(G,'comeback',1);addCoins(5,$('ans'));sfx.ok();say(pick(TH.comeback),'okb')}
+  else{R.res.push('miss');say(`${pick(TH.learn)}\n\nAnswer: ${q.show}\n${q.sol}`,'soft')}
+  doneQ()}
+ persist()}
+function doneQ(){const R=RUN;R.idx++;$('ans').disabled=true;$('btns').innerHTML=`<button class="go big" onclick="nextQ()">${R.idx>=R.total?'Finish 🏁':'Next ➜'}</button>`;setTimeout(()=>{const b=$('btns').querySelector('button');b&&b.focus()},30)}
+function quitRun(){if(RUN&&RUN.res.length&&!confirm('Leave this level? Your coins so far are kept.'))return;hub()}
+document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(!$('login').classList.contains('hide')){e.preventDefault();doLogin();return}
+ if(RUN&&$('ans')){e.preventDefault();if(!RUN.locked)submit();else{const b=$('btns').querySelector('button');b&&b.click()}}});
+function finish(){const R=RUN,stars=GAME.starsFor(R.score,R.total);let prev=0,bonus=0;
+ if(R.kind=='level'){prev=G.stars[R.gen]||0;G.stars[R.gen]=Math.max(prev,stars);bonus=stars*10}
+ else if(R.kind=='boss'){prev=G.boss[R.y]||0;G.boss[R.y]=Math.max(prev,stars);bonus=stars*25}
+ else bonus=R.score>0?20:5;
+ if(R.kind!='monster'){GAME.bump(G,'levels',1);GAME.bump(G,'stars',stars)}
+ G.coins+=bonus;R.coins+=bonus;
+ const before=GAME.stage(TH.name,ST.xp-0);persist();chips();
+ const best=stars>prev&&R.kind!='monster'?(prev?'New best! 🎉':'Level cleared! 🎉'):'';
+ const msg=stars==3?(TH.name=='cute'?'PERFECT! You are a maths superstar! 🌟':'Perfect run. Outstanding.'):stars==2?(TH.name=='cute'?'Great job! So close to 3 stars!':'Strong result.'):stars==1?(TH.name=='cute'?'Well done! Practise again for more stars ⭐':'Good effort — replay for more stars.'):(TH.name=='cute'?'You kept going — that\'s what counts! Try again any time 💪':'Tough one. Replaying builds mastery.');
+ $('scr').innerHTML=`<div class="card center"><h2>${R.kind=='monster'?'👾 Hunt complete!':esc(R.title)}</h2>${R.kind!='monster'?`<div class="stars">${[0,1,2].map(i=>`<span class="${i<stars?'':'off'}" style="animation-delay:${.15+i*.25}s">⭐</span>`).join('')}</div>`:''}
+ <p style="font-size:20px">${msg}</p><p>${best} 🪙 +${R.coins} coins this round</p>
+ <div id="chestBox"><p class="mut">Tap the chest!</p><div class="chest" onclick="openChestUI('${R.kind}',${stars})">🎁</div></div>
+ <div class="row" style="justify-content:center" id="after"></div></div>`;
+ if(stars>=2||R.kind=='monster'){confetti();sfx.win()}else sfx.ok();RUN=null;RUN_LAST=R}
+let RUN_LAST=null;
+function prizesHTML(items){return items.map((p,i)=>`<div class="prize ${p.rarity}" style="animation-delay:${i*.3}s"><div class="e">${p.emoji}</div><div>${p.isNew?'NEW '+TH.itemName+'!':'+'+p.coins+' 🪙'}</div><div class="mut" style="font-size:12px">${p.rarity}</div></div>`).join('')}
+function openChestUI(kind,stars){const items=GAME.openChest(G,TH.name,kind,stars);persist();chips();sfx.chest();if(items.some(p=>p.rarity!='common'))confetti(90);
+ $('chestBox').innerHTML=prizesHTML(items);const R=RUN_LAST;let nxt='';
+ if(R&&R.kind=='level'){const gs=GAME.islandGens(R.y),i=gs.indexOf(R.gen);if((G.stars[R.gen]||0)<3)nxt+=`<button class="ghost" onclick="startLevel(${R.y},'${R.gen}')">🔁 Play again</button>`;
+  if(i+1<gs.length&&GAME.levelOpen(G,L.year,R.y,i+1))nxt+=`<button class="go" onclick="startLevel(${R.y},'${gs[i+1]}')">Next level ➜</button>`;else if(GAME.bossOpen(G,L.year,R.y))nxt+=`<button class="go" onclick="startBoss(${R.y})">🐲 Boss!</button>`}
+ $('after').innerHTML=nxt+`<button class="ghost" onclick="mapScr()">🗺️ Map</button><button class="ghost" onclick="hub()">🏠 Home</button>`}
+function claimDaily(){if(!GAME.dailyDone(G)||G.daily.claimed)return;G.daily.claimed=true;G.coins+=30;const items=GAME.openChest(G,TH.name,'daily',3);persist();chips();sfx.chest();confetti();
+ $('scr').innerHTML=`<div class="card center"><h2>🎁 Daily chest!</h2><p>All quests done — brilliant! +30 🪙</p>${prizesHTML(items)}<div class="row" style="justify-content:center"><button class="go" onclick="hub()">🏠 Home</button></div></div>`}
+function goldenChest(){if(G.coins<150){floatText('Need 150 🪙',$('scr'));sfx.soft();return}G.coins-=150;const items=GAME.openChest(G,TH.name,'golden',3);persist();chips();sfx.chest();confetti();
+ $('scr').innerHTML=`<div class="card center"><h2>🪙 Golden chest!</h2>${prizesHTML(items)}<div class="row" style="justify-content:center"><button class="go" onclick="hub()">🏠 Home</button><button class="ghost" onclick="albumScr()">See collection</button></div></div>`}
+// ------------------------------------------------ start
+load();
+if(BACKEND){const c=cred();if(c){showLogin('Opening the map…');doLogin(c)}else showLogin()}else localStart();
+</script></body></html>

@@ -669,6 +669,10 @@ function nextQuestion(L, st, goal, mode, yearSel) {
   q.year = YEAR_OF[gen]; q.strand = STRAND_NAME[STRAND[gen]]; q.emoji = q.emoji || "🧮"; if (why === "placement") q.hint = "";
   return q;
 }
+function makeQuestion(gen, why) {
+  const q = G[gen](); q.gen = gen; q.why = why; q.year = YEAR_OF[gen]; q.strand = STRAND_NAME[STRAND[gen]]; q.emoji = q.emoji || "🧮";
+  return q;
+}
 function answerQuestion(L, st, goal, q, ans, skipped) {
   const ok = !skipped && check(q, ans), pl = q.why === "placement", d = today();
   if (st.day !== d) { st.day = d; st.today = 0; }
@@ -699,6 +703,6 @@ function progress(L, st, goal) {
   return { topics: rows, wrong: st.wrong.slice(-40).reverse(), summary: summary(L, st, goal), strands: strandRows(st) };
 }
 
-const API = { G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
+const API = { makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
 if (typeof module !== "undefined" && module.exports) module.exports = API; else root.MQ = API;
 })(typeof window !== "undefined" ? window : globalThis);
