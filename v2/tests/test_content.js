@@ -15,7 +15,7 @@ for (const s of skills) for (const c of s.cn_node.split(';')) { const id = c.rep
 const cases = [
   ['mul_as_add', { n: 10, k: 3 }, 13], ['one_group', { n: 10, k: 3 }, 3], ['count_off', { n: 4, k: 5 }, 15],
   ['neighbour_fact', { n: 6, k: 7 }, 36], ['append_zero_decimal', { x: 0.3 }, 0.3], ['two_step_half', { n1: 10, k1: 3, n2: 4, k2: 5 }, 30],
-  ['times_as_more', { n: 4, k: 3 }, 7], ['fence_n', { n: 3, d: 6 }, 18],
+  ['times_as_more', { n: 4, k: 3 }, 7], ['fence_n', { n: 3, d: 6 }, 18], ['sub_smaller_from_larger', { a: 42, b: 17 }, 35],
 ];
 for (const [r, p, e] of cases) ok(MQ.R[r](p).includes(e), `规则 ${r} 期望 ${e}`);
 // 题目文件

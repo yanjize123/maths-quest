@@ -2,7 +2,7 @@
 // 只做：读内容、按模板出题、判对错、诊断、掌握度更新、生成作答记录。界面与存储不在这里。
 // 版本写在文件内（组件库文件名不变）。浏览器：window.MQEngine；Node：require。
 (function (root) {
-  const ENGINE_VERSION = 1;
+  const ENGINE_VERSION = 2;
   const Rules = (typeof module !== 'undefined' && module.exports) ? require('./rules.js') : root.MQRules;
 
   // ---- CSV（支持双引号字段）----
@@ -25,7 +25,7 @@
     const skills = parseCSV(await read('content/skills.csv'));
     const mis = parseCSV(await read('content/misconceptions.csv'));
     const items = [];
-    for (const L of levels) { const j = JSON.parse(await read(`content/items/level${String(L).padStart(2, '0')}.json`)); j.items.forEach(it => items.push({ ...it, level: j.level, scene: j.scene })); }
+    for (const L of levels) { const j = JSON.parse(await read(`content/items/${typeof L === 'number' ? 'level' + String(L).padStart(2, '0') : L}.json`)); j.items.forEach(it => items.push({ ...it, level: j.level, scene: j.scene })); }
     return { skills, mis, items, bySkill: Object.fromEntries(skills.map(s => [s.skill_id, s])), byItem: Object.fromEntries(items.map(i => [i.item_id, i])) };
   }
 
@@ -48,6 +48,7 @@
   function instantiate(item, seed, mis, opts = {}) {
     const r = rng(seed), p = {};
     for (const [k, [lo, hi]] of Object.entries(item.params)) p[k] = lo + Math.floor(r() * (hi - lo + 1));
+    Object.assign(p, opts.params || {});   // 店铺等场景给定的数（如真实进货盒数、价格）
     p.who = opts.who || 'Pink Fluffy Unicorn';
     const correct = item.answer === 'same' ? 'same' : evalExpr(item.answer, p);
     let fairy = null;

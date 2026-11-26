@@ -2,7 +2,7 @@
 // 版本写在文件内（组件库文件名不变）。v1 2026-11-26，P-20261126-maths-game。
 // 用法：浏览器 <script src="rules.js"> 后用 window.MQRules；Node 用 require('./rules.js')。
 (function (root) {
-  const RULES_VERSION = 1;
+  const RULES_VERSION = 2;
   const R = {
     mul_as_add: p => [p.n + p.k],
     one_group: p => [p.k],
@@ -12,6 +12,7 @@
     two_step_half: p => [p.n1 * p.k1, p.n2 * p.k2],
     times_as_more: p => [p.n + p.k],
     fence_n: p => [p.n * p.d],
+    sub_smaller_from_larger: p => { const A = String(p.a).split('').reverse(), B = String(p.b).split('').reverse(); let out = ''; for (let i = 0; i < A.length; i++) out = Math.abs(+A[i] - +(B[i] || 0)) + out; return [Number(out)]; },
   };
 
   // 诊断：answer 与正确答案不同，且等于某条规则的输出 → 返回证据列表 [{mis_id, rule}]

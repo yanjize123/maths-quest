@@ -3,50 +3,46 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Maths Quest v2 · Cupcake Shop (test)</title>
-<!-- v2 试玩版 v001（2026-11-26）：第 1 关最小可玩页，用来打通 内容→引擎→诊断→新 Google Sheet。正式甜品店界面在阶段 3 做。 -->
+<title>Penguin Cupcakes · Maths Quest v2</title>
+<!-- 甜品店 第 1 关 页面 v001（2026-11-26）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
+     规则：business_loop.md（yanjize123/claude 条目 P-20261126-maths-game）。奖惩不对称：对方吃亏的错误被拒绝要重算，对方占便宜的错误被接受、店里亏。 -->
 <style>
- body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:#fff7fb;color:#3a2a3a}
- .wrap{max-width:720px;margin:0 auto;padding:16px}
- h1{font-size:22px;margin:4px 0 12px} .card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px #0001;margin-bottom:14px}
- button{font-size:17px;padding:10px 16px;border-radius:12px;border:0;background:#ff7eb6;color:#fff;cursor:pointer;margin:4px}
- button.alt{background:#e9e1f0;color:#3a2a3a} button:disabled{opacity:.5}
- input{font-size:20px;padding:8px;border-radius:10px;border:2px solid #e3cde0;width:140px}
- .story{font-size:19px;line-height:1.5} .cakes{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
- .cake{background:#fde7f1;border-radius:12px;padding:8px;min-width:70px;text-align:center;cursor:pointer;user-select:none}
- .cake .top{min-height:26px;font-size:18px} .cake .base{font-size:30px}
- .hint{background:#eef7ff;border-radius:10px;padding:8px 12px;margin:6px 0}
- .msg{font-size:18px;margin-top:10px} .dance{font-size:34px;text-align:center;animation:d .6s ease-in-out infinite alternate}
- @keyframes d{from{transform:rotate(-8deg) scale(1)}to{transform:rotate(8deg) scale(1.15)}}
- .hide{display:none} .foot{font-size:13px;color:#8a7a8a;margin-top:8px} .chests button{font-size:22px}
+ :root{--pink:#ff7eb6;--ink:#3a2a3a}
+ *{box-sizing:border-box} body{font-family:"Comic Sans MS","Chalkboard SE",system-ui,sans-serif;margin:0;background:#fde9f3;color:var(--ink)}
+ .wrap{max-width:820px;margin:0 auto;padding:10px}
+ .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:#fff;border-radius:16px;padding:8px 14px;box-shadow:0 2px 8px #0001}
+ .bar b{font-size:20px} .pill{background:#fff4d6;border-radius:20px;padding:4px 12px;font-size:17px} .pill.neg{background:#ffe0e0;color:#b00}
+ .stage{position:relative;margin-top:10px;border-radius:18px;overflow:hidden;box-shadow:0 2px 10px #0002;background:#fff}
+ .stage .art-scene{display:block;width:100%;height:auto}
+ .actors{position:absolute;left:0;right:0;bottom:4%;display:flex;justify-content:space-between;align-items:flex-end;padding:0 6%}
+ .actors svg{height:clamp(80px,22vw,150px);width:auto} .actors .art-cake{height:clamp(60px,16vw,110px)}
+ .dance{animation:d .5s ease-in-out infinite alternate} @keyframes d{from{transform:rotate(-10deg) translateY(0)}to{transform:rotate(10deg) translateY(-12px)}}
+ .big .dance{animation-duration:.3s} .wobble{animation:w .15s 6 alternate} @keyframes w{from{transform:translateX(-6px)}to{transform:translateX(6px)}}
+ .card{background:#fff;border-radius:16px;padding:14px 16px;margin-top:10px;box-shadow:0 2px 8px #0001}
+ .say{font-size:19px;line-height:1.45} .who{font-weight:700;color:#c2407e}
+ button{font-family:inherit;font-size:18px;padding:10px 16px;border-radius:14px;border:0;background:var(--pink);color:#fff;cursor:pointer;margin:4px;box-shadow:0 3px 0 #d55d95}
+ button.alt{background:#efe6f5;color:var(--ink);box-shadow:0 3px 0 #cdbfd8} button:disabled{opacity:.45;cursor:default}
+ input{font-family:inherit;font-size:22px;padding:8px 10px;border-radius:12px;border:3px solid #f3c6dc;width:150px}
+ .row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+ .cakes{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px} .cakes .c{width:86px;cursor:pointer;background:#fff7fb;border-radius:12px;text-align:center}
+ .cakes .c svg{width:86px;height:86px} .hint{background:#eef7ff;border-radius:12px;padding:8px 12px;margin-top:6px}
+ .note{font-size:15px;color:#7a6a7a} .good{color:#1d8a4a} .bad{color:#c03a3a}
+ .hide{display:none} table{border-collapse:collapse} td{padding:3px 10px}
+ .shopitem{display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #eee;padding:6px 0}
 </style>
 </head>
 <body>
 <div class="wrap">
- <h1>🧁 Cupcake Shop — Level 1 <span style="font-size:13px;color:#999">(test version)</span></h1>
-
  <div id="login" class="card">
-  <p>Log in with your Maths Quest v2 name and password.</p>
-  <input id="lu" placeholder="name"> <input id="lp" type="password" placeholder="password">
-  <button id="lb">Log in</button> <button class="alt" id="ll">Play without saving</button>
-  <div id="lm" class="msg"></div>
+  <div class="say">🐧 Welcome to <b>Penguin Cupcakes</b>! Log in with your Maths Quest v2 name and password.</div>
+  <div class="row"><input id="lu" placeholder="name"><input id="lp" type="password" placeholder="password"><button id="lb">Open the shop</button><button class="alt" id="ll">Play without saving</button></div>
+  <div id="lm" class="note"></div>
  </div>
 
  <div id="game" class="hide">
-  <div class="card"><div id="who"></div><div id="progress" class="foot"></div></div>
-  <div class="card" id="qcard">
-   <div class="story" id="story"></div>
-   <div id="area"></div>
-   <div id="hints"></div>
-   <div><button class="alt" id="hb">💡 Hint</button></div>
-   <div class="msg" id="msg"></div>
-  </div>
-  <div class="card hide" id="chest">
-   <p>🎁 Round finished! Pick a chest. Better chests have harder questions.</p>
-   <div class="chests"><button data-t="bronze">🥉 Bronze</button><button data-t="silver">🥈 Silver</button><button data-t="gold">🥇 Gold</button></div>
-   <div class="msg" id="cmsg"></div>
-  </div>
-  <div class="foot" id="foot"></div>
+  <div class="bar"><b>🧁 Penguin Cupcakes</b><span class="pill" id="cash"></span><span class="pill" id="stock"></span><span class="pill" id="day"></span><span class="note" id="foot"></span></div>
+  <div class="stage" id="stage"><div id="bg"></div><div class="actors"><div id="left"></div><div id="mid"></div><div id="right"></div></div></div>
+  <div class="card" id="panel"></div>
  </div>
 </div>
 
@@ -54,105 +50,237 @@
 <script src="rules.js"></script>
 <script src="mq_engine.js"></script>
 <script src="mq_store.js"></script>
+<script src="mq_art.js"></script>
 <script>
-const E = MQEngine, $ = id => document.getElementById(id);
-const PAGE_VERSION = 1, QKEY = 'mq_v2_queue', ROUND = 5;
-let C, S = null, ST = null, cur = null, flushing = false;
+const PAGE_VERSION = 1, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
+const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
+const PUNNET = 10;                 // 每盒草莓 10 颗
+const UPGRADES = [
+  { id: 'sign', name: '🌈 Rainbow sign', cost: 15, info: 'Customers smile more.' },
+  { id: 'oven', name: '🔥 Bigger oven', cost: 25, info: 'One more customer every day.' },
+  { id: 'space', name: '🚀 Space shop', cost: 40, info: 'Move the shop to outer space!' },
+  { id: 'sea', name: '🐠 Seaside shop', cost: 30, info: 'A shop by the sea.' },
+];
+let C, S, ST, T, flushing = false;   // C 内容、S 会话、ST 存档、T 今天的临时状态
 
 const read = p => fetch(p, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(p); return r.text(); });
 async function post(b) { const r = await fetch(BACKEND_V2, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }); return r.json(); }
 const qGet = () => { try { return JSON.parse(localStorage.getItem(QKEY)) || []; } catch (e) { return []; } };
 const qSet = q => { try { localStorage.setItem(QKEY, JSON.stringify(q)); } catch (e) {} };
+const R = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const money = v => (v < 0 ? '−£' : '£') + Math.abs(v);
+function newShop() { return { v: 1, cash: 20, day: 1, stock: 0, mastery: {}, evidence: [], upgrades: [], chests: [], history: [] }; }
 
-function newState() { return { mastery: {}, evidence: [], done: 0, chests: [], round: 0 }; }
-
+// ---------------- 登录 ----------------
 $('lb').onclick = async () => {
   const user = $('lu').value.trim(), pass = $('lp').value; if (!user || !pass) { $('lm').textContent = 'Type your name and password.'; return; }
-  $('lb').disabled = true; $('lm').textContent = 'Opening the shop…';
+  $('lb').disabled = true; $('lm').textContent = 'Unlocking the shop door…';
   try {
-    const r = await post({ action: 'login', user, pass, device: 'v2 · ' + navigator.userAgent });
-    $('lb').disabled = false; if (!r.ok) { $('lm').textContent = r.err || 'Could not log in'; return; }
+    const r = await post({ action: 'login', user, pass, device: 'v2-shop · ' + navigator.userAgent }); $('lb').disabled = false;
+    if (!r.ok) { $('lm').textContent = r.err || 'Could not log in'; return; }
     S = { user, pass, name: r.name, session: r.session };
-    ST = (r.state && r.state.mastery) ? r.state : (MQStore.loadProgress(r.name) || newState());
-    start();
+    const local = MQStore.loadProgress(r.name), remote = r.state && r.state.v ? r.state : null;
+    ST = (!remote || (local && local.day > remote.day)) ? (local || newShop()) : remote; boot();
   } catch (e) { $('lb').disabled = false; $('lm').textContent = 'Cannot reach the server. Check the internet and try again.'; }
 };
-$('ll').onclick = () => { S = { name: 'guest', local: true }; ST = MQStore.loadProgress('guest') || newState(); start(); };
+$('ll').onclick = () => { S = { name: 'guest', local: true }; ST = MQStore.loadProgress('guest') || newShop(); boot(); };
 
-async function start() {
-  C = await E.loadContent(read, [1]);
-  $('login').classList.add('hide'); $('game').classList.remove('hide');
-  $('who').textContent = `Hello ${S.name}! Pink Fluffy Unicorn, Yummy and Sprinkle are coming to the shop.`;
-  next();
+async function boot() {
+  C = await E.loadContent(read, [1, 'level01biz']);
+  $('login').classList.add('hide'); $('game').classList.remove('hide'); morning();
 }
 
-// 选题：按难度从易到难，优先掌握度低的知识点；chest 时按档次选难度
-function pickItem(tier) {
-  const items = C.items.slice().sort((a, b) => a.difficulty - b.difficulty);
-  if (tier) { const band = { bronze: [0, 0.3], silver: [0.3, 0.45], gold: [0.45, 1] }[tier]; const pool = items.filter(i => i.difficulty >= band[0] && i.difficulty <= band[1]); return pool[Math.floor(Math.random() * pool.length)]; }
-  const score = i => (ST.mastery[i.skills[0][0]] ?? 0.2) + i.difficulty * 0.5 + Math.random() * 0.25;
-  return items.sort((a, b) => score(a) - score(b))[0];
+// ---------------- 画面 ----------------
+function hud() {
+  $('cash').textContent = '💷 ' + money(ST.cash) + (ST.cash < 0 ? ' (bank loan)' : ''); $('cash').className = 'pill' + (ST.cash < 0 ? ' neg' : '');
+  $('stock').textContent = '🍓 ' + ST.stock; $('day').textContent = '📅 Day ' + ST.day;
+  const theme = ST.upgrades.includes('space') && ST.theme === 'space' ? 'space' : ST.upgrades.includes('sea') && ST.theme === 'sea' ? 'sea' : 'shop';
+  $('bg').innerHTML = A.scene(theme);
+}
+function actors(left, mid, right) { $('left').innerHTML = left || ''; $('mid').innerHTML = mid || ''; $('right').innerHTML = right || ''; }
+function panel(html) { $('panel').innerHTML = html; }
+function dance(el, big) { el.firstElementChild?.classList.add('dance'); $('stage').classList.toggle('big', !!big); }
+
+// ---------------- 一道“孩子必须算的题”（通用） ----------------
+// opts.onAnswer(value, res) 返回 'accept' | 'reject'（不对称规则在调用处决定）；onDone(finalValue, res)
+function ask(itemId, params, opts) {
+  const item = C.byItem[itemId], seed = R(1, 1e9);
+  const q = E.instantiate(item, seed, C.mis, { lang: 'en', params, who: params.who });
+  if (opts.story) q.story = opts.story;
+  const st = { attempt: 1, hint: 0, t0: Date.now(), first: null };
+  panel(`<div class="say">${opts.speaker ? `<span class="who">${opts.speaker}:</span> ` : ''}${q.story}</div>
+    ${opts.extra || ''}
+    <div class="row"><input id="ans" inputmode="numeric" placeholder="${opts.placeholder || '£?'}"><button id="ok">${opts.button || 'OK'}</button><button class="alt" id="hb">💡 Hint</button></div>
+    <div id="hints"></div><div class="say" id="msg"></div>`);
+  const go = () => {
+    const raw = $('ans').value.trim(); if (raw === '') return;
+    const v = Number(raw.replace(/[£,\s]/g, '')); if (!Number.isFinite(v)) return;
+    const res = E.check(q, v, C.mis, item); if (st.attempt === 1) st.first = res.correct && st.hint === 0;
+    res.evidence.forEach(e => ST.evidence.push({ mis_id: e.mis_id, item_id: item.item_id }));
+    record(E.makeAttempt({ q, item, content: C, mastery: ST.mastery, answer: v, result: res, attemptNo: st.attempt, hintLevel: st.hint, firstCorrect: st.first, seconds: Math.round((Date.now() - st.t0) / 1000), chosen: !!opts.chosen, reward: opts.reward || '' }));
+    const verdict = res.correct ? 'accept' : opts.onAnswer(v, res, q);
+    if (verdict === 'accept') { $('ok').disabled = true; $('ans').disabled = true; opts.onDone(v, res, q, st); return; }
+    st.attempt++; const mis = res.evidence[0] && C.mis.find(m => m.mis_id === res.evidence[0].mis_id);
+    if (mis) $('msg').innerHTML += `<div class="hint">🤔 ${mis.counterexample}</div>`;
+    if (st.hint < 3) $('hb').click(); $('ans').select();
+  };
+  $('ok').onclick = go; $('ans').onkeydown = e => { if (e.key === 'Enter') go(); }; $('ans').focus();
+  $('hb').onclick = () => { if (st.hint >= 3) return; $('hints').innerHTML += `<div class="hint">💡 ${q.hints[st.hint]}</div>`; st.hint++; if (st.hint >= 3) $('hb').disabled = true; };
+  return q;
 }
 
-function next(tier) {
-  const item = pickItem(tier), seed = Math.floor(Math.random() * 1e9);
-  const q = E.instantiate(item, seed, C.mis, { lang: 'en', who: ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'][seed % 3] });
-  cur = { item, q, tier, attempt: 1, hint: 0, t0: Date.now(), firstCorrect: null };
-  $('chest').classList.add('hide'); $('qcard').classList.remove('hide');
-  $('story').textContent = q.story; $('hints').innerHTML = ''; $('msg').innerHTML = ''; $('hb').disabled = false;
-  $('progress').textContent = `Order ${ST.done % ROUND + 1} of ${ROUND}` + (tier ? ` · ${tier} chest question` : '');
-  const A = $('area'); A.innerHTML = '';
-  if (item.action === 'choose') { A.innerHTML = '<button data-a="same">Same</button><button data-a="different">Different</button>'; }
-  else if (item.action === 'judge') { A.innerHTML = '<button data-a="right">She is right ✅</button><button data-a="wrong">She is wrong ❌</button>'; }
-  else if (item.action === 'drag') {
-    const n = q.params.n; cur.placed = Array(n).fill(0);
-    A.innerHTML = '<p class="foot">Tap a cupcake to add a strawberry (tap 🔄 to start again).</p><div class="cakes" id="cakes"></div><button class="alt" id="reset">🔄</button> <input id="ans" inputmode="numeric" placeholder="how many?"> <button id="ok">Serve!</button>';
-    const draw = () => { $('cakes').innerHTML = cur.placed.map((c, i) => `<div class="cake" data-i="${i}"><div class="top">${'🍓'.repeat(c)}</div><div class="base">🧁</div></div>`).join(''); };
-    draw(); $('cakes').onclick = e => { const el = e.target.closest('.cake'); if (!el) return; cur.placed[+el.dataset.i]++; draw(); };
-    $('reset').onclick = () => { cur.placed.fill(0); draw(); };
-  } else { A.innerHTML = '<input id="ans" inputmode="numeric" placeholder="answer"> <button id="ok">Serve!</button>'; }
-  A.querySelectorAll('button[data-a]').forEach(b => b.onclick = () => submit(b.dataset.a));
-  if ($('ok')) { $('ok').onclick = () => submit($('ans').value); $('ans').onkeydown = e => { if (e.key === 'Enter') submit($('ans').value); }; $('ans').focus(); }
+// ---------------- 1 早上：看订单预告、进货 ----------------
+function morning() {
+  hud(); const nCust = 3 + (ST.upgrades.includes('oven') ? 1 : 0);
+  const orders = Array.from({ length: nCust }, (_, i) => {
+    const who = DRAGONS[(ST.day + i) % 3], kind = ['IT.L1.MUL.001', 'IT.L1.MUL.003', 'IT.L1.MUL.007'][R(0, 2)];
+    const p = kind === 'IT.L1.MUL.003' ? { n: 10, k: R(2, 4) } : kind === 'IT.L1.MUL.001' ? { n: R(2, 5), k: R(2, 5) } : { n: R(3, 6), k: R(2, 4) };
+    return { who, kind, p };
+  });
+  const price = R(2, 4);
+  T = { orders, idx: 0, price, cakePrice: ST.upgrades.includes('sign') ? 3 : 2, income: 0, spent: 0, punnets: 0, lost: 0, served: 0 };
+  actors(A.penguin(), '', A.dragon(orders[0].who));
+  const list = orders.map(o => `<li>${o.who}: ${o.kind === 'IT.L1.MUL.007' ? `some cupcakes with lots of strawberries` : `${o.p.n} cupcakes, ${o.p.k} strawberries on each`}</li>`).join('');
+  panel(`<div class="say"><span class="who">Penguin:</span> Good morning! Here are today's orders:</div><ul class="say">${list}</ul>
+    <div class="say">You have <b>🍓 ${ST.stock}</b> strawberries. The market sells punnets of <b>${PUNNET}</b> strawberries for <b>£${price}</b> each.</div>
+    <div class="row">How many punnets? <button class="alt" id="minus">−</button><b id="pn" style="font-size:24px">1</b><button class="alt" id="plus">+</button><button id="buy">Go to the market</button><button class="alt" id="skip">No shopping today</button></div>
+    <div class="note">Tip: work out how many strawberries the orders need before you buy!</div>`);
+  let n = 1; const show = () => $('pn').textContent = n;
+  $('minus').onclick = () => { n = Math.max(1, n - 1); show(); }; $('plus').onclick = () => { n = Math.min(8, n + 1); show(); };
+  $('skip').onclick = () => serveNext();
+  $('buy').onclick = () => pay(n);
 }
 
-$('hb').onclick = () => { if (!cur || cur.hint >= 3) return; $('hints').innerHTML += `<div class="hint">💡 ${cur.q.hints[cur.hint]}</div>`; cur.hint++; if (cur.hint >= 3) $('hb').disabled = true; };
+function pay(n) {
+  const correct = n * T.price; T.punnets = n;
+  actors(A.penguin(), '', '<div style="font-size:70px">🧑‍🌾</div>');
+  ask('IT.L1.BIZ.BUY', { n, k: T.price }, {
+    speaker: 'Farmer Fox', button: 'Pay',
+    onAnswer: v => {
+      if (v < correct) { $('msg').innerHTML = '<span class="bad">🦊 "That\'s not enough money!" Try again.</span>'; return 'reject'; }
+      $('msg').innerHTML = `<span class="bad">🦊 "Thank you!" The farmer kept the extra <b>£${v - correct}</b>. Oops — you paid too much.</span>`; return 'accept';
+    },
+    onDone: v => {
+      ST.cash -= v; T.spent += v; ST.stock += n * PUNNET; hud();
+      if (v === correct) $('msg').innerHTML = `<span class="good">🦊 "Exactly right, thank you!"</span>`;
+      $('msg').innerHTML += `<div class="row"><button id="nx">Open the shop 🔔</button></div>`; $('nx').onclick = serveNext;
+    }
+  });
+}
 
-function submit(ans) {
-  if (ans === '' || ans == null) return;
-  const { item, q } = cur, res = E.check(q, ans, C.mis, item), secs = Math.round((Date.now() - cur.t0) / 1000);
-  if (cur.attempt === 1) cur.firstCorrect = res.correct && cur.hint === 0;
-  res.evidence.forEach(e => ST.evidence.push({ mis_id: e.mis_id, item_id: item.item_id }));
-  const row = E.makeAttempt({ q, item, content: C, mastery: ST.mastery, answer: ans, result: res, attemptNo: cur.attempt, hintLevel: cur.hint, firstCorrect: cur.firstCorrect, seconds: secs, chosen: false, reward: cur.tier && res.correct ? cur.tier : '' });
-  record(row);
-  if (res.correct) {
-    const great = cur.firstCorrect, moves = great ? '🌈💃🌈✨🦄✨🌈💃🌈' : (cur.hint ? '🦄💃' : '🌈🦄💃🌈');
-    $('msg').innerHTML = `<div class="dance">${moves}</div>${great ? 'Perfect order! Pink Fluffy Unicorn does the big rainbow dance!' : 'Order served! A little dance!'}`;
-    $('area').querySelectorAll('button,input').forEach(x => x.disabled = true); $('hb').disabled = true;
-    if (cur.tier) { ST.chests.push({ tier: cur.tier, t: Date.now() }); $('msg').innerHTML += `<p>🎁 You opened the ${cur.tier} chest!</p>`; }
-    else ST.done++;
-    save();
-    setTimeout(() => (!cur.tier && ST.done % ROUND === 0) ? showChest() : next(), 1800);
-  } else {
-    cur.attempt++;
-    const mis = res.evidence[0] && C.mis.find(m => m.mis_id === res.evidence[0].mis_id);
-    $('msg').innerHTML = '🫠 Oh no — the cupcake tower wobbled and fell! ' + (mis ? `<br><b>Think:</b> ${mis.counterexample}` : 'Try again.');
-    if (cur.hint < 3) $('hb').click();
-    if (cur.attempt > 3) { $('msg').innerHTML += `<br>The answer was <b>${q.correct}</b>. Let's do another order.`; if (cur.tier) { ST.chests.push({ tier: cur.tier === 'gold' ? 'silver' : 'bronze', t: Date.now() }); } else ST.done++; save(); setTimeout(() => (!cur.tier && ST.done % ROUND === 0) ? showChest() : next(), 2500); }
+// ---------------- 2 营业：做蛋糕、收钱 ----------------
+function serveNext() {
+  hud(); if (T.idx >= T.orders.length) return evening();
+  const o = T.orders[T.idx], item = C.byItem[o.kind], need = E.evalExpr(item.answer, o.p);
+  actors(A.penguin(), A.cupcake(0), A.dragon(o.who));
+  if (need > ST.stock) {
+    panel(`<div class="say"><span class="who">${o.who}:</span> I'd like ${o.p.n} cupcakes with ${o.p.k} strawberries on each, please!</div>
+      <div class="say bad">🐧 Oh no — we only have 🍓 ${ST.stock}. Not enough strawberries! ${o.who} goes home sad.</div><div class="row"><button id="nx">Next customer</button></div>`);
+    actors(A.penguin('oops'), A.cupcake(0), A.dragon(o.who, 'sad')); T.lost++; T.idx++; $('nx').onclick = serveNext; return;
+  }
+  const extra = item.action === 'drag' ? `<div class="note">Tap a cupcake to add a strawberry, then type how many you used.</div><div class="cakes" id="cakes"></div><button class="alt" id="reset">🔄 start again</button>` : '';
+  let placed = Array(o.p.n).fill(0);
+  ask(o.kind, { ...o.p, who: o.who }, {
+    speaker: o.who, button: 'Bake!', placeholder: '🍓 ?', extra,
+    onAnswer: (v, res) => {
+      if (v < need) { actors(A.penguin('oops'), A.cupcake(0, true), A.dragon(o.who, 'sad')); $('stage').classList.add('wobble'); setTimeout(() => $('stage').classList.remove('wobble'), 900);
+        $('msg').innerHTML = `<span class="bad">🫠 Not enough strawberries — that's not what ${o.who} ordered! Bake it again.</span>`; return 'reject'; }
+      $('msg').innerHTML = `<span class="bad">${o.who} is happy, but you used <b>${v - need}</b> strawberries too many.</span>`; return 'accept';
+    },
+    onDone: (v, res, q, st) => {
+      ST.stock -= Math.min(v, ST.stock); hud();
+      actors(A.penguin(), A.cupcake(Math.min(o.p.k, 8)), A.dragon(o.who)); dance($('right'), st.first);
+      if (v === need) $('msg').innerHTML = `<span class="good">${st.first ? '🌈 Perfect! ' + o.who + ' does the big rainbow dance!' : 'Yum! ' + o.who + ' does a little dance.'}</span>`;
+      $('msg').innerHTML += `<div class="row"><button id="nx">Take the money 💷</button></div>`; $('nx').onclick = () => charge(o);
+    }
+  });
+  if (item.action === 'drag') {
+    const draw = () => { $('cakes').innerHTML = placed.map((c, i) => `<div class="c" data-i="${i}">${A.cupcake(c)}</div>`).join(''); };
+    draw(); $('cakes').onclick = e => { const el = e.target.closest('.c'); if (!el) return; placed[+el.dataset.i]++; draw(); };
+    $('reset').onclick = () => { placed.fill(0); draw(); };
   }
 }
 
-function showChest() { $('qcard').classList.add('hide'); $('chest').classList.remove('hide'); $('cmsg').textContent = ''; }
-document.querySelectorAll('#chest button').forEach(b => b.onclick = () => next(b.dataset.t));
+function charge(o) {
+  const correct = o.p.n * T.cakePrice;
+  ask('IT.L1.BIZ.CHARGE', { n: o.p.n, k: T.cakePrice, who: o.who }, {
+    speaker: 'Penguin', button: 'Charge',
+    onAnswer: v => {
+      if (v > correct) { $('msg').innerHTML = `<span class="bad">${o.who}: "That's too much! I'm not paying that." Check again.</span>`; return 'reject'; }
+      $('msg').innerHTML = `<span class="bad">${o.who} pays happily… but you charged <b>£${correct - v}</b> too little!</span>`; return 'accept';
+    },
+    onDone: v => {
+      ST.cash += v; T.income += v; T.served++; hud();
+      if (v === correct) $('msg').innerHTML = `<span class="good">💷 Ka-ching! +£${v}</span>`;
+      T.idx++; $('msg').innerHTML += `<div class="row"><button id="nx">${T.idx < T.orders.length ? 'Next customer' : 'Close the shop 🌙'}</button></div>`; $('nx').onclick = serveNext;
+    }
+  });
+}
 
-function save() { MQStore.saveProgress(S.name, ST); }
+// ---------------- 3 晚上：结账 ----------------
+function evening() {
+  actors(A.penguin(), '', '<div style="font-size:70px">🦉</div>');
+  const a = T.income, b = T.spent, profit = a >= b;
+  ask('IT.L1.BIZ.PROFIT', profit ? { a, b } : { a: b, b: a }, {
+    speaker: 'Owl the accountant', button: 'Check',
+    story: profit ? `Today you took £${a} and spent £${b} on strawberries. How much profit did you make?` : `Today you spent £${b} on strawberries but only took £${a}. How much money did you lose?`,
+    onAnswer: () => { $('msg').innerHTML = '<span class="bad">🦉 "Hoo! Let\'s check that again."</span>'; return 'reject'; },
+    onDone: () => {
+      ST.history.push({ day: ST.day, income: a, spent: b, served: T.served, lost: T.lost });
+      $('msg').innerHTML = `<span class="good">🦉 "Correct! ${profit ? 'You made £' + (a - b) : 'You lost £' + (b - a)} today."</span>
+        <table class="say"><tr><td>Customers served</td><td>${T.served}</td></tr><tr><td>Customers who left</td><td>${T.lost}</td></tr><tr><td>Money in the till</td><td>${money(ST.cash)}</td></tr><tr><td>Strawberries left</td><td>🍓 ${ST.stock}</td></tr></table>
+        ${ST.cash < 0 ? '<div class="note">Your money is below zero, so Penguin Bank lent you some. Make a profit to pay it back!</div>' : ''}
+        <div class="row"><button id="nx">🎁 Pick a chest</button><button class="alt" id="up">🛠 Shop upgrades</button></div>`;
+      $('nx').onclick = chest; $('up').onclick = upgrades; save();
+    }
+  });
+}
+
+// ---------------- 4 升级 ----------------
+function upgrades() {
+  actors(A.penguin(), '', ''); const own = ST.upgrades;
+  panel(`<div class="say"><span class="who">Penguin:</span> What shall we buy for the shop? You have ${money(ST.cash)}.</div>
+    ${UPGRADES.map(u => `<div class="shopitem"><span>${u.name} — £${u.cost}<br><span class="note">${u.info}</span></span>${own.includes(u.id) ? (u.id === 'space' || u.id === 'sea' ? `<button class="alt" data-theme="${u.id}">Use</button>` : '<span class="good">✓</span>') : `<button data-buy="${u.id}" ${ST.cash < u.cost ? 'disabled' : ''}>Buy</button>`}</div>`).join('')}
+    ${own.includes('space') || own.includes('sea') ? '<button class="alt" data-theme="shop">Normal shop</button>' : ''}
+    <div class="row"><button id="nx">🎁 Pick a chest</button></div>`);
+  $('panel').querySelectorAll('[data-buy]').forEach(b => b.onclick = () => { const u = UPGRADES.find(x => x.id === b.dataset.buy); ST.cash -= u.cost; ST.upgrades.push(u.id); if (u.id === 'space' || u.id === 'sea') ST.theme = u.id; save(); hud(); upgrades(); });
+  $('panel').querySelectorAll('[data-theme]').forEach(b => b.onclick = () => { ST.theme = b.dataset.theme; save(); hud(); });
+  $('nx').onclick = chest;
+}
+
+// ---------------- 5 宝箱：自选档次，答对得奖，答错降一档 ----------------
+function chest() {
+  actors(A.penguin(), '<div style="font-size:80px">🎁</div>', A.dragon(DRAGONS[ST.day % 3]));
+  panel(`<div class="say">Pick a chest! Better chests have harder questions.</div><div class="row"><button data-t="bronze">🥉 Bronze (£2)</button><button data-t="silver">🥈 Silver (£5)</button><button data-t="gold">🥇 Gold (£10)</button></div>`);
+  $('panel').querySelectorAll('[data-t]').forEach(b => b.onclick = () => openChest(b.dataset.t));
+}
+function openChest(tier) {
+  const VAL = { bronze: 2, silver: 5, gold: 10 }, DOWN = { gold: 'silver', silver: 'bronze', bronze: 'bronze' };
+  const band = { bronze: [0, 0.3], silver: [0.3, 0.45], gold: [0.45, 1] }[tier];
+  const pool = C.items.filter(i => i.level === 1 && !i.item_id.includes('BIZ') && i.action !== 'drag' && i.action !== 'choose' && i.action !== 'judge' && i.difficulty >= band[0] && i.difficulty <= band[1]);
+  const item = pool[R(0, pool.length - 1)] || C.byItem['IT.L1.MUL.005'];
+  let wrong = false;
+  ask(item.item_id, { who: DRAGONS[R(0, 2)] }, {
+    speaker: '🎁', button: 'Open!', chosen: true, reward: tier, placeholder: '?',
+    onAnswer: () => { wrong = true; $('msg').innerHTML = '<span class="bad">The chest is still locked. Try again!</span>'; return 'reject'; },
+    onDone: () => {
+      const got = wrong ? DOWN[tier] : tier; ST.cash += VAL[got]; ST.chests.push({ tier: got, day: ST.day }); hud();
+      $('msg').innerHTML = `<span class="good">🎉 The ${got} chest opens: +£${VAL[got]}!</span>${wrong && got !== tier ? `<div class="note">(It became a ${got} chest because it took more than one try.)</div>` : ''}<div class="row"><button id="nx">Sleep 😴 → next day</button></div>`;
+      $('nx').onclick = () => { ST.day++; save(); morning(); };
+    }
+  });
+}
+
+// ---------------- 存档与上传 ----------------
+function save() { ST.evidence = ST.evidence.slice(-200); ST.history = ST.history.slice(-60); MQStore.saveProgress(S.name, ST); flush(); }
 function record(row) {
   if (S.local || !BACKEND_V2) return;
-  const a = qGet(); a.push({ id: Math.random().toString(36).slice(2), user: S.name, session: S.session, time: new Date().toISOString(), mode: 'v2-test', year: '', area: 'calculation', topic: row.skills_snapshot, type: row.item_id, hint: row.hint_level > 0 ? 1 : 0, ...row }); qSet(a); flush();
+  const a = qGet(); a.push({ id: Math.random().toString(36).slice(2), user: S.name, session: S.session, time: new Date().toISOString(), mode: 'v2-shop', year: '', area: 'calculation', topic: row.skills_snapshot, type: row.item_id, hint: row.hint_level > 0 ? 1 : 0, ...row }); qSet(a); flush();
 }
 async function flush() {
   if (!S || S.local || flushing) return; const mine = qGet().filter(e => e.user === S.name); flushing = true;
   try { const r = await post({ action: 'log', user: S.user, pass: S.pass, events: mine, state: ST }); if (r.ok) { const ids = new Set(mine.map(e => e.id)); qSet(qGet().filter(e => !ids.has(e.id))); } } catch (e) {}
-  flushing = false; const n = qGet().filter(e => e.user === S.name).length; $('foot').textContent = n ? `⏳ ${n} answer(s) waiting to upload` : '✓ saved to the sheet';
+  flushing = false; const n = qGet().filter(e => e.user === S.name).length; $('foot').textContent = n ? `⏳ ${n} waiting to upload` : '✓ saved';
 }
 </script>
 </body>

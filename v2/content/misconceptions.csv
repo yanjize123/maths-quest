@@ -7,3 +7,4 @@ MIS.MUL.ZERO,乘 10 只是在后面加个 0（以后小数会出错）,乘 10 �
 MIS.TWOSTEP.HALF,只做了一半的订单,两步题只完成一步（只答第一部分的积）,MD.MUL.06,two_step_half,题目只问一种蛋糕时这样是对的,订单上有两种蛋糕，草莓和彩糖都要算进去,工作记忆负担 / 没回到问题,没读完题,bar,MD.MUL.06,yes,Claude 推断（L）,hypothesised
 MIS.MUL.TIMES_ADD,把“3 倍”当成“多 3 个”,倍数关系当加法关系（k 倍 → +k）,MD.MUL.07,times_as_more,—,蛋糕 4 个，草莓是它的 3 倍：画 3 排每排 4 个，不是 4+3,加法推理代替乘法推理（比例错误族的早期形式）,—,bar,MD.MUL.01,yes,answer.md §2 第 5 族早期形式,hypothesised
 MIS.FENCE.N,数成了脚印数，不是间隔数,植树问题：间隔数取成点数（n×d，正确 (n−1)×d）,MD.MUL.01,fence_n,首尾连成一圈时间隔数确实等于点数,2 个脚印只有 1 个间隔,计数错位,读成“走了 n 段”,numberline,MD.CNT.01,yes,Brenda 2026-11-26 实测（M）；第 6 关用,hypothesised
+MIS.SUB.SMALLER,每一位都用大的数减小的数了,减法“大减小”错误：每一列用较大数字减较小数字，不退位,MD.SUB.02;MD.PROFIT.01,sub_smaller_from_larger,上面的数字每一位都更大时（不退位）结果正确,42−17：个位 2 不够减 7，要从十位借 1 个十，变成 12−7,位值：退位规则没建立,粗心看错数字,placevalue,MD.SUB.02,yes,Brown & Burton 1978 BUGGY 经典错误（L，待核出处）,hypothesised

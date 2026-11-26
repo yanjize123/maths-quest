@@ -1,0 +1,156 @@
+{
+ "level": 1,
+ "scene": "甜品店营业日（经营线）",
+ "version": 1,
+ "items": [
+  {
+   "item_id": "IT.L1.BIZ.BUY",
+   "version": 1,
+   "skills": [
+    [
+     "MD.MONEY.01",
+     1.0
+    ]
+   ],
+   "target": "procedure",
+   "rep_from": "story",
+   "rep_to": "symbolic",
+   "action": "type",
+   "story": "你要买 {n} 盒草莓，每盒 £{k}。一共要付多少镑？",
+   "story_en": "You are buying {n} punnets of strawberries at £{k} each. How much do you pay?",
+   "params": {
+    "n": [
+     1,
+     6
+    ],
+    "k": [
+     2,
+     4
+    ]
+   },
+   "answer": "n*k",
+   "variation_group": "VG.BIZ.TOTAL",
+   "example_stage": "independent",
+   "distractors": [
+    "MIS.MUL.ADD",
+    "MIS.MUL.ONEGROUP",
+    "MIS.MUL.COUNTOFF"
+   ],
+   "hints": [
+    "每盒 £{k}，买 {n} 盒。",
+    "{n} 个 £{k}。",
+    "{n}×{k}"
+   ],
+   "hints_en": [
+    "Each punnet is £{k}, and you buy {n}.",
+    "{n} lots of £{k}.",
+    "{n}×{k}"
+   ],
+   "context_load": "money",
+   "time_limit": "none",
+   "difficulty": 0.25,
+   "status": "hypothesised",
+   "source": "business_loop.md"
+  },
+  {
+   "item_id": "IT.L1.BIZ.CHARGE",
+   "version": 1,
+   "skills": [
+    [
+     "MD.MONEY.01",
+     1.0
+    ]
+   ],
+   "target": "procedure",
+   "rep_from": "story",
+   "rep_to": "symbolic",
+   "action": "type",
+   "story": "{who} 买了 {n} 个纸杯蛋糕，每个 £{k}。应该收多少镑？",
+   "story_en": "{who} bought {n} cupcakes at £{k} each. How much should you charge?",
+   "params": {
+    "n": [
+     1,
+     6
+    ],
+    "k": [
+     2,
+     3
+    ]
+   },
+   "answer": "n*k",
+   "variation_group": "VG.BIZ.TOTAL",
+   "example_stage": "independent",
+   "distractors": [
+    "MIS.MUL.ADD",
+    "MIS.MUL.ONEGROUP",
+    "MIS.MUL.COUNTOFF"
+   ],
+   "hints": [
+    "每个 £{k}，{n} 个。",
+    "{n} 个 £{k}。",
+    "{n}×{k}"
+   ],
+   "hints_en": [
+    "£{k} each, {n} cupcakes.",
+    "{n} lots of £{k}.",
+    "{n}×{k}"
+   ],
+   "context_load": "money",
+   "time_limit": "none",
+   "difficulty": 0.25,
+   "status": "hypothesised",
+   "source": "business_loop.md"
+  },
+  {
+   "item_id": "IT.L1.BIZ.PROFIT",
+   "version": 1,
+   "skills": [
+    [
+     "MD.PROFIT.01",
+     0.6
+    ],
+    [
+     "MD.SUB.02",
+     0.4
+    ]
+   ],
+   "target": "concept",
+   "rep_from": "story",
+   "rep_to": "bar",
+   "action": "type",
+   "story": "今天收入 £{a}，进货花了 £{b}。今天赚了多少镑？",
+   "story_en": "Today you took £{a} and spent £{b} on stock. How much profit did you make?",
+   "params": {
+    "a": [
+     20,
+     60
+    ],
+    "b": [
+     4,
+     19
+    ]
+   },
+   "answer": "a-b",
+   "variation_group": "VG.BIZ.PROFIT",
+   "example_stage": "independent",
+   "distractors": [
+    "MIS.SUB.SMALLER"
+   ],
+   "hints": [
+    "利润 = 收入 − 成本。",
+    "£{a} 里拿走 £{b}，还剩多少？",
+    "{a}−{b}"
+   ],
+   "hints_en": [
+    "Profit = money in − money out.",
+    "Take £{b} away from £{a}. What is left?",
+    "{a}−{b}"
+   ],
+   "context_load": "money",
+   "time_limit": "none",
+   "difficulty": 0.4,
+   "status": "hypothesised",
+   "source": "business_loop.md"
+  }
+ ]
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maths Quest v2 · Cupcake Shop (test)</title>
+<!-- v2 试玩版 v001（2026-11-26）：第 1 关最小可玩页，用来打通 内容→引擎→诊断→新 Google Sheet。正式甜品店界面在阶段 3 做。 -->
+<style>
+ body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:#fff7fb;color:#3a2a3a}
+ .wrap{max-width:720px;margin:0 auto;padding:16px}
+ h1{font-size:22px;margin:4px 0 12px} .card{background:#fff;border-radius:16px;padding:18px;box-shadow:0 2px 10px #0001;margin-bottom:14px}
+ button{font-size:17px;padding:10px 16px;border-radius:12px;border:0;background:#ff7eb6;color:#fff;cursor:pointer;margin:4px}
+ button.alt{background:#e9e1f0;color:#3a2a3a} button:disabled{opacity:.5}
+ input{font-size:20px;padding:8px;border-radius:10px;border:2px solid #e3cde0;width:140px}
+ .story{font-size:19px;line-height:1.5} .cakes{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+ .cake{background:#fde7f1;border-radius:12px;padding:8px;min-width:70px;text-align:center;cursor:pointer;user-select:none}
+ .cake .top{min-height:26px;font-size:18px} .cake .base{font-size:30px}
+ .hint{background:#eef7ff;border-radius:10px;padding:8px 12px;margin:6px 0}
+ .msg{font-size:18px;margin-top:10px} .dance{font-size:34px;text-align:center;animation:d .6s ease-in-out infinite alternate}
+ @keyframes d{from{transform:rotate(-8deg) scale(1)}to{transform:rotate(8deg) scale(1.15)}}
+ .hide{display:none} .foot{font-size:13px;color:#8a7a8a;margin-top:8px} .chests button{font-size:22px}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <h1>🧁 Cupcake Shop — Level 1 <span style="font-size:13px;color:#999">(test version)</span></h1>
+
+ <div id="login" class="card">
+  <p>Log in with your Maths Quest v2 name and password.</p>
+  <input id="lu" placeholder="name"> <input id="lp" type="password" placeholder="password">
+  <button id="lb">Log in</button> <button class="alt" id="ll">Play without saving</button>
+  <div id="lm" class="msg"></div>
+ </div>
+
+ <div id="game" class="hide">
+  <div class="card"><div id="who"></div><div id="progress" class="foot"></div></div>
+  <div class="card" id="qcard">
+   <div class="story" id="story"></div>
+   <div id="area"></div>
+   <div id="hints"></div>
+   <div><button class="alt" id="hb">💡 Hint</button></div>
+   <div class="msg" id="msg"></div>
+  </div>
+  <div class="card hide" id="chest">
+   <p>🎁 Round finished! Pick a chest. Better chests have harder questions.</p>
+   <div class="chests"><button data-t="bronze">🥉 Bronze</button><button data-t="silver">🥈 Silver</button><button data-t="gold">🥇 Gold</button></div>
+   <div class="msg" id="cmsg"></div>
+  </div>
+  <div class="foot" id="foot"></div>
+ </div>
+</div>
+
+<script src="config.js"></script>
+<script src="rules.js"></script>
+<script src="mq_engine.js"></script>
+<script src="mq_store.js"></script>
+<script>
+const E = MQEngine, $ = id => document.getElementById(id);
+const PAGE_VERSION = 1, QKEY = 'mq_v2_queue', ROUND = 5;
+let C, S = null, ST = null, cur = null, flushing = false;
+
+const read = p => fetch(p, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(p); return r.text(); });
+async function post(b) { const r = await fetch(BACKEND_V2, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }); return r.json(); }
+const qGet = () => { try { return JSON.parse(localStorage.getItem(QKEY)) || []; } catch (e) { return []; } };
+const qSet = q => { try { localStorage.setItem(QKEY, JSON.stringify(q)); } catch (e) {} };
+
+function newState() { return { mastery: {}, evidence: [], done: 0, chests: [], round: 0 }; }
+
+$('lb').onclick = async () => {
+  const user = $('lu').value.trim(), pass = $('lp').value; if (!user || !pass) { $('lm').textContent = 'Type your name and password.'; return; }
+  $('lb').disabled = true; $('lm').textContent = 'Opening the shop…';
+  try {
+    const r = await post({ action: 'login', user, pass, device: 'v2 · ' + navigator.userAgent });
+    $('lb').disabled = false; if (!r.ok) { $('lm').textContent = r.err || 'Could not log in'; return; }
+    S = { user, pass, name: r.name, session: r.session };
+    ST = (r.state && r.state.mastery) ? r.state : (MQStore.loadProgress(r.name) || newState());
+    start();
+  } catch (e) { $('lb').disabled = false; $('lm').textContent = 'Cannot reach the server. Check the internet and try again.'; }
+};
+$('ll').onclick = () => { S = { name: 'guest', local: true }; ST = MQStore.loadProgress('guest') || newState(); start(); };
+
+async function start() {
+  C = await E.loadContent(read, [1]);
+  $('login').classList.add('hide'); $('game').classList.remove('hide');
+  $('who').textContent = `Hello ${S.name}! Pink Fluffy Unicorn, Yummy and Sprinkle are coming to the shop.`;
+  next();
+}
+
+// 选题：按难度从易到难，优先掌握度低的知识点；chest 时按档次选难度
+function pickItem(tier) {
+  const items = C.items.slice().sort((a, b) => a.difficulty - b.difficulty);
+  if (tier) { const band = { bronze: [0, 0.3], silver: [0.3, 0.45], gold: [0.45, 1] }[tier]; const pool = items.filter(i => i.difficulty >= band[0] && i.difficulty <= band[1]); return pool[Math.floor(Math.random() * pool.length)]; }
+  const score = i => (ST.mastery[i.skills[0][0]] ?? 0.2) + i.difficulty * 0.5 + Math.random() * 0.25;
+  return items.sort((a, b) => score(a) - score(b))[0];
+}
+
+function next(tier) {
+  const item = pickItem(tier), seed = Math.floor(Math.random() * 1e9);
+  const q = E.instantiate(item, seed, C.mis, { lang: 'en', who: ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'][seed % 3] });
+  cur = { item, q, tier, attempt: 1, hint: 0, t0: Date.now(), firstCorrect: null };
+  $('chest').classList.add('hide'); $('qcard').classList.remove('hide');
+  $('story').textContent = q.story; $('hints').innerHTML = ''; $('msg').innerHTML = ''; $('hb').disabled = false;
+  $('progress').textContent = `Order ${ST.done % ROUND + 1} of ${ROUND}` + (tier ? ` · ${tier} chest question` : '');
+  const A = $('area'); A.innerHTML = '';
+  if (item.action === 'choose') { A.innerHTML = '<button data-a="same">Same</button><button data-a="different">Different</button>'; }
+  else if (item.action === 'judge') { A.innerHTML = '<button data-a="right">She is right ✅</button><button data-a="wrong">She is wrong ❌</button>'; }
+  else if (item.action === 'drag') {
+    const n = q.params.n; cur.placed = Array(n).fill(0);
+    A.innerHTML = '<p class="foot">Tap a cupcake to add a strawberry (tap 🔄 to start again).</p><div class="cakes" id="cakes"></div><button class="alt" id="reset">🔄</button> <input id="ans" inputmode="numeric" placeholder="how many?"> <button id="ok">Serve!</button>';
+    const draw = () => { $('cakes').innerHTML = cur.placed.map((c, i) => `<div class="cake" data-i="${i}"><div class="top">${'🍓'.repeat(c)}</div><div class="base">🧁</div></div>`).join(''); };
+    draw(); $('cakes').onclick = e => { const el = e.target.closest('.cake'); if (!el) return; cur.placed[+el.dataset.i]++; draw(); };
+    $('reset').onclick = () => { cur.placed.fill(0); draw(); };
+  } else { A.innerHTML = '<input id="ans" inputmode="numeric" placeholder="answer"> <button id="ok">Serve!</button>'; }
+  A.querySelectorAll('button[data-a]').forEach(b => b.onclick = () => submit(b.dataset.a));
+  if ($('ok')) { $('ok').onclick = () => submit($('ans').value); $('ans').onkeydown = e => { if (e.key === 'Enter') submit($('ans').value); }; $('ans').focus(); }
+}
+
+$('hb').onclick = () => { if (!cur || cur.hint >= 3) return; $('hints').innerHTML += `<div class="hint">💡 ${cur.q.hints[cur.hint]}</div>`; cur.hint++; if (cur.hint >= 3) $('hb').disabled = true; };
+
+function submit(ans) {
+  if (ans === '' || ans == null) return;
+  const { item, q } = cur, res = E.check(q, ans, C.mis, item), secs = Math.round((Date.now() - cur.t0) / 1000);
+  if (cur.attempt === 1) cur.firstCorrect = res.correct && cur.hint === 0;
+  res.evidence.forEach(e => ST.evidence.push({ mis_id: e.mis_id, item_id: item.item_id }));
+  const row = E.makeAttempt({ q, item, content: C, mastery: ST.mastery, answer: ans, result: res, attemptNo: cur.attempt, hintLevel: cur.hint, firstCorrect: cur.firstCorrect, seconds: secs, chosen: false, reward: cur.tier && res.correct ? cur.tier : '' });
+  record(row);
+  if (res.correct) {
+    const great = cur.firstCorrect, moves = great ? '🌈💃🌈✨🦄✨🌈💃🌈' : (cur.hint ? '🦄💃' : '🌈🦄💃🌈');
+    $('msg').innerHTML = `<div class="dance">${moves}</div>${great ? 'Perfect order! Pink Fluffy Unicorn does the big rainbow dance!' : 'Order served! A little dance!'}`;
+    $('area').querySelectorAll('button,input').forEach(x => x.disabled = true); $('hb').disabled = true;
+    if (cur.tier) { ST.chests.push({ tier: cur.tier, t: Date.now() }); $('msg').innerHTML += `<p>🎁 You opened the ${cur.tier} chest!</p>`; }
+    else ST.done++;
+    save();
+    setTimeout(() => (!cur.tier && ST.done % ROUND === 0) ? showChest() : next(), 1800);
+  } else {
+    cur.attempt++;
+    const mis = res.evidence[0] && C.mis.find(m => m.mis_id === res.evidence[0].mis_id);
+    $('msg').innerHTML = '🫠 Oh no — the cupcake tower wobbled and fell! ' + (mis ? `<br><b>Think:</b> ${mis.counterexample}` : 'Try again.');
+    if (cur.hint < 3) $('hb').click();
+    if (cur.attempt > 3) { $('msg').innerHTML += `<br>The answer was <b>${q.correct}</b>. Let's do another order.`; if (cur.tier) { ST.chests.push({ tier: cur.tier === 'gold' ? 'silver' : 'bronze', t: Date.now() }); } else ST.done++; save(); setTimeout(() => (!cur.tier && ST.done % ROUND === 0) ? showChest() : next(), 2500); }
+  }
+}
+
+function showChest() { $('qcard').classList.add('hide'); $('chest').classList.remove('hide'); $('cmsg').textContent = ''; }
+document.querySelectorAll('#chest button').forEach(b => b.onclick = () => next(b.dataset.t));
+
+function save() { MQStore.saveProgress(S.name, ST); }
+function record(row) {
+  if (S.local || !BACKEND_V2) return;
+  const a = qGet(); a.push({ id: Math.random().toString(36).slice(2), user: S.name, session: S.session, time: new Date().toISOString(), mode: 'v2-test', year: '', area: 'calculation', topic: row.skills_snapshot, type: row.item_id, hint: row.hint_level > 0 ? 1 : 0, ...row }); qSet(a); flush();
+}
+async function flush() {
+  if (!S || S.local || flushing) return; const mine = qGet().filter(e => e.user === S.name); flushing = true;
+  try { const r = await post({ action: 'log', user: S.user, pass: S.pass, events: mine, state: ST }); if (r.ok) { const ids = new Set(mine.map(e => e.id)); qSet(qGet().filter(e => !ids.has(e.id))); } } catch (e) {}
+  flushing = false; const n = qGet().filter(e => e.user === S.name).length; $('foot').textContent = n ? `⏳ ${n} answer(s) waiting to upload` : '✓ saved to the sheet';
+}
+</script>
+</body>
+</html>

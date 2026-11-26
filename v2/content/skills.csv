@@ -8,3 +8,6 @@ MD.MUL.04,乘整十数与乘 10,能算 10×3、20×4 并说明为什么个位补
 MD.MUL.05,多位数乘一位数,能算 23×4 并用拆数解释（20×4+3×4）,procedure,calculation,N.MUL.MULTIDIGIT.01;N.MUL.MULTIDIGIT.02,EN-NC:Y3-Y4,3,5,MD.MUL.04,,area;symbolic,2;7;21,BKT-v1,hypothesised,1
 MD.MUL.06,两步问题：先分别乘再相加,能算“10 个蛋糕每个 3 颗 + 4 个蛋糕每个 5 粒”共几颗并说出两步,strategy,calculation,QR-02;N.MIX.MD.01,EN-NC:Y3-Y5,3,5,MD.MUL.01;MD.ADD.01,,bar,2;7;21,BKT-v1,hypothesised,1
 MD.MUL.07,倍的认识（一个数的几倍）,能说出“草莓是蛋糕的 3 倍”并求几倍是多少,concept,calculation,QR-03;H.MULCOMP,EN-NC:Y3,3,4,MD.MUL.01,MD.MUL.01,bar,2;7;21,BKT-v1,hypothesised,1
+MD.SUB.02,两位数减法（含退位）,能算 45−28 并说出为什么要退位,procedure,calculation,N.SUB.COL100.02,EN-NC:Y2-Y3,2,3,MD.ADD.01,,placevalue;numberline,2;7;21,BKT-v1,hypothesised,1
+MD.MONEY.01,用钱：总价与收入（单价×数量）,能算 4 盒每盒 £3 共多少钱，并知道总价、单价、数量的关系,concept,calculation,QR-04;N.MUL.MEAN.01,EN-NC:Y2-Y3,2,4,MD.MUL.01,,objects;bar,2;7;21,BKT-v1,hypothesised,1
+MD.PROFIT.01,利润 = 收入 − 成本,能用当天收入减去进货花费算出赚了多少,concept,calculation,QR-01;N.SUB.COL100.02,EN-NC:Y3-Y4,3,5,MD.SUB.02;MD.MONEY.01,,bar,2;7;21,BKT-v1,hypothesised,1
