@@ -52,7 +52,8 @@
     const correct = item.answer === 'same' ? 'same' : evalExpr(item.answer, p);
     let fairy = null;
     if (item.fairy) { fairy = Rules.fairyWrong(p, correct, mis.filter(m => item.distractors.includes(m.mis_id)), r); if (fairy && r() < 0.4) fairy = null; p.shown = fairy ? fairy.value : correct; }
-    return { item_id: item.item_id, item_version: item.version, seed, params: p, correct, fairy, story: fill(item.story, p), hints: item.hints.map(h => fill(h, p)), action: item.action, rep: item.rep_to, skills: item.skills.map(s => s[0]) };
+    const en = opts.lang === 'en' && item.story_en;
+    return { item_id: item.item_id, item_version: item.version, seed, params: p, correct, fairy, story: fill(en ? item.story_en : item.story, p), hints: (en ? item.hints_en : item.hints).map(h => fill(h, p)), action: item.action, rep: item.rep_to, skills: item.skills.map(s => s[0]) };
   }
 
   // ---- 判对错 + 诊断 ----
