@@ -20,3 +20,7 @@ Files: `index.html` (interface), `engine.js` (question generators, answer checki
 ## Adventure mode (`quest.html`, `game.js`)
 
 Same question bank, login and records, with a game layer: islands per school year, 5-question levels with 1–3 stars, boss battles, a chest after every level (stickers/artefacts with rarity, duplicates become coins), a companion that grows with XP (dragon for Year ≤ 8, space rank for Year 9+), daily quests with a daily chest, day streaks with freeze cards, mistake monsters (the review queue), a golden chest bought with coins. Wrong answers get a hint and a second try (half coins and a "comeback" on success); no red crosses or lost lives.
+
+## Maths game engine (in progress, P-20261126-maths-game)
+
+`content/` (skills, misconceptions, level item templates) · `rules.js` (misconception rules, diagnosis, fairy wrong answers) · `mq_engine.js` (load content, instantiate templates with a seed, check, BKT mastery, attempt rows) · `mq_store.js` (save/load progress — the only two storage functions) · `tests/` (`node tests/test_content.js`, `node tests/test_engine.js`). The shop page for level 1 is not built yet; existing pages are unchanged. `backend/Code.gs` now appends 24 game columns to `Answers` (old pages leave them blank) — paste it into Apps Script, run `setup` once to add the headers, and deploy a new version.
