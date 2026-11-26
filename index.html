@@ -30,9 +30,14 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
 </style></head><body><div class="wrap">
 <div id="home"><h1>Maths <span>Quest</span> 🧭</h1><p class="mut">Choose your player:</p><div class="cards" id="cards"></div></div>
 <div id="setup" class="hide q"></div>
+<div id="login" class="hide q" style="max-width:460px;margin:30px auto"><h2>🔐 Log in</h2>
+ <div class="prow"><input id="lu" placeholder="Name, e.g. Alicia Yan" autocomplete="username" autocapitalize="words"></div>
+ <div class="prow"><input id="lp" type="password" placeholder="Password" autocomplete="current-password"></div>
+ <label class="mut" style="display:block;margin:8px 0"><input type="checkbox" id="lk" checked style="width:auto;transform:scale(1.3);margin-right:8px">Keep me logged in on this device</label>
+ <div class="row"><button class="go" id="lb" onclick="doLogin()">Log in ➜</button></div><p id="lm" class="mut"></p></div>
 <div id="play" class="hide">
  <div class="bar"><b id="nm"></b><span class="pill" id="yr"></span><span class="pill" id="lv"></span><div class="xp"><i id="xpb"></i></div><span class="pill" id="stk"></span><span class="pill" id="tdy"></span>
- <button class="ghost" onclick="home()">⇦</button></div>
+ <button class="ghost" id="backbtn" onclick="backBtn()">⇦</button></div>
  <div class="tabs"><button id="t1" onclick="tab(1)">⚔️ Practice</button><button id="t2" onclick="tab(2)">🧭 Placement test</button><button id="t3" onclick="tab(3)">🎯 Fix my mistakes</button><button id="t4" onclick="tab(4)">📒 Progress</button></div>
  <div id="ysel" class="row hide" style="margin:0 0 12px"><span class="mut">Question bank:</span><select id="year" onchange="nextQ()"></select></div>
  <div id="qbox" class="q hide"><span class="emo" id="emo"></span><span class="tag" id="tp"></span><span class="tag rev hide" id="rv"></span>
@@ -46,7 +51,8 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
  <div id="pbox" class="q hide"></div>
  <div id="bookbox" class="q hide"></div>
 </div>
-<div class="foot"><a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device</div></div>
+<div class="foot" id="foot"></div></div>
+<script src="config.js"></script>
 <script src="engine.js"></script>
 <script>
 const KEY='mathsquest_v1';
@@ -58,10 +64,11 @@ function load(){try{DB=JSON.parse(localStorage.getItem(KEY))}catch(e){DB=null}
  if(!DB||!Array.isArray(DB.players))DB={players:[],goal:20,states:{}};DB.states=DB.states||{};DB.goal=DB.goal||20}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){alert('Could not save progress on this device: '+e.message)}}
 function stOf(p){return DB.states[p.name]=MQ.fixState(DB.states[p.name])}
-function home(){show0('home');const ps=DB.players;
+function home(){if(BACKEND){if(SESSION){startSession();return}showLogin();return}
+ show0('home');footLocal();const ps=DB.players;
  if(!ps.length){openSetup();return}
  $('cards').innerHTML=ps.map((p,i)=>{const s=MQ.summary(p,stOf(p),DB.goal);return `<div class="lc" onclick="start(${i})"><div class="big">${p.year>=10?'🎓':p.year>=7?'🚀':'🌟'}</div><h2>${esc(p.name)}</h2><div class="mut">${s.year_label} · Level ${s.level} ${s.title}</div><div class="mut">${s.overall!=null?'🧭 Secure up to Year '+s.overall:(s.placement_active?'🧭 Placement test in progress':'🧭 Placement test not taken yet')}</div><div class="mut">⭐ ${s.correct} correct · 🔥 best streak ${s.best_streak}</div></div>`}).join('')+`<div class="lc add" onclick="openSetup()">＋ Add / edit players</div>`}
-function show0(id){['home','setup','play'].forEach(k=>$(k).classList.toggle('hide',k!=id))}
+function show0(id){['home','setup','play','login'].forEach(k=>$(k).classList.toggle('hide',k!=id))}
 function openSetup(){show0('setup');const yopts=y=>Object.keys(YL).map(k=>`<option value="${k}" ${+k===+y?'selected':''}>${YL[k]}</option>`).join('');
  $('setup').innerHTML=`<h2>⚙️ Players</h2><p class="mut">Name and school year for each player. Progress is saved in this browser on this device.</p>
  <div id="plist">${DB.players.map((p,i)=>`<div class="prow"><input value="${esc(p.name)}" data-i="${i}" class="pn"><select class="py">${yopts(p.year)}</select><button class="danger" onclick="delP(${i})">Remove</button></div>`).join('')}</div>
@@ -105,14 +112,15 @@ function nextQ(){const ys=$('year').value;Q=MQ.nextQuestion(L,ST,DB.goal,mode,mo
  const lab={review:'🎯 Bonus mission',gap:'🧩 Gap filler',challenge:'⚡ Challenge',placement:'🧭 Placement'+(Q.progress?` · ${Q.progress.strands_done}/${Q.progress.strands} areas done · Q${Q.progress.asked+1}`:'')}[Q.why];
  $('rv').textContent=lab||'';$('rv').classList.toggle('hide',!lab);
  $('qt').textContent=Q.text;$('fmt').textContent=Q.fmt||'';$('hn').classList.add('hide');$('hn').textContent=Q.hint?'💡 '+Q.hint:'';$('hb').classList.toggle('hide',!Q.hint);
- $('fb').className='fb hide';$('nx').classList.add('hide');$('sub').disabled=false;$('sk').disabled=false;$('ans').value='';$('ans').disabled=false;$('ans').focus()}
-function hint(){$('hn').classList.remove('hide')}
+ $('fb').className='fb hide';$('nx').classList.add('hide');$('sub').disabled=false;$('sk').disabled=false;$('ans').value='';$('ans').disabled=false;$('ans').focus();Q.shownAt=Date.now()}
+function hint(){$('hn').classList.remove('hide');if(Q)Q.hintUsed=true}
 function submit(skip){if(done||!Q)return;const a=$('ans').value;if(!a.trim()&&!skip)return;done=true;
- const r=MQ.answerQuestion(L,ST,DB.goal,Q,a,!!skip);save();
+ const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10;
+ const r=MQ.answerQuestion(L,ST,DB.goal,Q,a,!!skip);save();record(Q,a,!!skip,r.correct,secs);
  const f=$('fb');f.className='fb '+(r.correct?'ok':'bad');
  f.innerHTML=`<b>${esc(r.msg)}</b>${r.gained?`  +${r.gained} XP`:''}\n${r.correct?'':'Answer: <b>'+esc(r.show)+'</b>\n'}<span class="mut">${esc(r.sol)}</span>`+(r.badges.length?'\n'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):'');
  $('nx').classList.remove('hide');$('sub').disabled=true;$('sk').disabled=true;$('ans').disabled=true;bar(r.summary)}
-document.addEventListener('keydown',e=>{if(e.key=='Enter'&&!$('qbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!done)submit();else if(!$('nx').classList.contains('hide'))nextQ()}});
+document.addEventListener('keydown',e=>{if(e.key=='Enter'&&!$('login').classList.contains('hide')){e.preventDefault();doLogin();return}if(e.key=='Enter'&&!$('qbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!done)submit();else if(!$('nx').classList.contains('hide'))nextQ()}});
 function levelRows(strands,year){return '<table><tr><th>Area</th><th style="width:45%">Secure up to</th><th></th></tr>'+strands.map(s=>{const lv=s.level;
  const w=lv==null?0:Math.max(0,lv)/11*100,mk=year/11*100;
  const txt=lv==null?'<span class=mut>not tested</span>':(lv<s.min?`not yet Year ${s.min}`:'Year '+lv);
@@ -127,5 +135,51 @@ function book(){const b=MQ.progress(L,ST,DB.goal);bar(b.summary);const s=b.summa
  h+=b.topics.map(t=>`<tr><td>Y${t.year}</td><td>${esc(t.topic)}</td><td>${'⭐'.repeat(t.stars)||'<span class=mut>new</span>'}</td><td><div class="acc"><i style="width:${t.a?Math.round(100*t.c/t.a):0}%"></i></div></td><td class="mut">${t.c}/${t.a}</td></tr>`).join('')+'</table><h3>Recent mistakes</h3>';
  h+=b.wrong.length?b.wrong.map(w=>`<div class="w"><span class="mut">${esc(w.t)} · ${esc(w.topic)}</span>\n${esc(w.q)}\nYou: <b style="color:#ff9b9b">${esc(w.yours)}</b> · Right: <b style="color:#7ff0bd">${esc(w.right)}</b></div>`).join(''):'<p class="mut">No mistakes yet!</p>';
  $('bookbox').innerHTML=h}
-load();home();
+// ------------------------------------------------------------ accounts & recording (backend mode)
+const BACKEND=(window.MQ_BACKEND||'').trim();
+const CKEY='mathsquest_cred',QKEY='mathsquest_queue';
+let SESSION=null,flushing=false,saveMsg='';
+function backBtn(){if(BACKEND)logout();else home()}
+function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device'}
+function footBackend(){const n=queueGet().filter(e=>SESSION&&e.user===SESSION.name).length;
+ $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'}`:''}
+async function post(body){const r=await fetch(BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return r.json()}
+function queueGet(){try{return JSON.parse(localStorage.getItem(QKEY))||[]}catch(e){return[]}}
+function queueSet(q){try{localStorage.setItem(QKEY,JSON.stringify(q))}catch(e){}}
+function slim(st){const s=JSON.parse(JSON.stringify(st));s.wrong=(s.wrong||[]).slice(-30);return s}
+function showLogin(msg){show0('login');$('foot').innerHTML='';$('lm').textContent=msg||'';const c=cred();if(c&&!$('lu').value)$('lu').value=c.user;setTimeout(()=>($('lu').value?$('lp'):$('lu')).focus(),50)}
+function cred(){try{return JSON.parse(localStorage.getItem(CKEY))}catch(e){return null}}
+async function doLogin(auto){const user=auto?auto.user:$('lu').value.trim(),pass=auto?auto.pass:$('lp').value;if(!user||!pass){$('lm').textContent='Type your name and password.';return}
+ $('lb').disabled=true;$('lm').textContent='Logging in…';
+ try{const r=await post({action:'login',user,pass,device:navigator.userAgent});
+  if(!r.ok){$('lm').textContent=r.err||'Could not log in';if(auto)localStorage.removeItem(CKEY);$('lb').disabled=false;show0('login');return}
+  SESSION={user,pass,name:r.name,year:r.year,session:r.session};
+  if(auto||$('lk').checked)localStorage.setItem(CKEY,JSON.stringify({user,pass}));else localStorage.removeItem(CKEY);
+  const local=DB.states[r.name]?MQ.fixState(DB.states[r.name]):null,remote=r.state?MQ.fixState(r.state):null;
+  ST=(!remote||(local&&local.count>remote.count))?(local||MQ.newState()):remote;
+  if(local&&remote&&ST===remote)ST.wrong=(local.wrong||[]).length>(remote.wrong||[]).length?local.wrong:remote.wrong;
+  DB.states[r.name]=ST;save();$('lp').value='';$('lb').disabled=false;startSession();flush();
+ }catch(e){$('lb').disabled=false;$('lm').textContent='Cannot reach the server. Check the internet connection and try again.';show0('login')}}
+function startSession(){L={name:SESSION.name,year:SESSION.year};ST=DB.states[L.name]=MQ.fixState(DB.states[L.name]);show0('play');$('backbtn').textContent='Log out';
+ const s=MQ.summary(L,ST,DB.goal);bar(s);
+ $('year').innerHTML='<option value="">My plan (Year '+L.year+' + gaps)</option>'+Object.keys(YL).map(y=>`<option value="${y}">${YL[y]}</option>`).join('');
+ footBackend();tab(s.overall==null&&!s.count?2:1)}
+function record(q,ans,skip,ok,secs){if(!BACKEND||!SESSION)return;
+ const q2=queueGet();q2.push({id:Math.random().toString(36).slice(2),user:SESSION.name,session:SESSION.session,time:new Date().toISOString(),mode:q.why,year:q.year,area:q.strand,topic:q.topic,
+  question:q.text,answer:skip?'(skipped)':ans,correct_answer:q.show,correct:ok?1:0,seconds:secs,hint:q.hintUsed?1:0,type:q.gen});
+ queueSet(q2);footBackend();flush()}
+async function flush(){if(!SESSION||flushing)return;const mine=queueGet().filter(e=>e.user===SESSION.name);flushing=true;
+ try{const r=await post({action:'log',user:SESSION.user,pass:SESSION.pass,events:mine,state:slim(ST)});
+  if(r.ok){const ids=new Set(mine.map(e=>e.id));queueSet(queueGet().filter(e=>!ids.has(e.id)))}}catch(e){}
+ flushing=false;footBackend()}
+async function logout(){if(!SESSION)return;const s=SESSION,mine=queueGet().filter(e=>e.user===s.name);
+ try{const r=await post({action:'logout',user:s.user,pass:s.pass,session:s.session,events:mine,state:slim(ST)});if(r.ok){const ids=new Set(mine.map(e=>e.id));queueSet(queueGet().filter(e=>!ids.has(e.id)))}}catch(e){}
+ SESSION=null;localStorage.removeItem(CKEY);$('lu').value='';showLogin('Logged out.')}
+window.addEventListener('pagehide',()=>{if(!SESSION)return;const s=SESSION,mine=queueGet().filter(e=>e.user===s.name);
+ const ok=navigator.sendBeacon&&navigator.sendBeacon(BACKEND,new Blob([JSON.stringify({action:'logout',user:s.user,pass:s.pass,session:s.session,events:mine,state:slim(ST)})],{type:'text/plain;charset=utf-8'}));
+ if(ok){const ids=new Set(mine.map(e=>e.id));queueSet(queueGet().filter(e=>!ids.has(e.id)))}SESSION=null});
+window.addEventListener('pageshow',e=>{if(e.persisted&&BACKEND&&!SESSION){const c=cred();if(c)doLogin(c);else showLogin()}});
+setInterval(()=>{if(SESSION&&queueGet().some(e=>e.user===SESSION.name))flush()},30000);
+load();
+if(BACKEND){const c=cred();if(c){show0('login');$('lm').textContent='Logging in…';doLogin(c)}else showLogin()}else home();
 </script></body></html>
