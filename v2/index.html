@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Penguin Cupcakes · Maths Quest v2</title>
-<!-- 甜品店 第 1 关 页面 v002（2026-11-26 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
+<!-- 甜品店 第 1 关 页面 v003（2026-11-26 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
      规则：business_loop.md（yanjize123/claude 条目 P-20261126-maths-game）。奖惩不对称：对方吃亏的错误被拒绝要重算，对方占便宜的错误被接受、店里亏。 -->
 <style>
  :root{--pink:#ff7eb6;--ink:#3a2a3a}
@@ -52,7 +52,7 @@
 <script src="mq_store.js"></script>
 <script src="mq_art.js"></script>
 <script>
-const PAGE_VERSION = 2, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
+const PAGE_VERSION = 3, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
 const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
 const PUNNET = 10;                 // 每盒草莓 10 颗
 const UPGRADES = [
@@ -61,7 +61,7 @@ const UPGRADES = [
   { id: 'space', name: '🚀 Space shop', cost: 40, info: 'Move the shop to outer space!' },
   { id: 'sea', name: '🐠 Seaside shop', cost: 30, info: 'A shop by the sea.' },
 ];
-let C, S, ST, T, flushing = false;
+let C, S, ST, T, flushing = false, CUR = null;   // CUR：重画当前步骤（切换语言时用，不改变进度）
 let LANG = new URLSearchParams(location.search).get('lang') || (() => { try { return localStorage.getItem('mq_v2_lang'); } catch (e) { return null; } })() || 'en';
 const TX = {
  en: { title:'Penguin Cupcakes', welcome:'🐧 Welcome to <b>Penguin Cupcakes</b>! Log in with your Maths Quest v2 name and password.', name:'name', pass:'password', open:'Open the shop', guest:'Play without saving', needpw:'Type your name and password.', unlocking:'Unlocking the shop door…', noserver:'Cannot reach the server. Check the internet and try again.', loginfail:'Could not log in',
@@ -115,7 +115,7 @@ $('lb').onclick = async () => {
 };
 function renderLogin() { setLang(LANG); $('lw').innerHTML = t('welcome'); $('lu').placeholder = t('name'); $('lp').placeholder = t('pass'); $('lb').textContent = t('open'); $('ll').textContent = t('guest'); $('lang1').textContent = t('other'); }
 $('lang1').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); renderLogin(); };
-$('lang2').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); morning(); };
+$('lang2').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); hud(); if (CUR) CUR(); };
 renderLogin();
 $('ll').onclick = () => { S = { name: 'guest', local: true }; ST = MQStore.loadProgress('guest') || newShop(); boot(); };
 
@@ -138,7 +138,7 @@ function dance(el, big) { el.firstElementChild?.classList.add('dance'); $('stage
 // ---------------- 一道“孩子必须算的题”（通用） ----------------
 // opts.onAnswer(value, res) 返回 'accept' | 'reject'（不对称规则在调用处决定）；onDone(finalValue, res)
 function ask(itemId, params, opts) {
-  const item = C.byItem[itemId], seed = R(1, 1e9);
+  const item = C.byItem[itemId], seed = opts.seed || R(1, 1e9);
   const q = E.instantiate(item, seed, C.mis, { lang: LANG, params, who: params.who });
   if (opts.story) q.story = opts.story;
   const st = { attempt: 1, hint: 0, t0: Date.now(), first: null };
@@ -164,8 +164,9 @@ function ask(itemId, params, opts) {
 }
 
 // ---------------- 1 早上：看订单预告、进货 ----------------
-function morning() {
-  hud(); const nCust = 3 + (ST.upgrades.includes('oven') ? 1 : 0);
+function morning() { newDay(); showMorning(); }
+function newDay() {
+  const nCust = 3 + (ST.upgrades.includes('oven') ? 1 : 0);
   const orders = Array.from({ length: nCust }, (_, i) => {
     const who = DRAGONS[(ST.day + i) % 3], kind = ['IT.L1.MUL.001', 'IT.L1.MUL.003', 'IT.L1.MUL.007'][R(0, 2)];
     const p = kind === 'IT.L1.MUL.003' ? { n: 10, k: R(2, 4) } : kind === 'IT.L1.MUL.001' ? { n: R(2, 5), k: R(2, 5) } : { n: R(3, 6), k: R(2, 4) };
@@ -173,6 +174,9 @@ function morning() {
   });
   const price = R(2, 4);
   T = { orders, idx: 0, price, cakePrice: ST.upgrades.includes('sign') ? 3 : 2, income: 0, spent: 0, punnets: 0, lost: 0, served: 0 };
+}
+function showMorning() {
+  CUR = showMorning; hud(); const orders = T.orders, price = T.price;
   actors(A.penguin(), '', A.dragon(orders[0].who));
   const list = orders.map(o => `<li>${o.who}: ${o.kind === 'IT.L1.MUL.007' ? t('lots') : t('ord')(o.p.n, o.p.k)}</li>`).join('');
   panel(`<div class="say"><span class="who">${t('penguin')}:</span> ${t('morning')}</div><ul class="say">${list}</ul>
@@ -186,16 +190,17 @@ function morning() {
 }
 
 function pay(n) {
+  CUR = () => pay(n); T.paySeed = T.paySeed || R(1, 1e9);
   const correct = n * T.price; T.punnets = n;
   actors(A.penguin(), '', '<div style="font-size:70px">🧑‍🌾</div>');
-  ask('IT.L1.BIZ.BUY', { n, k: T.price }, {
+  ask('IT.L1.BIZ.BUY', { n, k: T.price }, { seed: T.paySeed,
     speaker: t('farmer'), button: t('pay'),
     onAnswer: v => {
       if (v < correct) { $('msg').innerHTML = `<span class="bad">${t('notenough')}</span>`; return 'reject'; }
       $('msg').innerHTML = `<span class="bad">${t('kept')(v - correct)}</span>`; return 'accept';
     },
     onDone: v => {
-      ST.cash -= v; T.spent += v; ST.stock += n * PUNNET; hud();
+      ST.cash -= v; T.spent += v; ST.stock += n * PUNNET; hud(); CUR = serveNext; T.paySeed = null;
       if (v === correct) $('msg').innerHTML = `<span class="good">${t('exact')}</span>`;
       $('msg').innerHTML += `<div class="row"><button id="nx">${t('opennow')}</button></div>`; $('nx').onclick = serveNext;
     }
@@ -204,7 +209,7 @@ function pay(n) {
 
 // ---------------- 2 营业：做蛋糕、收钱 ----------------
 function serveNext() {
-  hud(); if (T.idx >= T.orders.length) return evening();
+  CUR = serveNext; hud(); if (T.idx >= T.orders.length) return evening();
   const o = T.orders[T.idx], item = C.byItem[o.kind], need = E.evalExpr(item.answer, o.p);
   actors(A.penguin(), A.cupcake(0), A.dragon(o.who));
   if (need > ST.stock) {
@@ -222,7 +227,7 @@ function serveNext() {
       $('msg').innerHTML = `<span class="bad">${t('toomany')(o.who, v - need)}</span>`; return 'accept';
     },
     onDone: (v, res, q, st) => {
-      ST.stock -= Math.min(v, ST.stock); hud();
+      ST.stock -= Math.min(v, ST.stock); hud(); CUR = () => charge(o);
       actors(A.penguin(), A.cupcake(Math.min(o.p.k, 8)), A.dragon(o.who)); dance($('right'), st.first);
       if (v === need) $('msg').innerHTML = `<span class="good">${st.first ? t('perfect')(o.who) : t('yum')(o.who)}</span>`;
       $('msg').innerHTML += `<div class="row"><button id="nx">${t('takemoney')}</button></div>`; $('nx').onclick = () => charge(o);
@@ -236,6 +241,7 @@ function serveNext() {
 }
 
 function charge(o) {
+  CUR = () => charge(o);
   const correct = o.p.n * T.cakePrice;
   ask('IT.L1.BIZ.CHARGE', { n: o.p.n, k: T.cakePrice, who: o.who }, {
     speaker: t('penguin'), button: t('charge'),
@@ -244,15 +250,16 @@ function charge(o) {
       $('msg').innerHTML = `<span class="bad">${t('toolittle')(o.who, correct - v)}</span>`; return 'accept';
     },
     onDone: v => {
-      ST.cash += v; T.income += v; T.served++; hud();
+      ST.cash += v; T.income += v; T.served++; hud(); CUR = () => { T.idx++; serveNext(); };
       if (v === correct) $('msg').innerHTML = `<span class="good">${t('kaching')(v)}</span>`;
-      T.idx++; $('msg').innerHTML += `<div class="row"><button id="nx">${T.idx < T.orders.length ? t('nextc') : t('close')}</button></div>`; $('nx').onclick = serveNext;
+      $('msg').innerHTML += `<div class="row"><button id="nx">${T.idx + 1 < T.orders.length ? t('nextc') : t('close')}</button></div>`; $('nx').onclick = CUR;
     }
   });
 }
 
 // ---------------- 3 晚上：结账 ----------------
 function evening() {
+  CUR = evening;
   actors(A.penguin(), '', '<div style="font-size:70px">🦉</div>');
   const a = T.income, b = T.spent, profit = a >= b;
   ask('IT.L1.BIZ.PROFIT', profit ? { a, b } : { a: b, b: a }, {
@@ -260,7 +267,7 @@ function evening() {
     story: profit ? t('profitq')(a, b) : t('lossq')(a, b),
     onAnswer: () => { $('msg').innerHTML = `<span class="bad">${t('owlagain')}</span>`; return 'reject'; },
     onDone: () => {
-      ST.history.push({ day: ST.day, income: a, spent: b, served: T.served, lost: T.lost });
+      ST.history.push({ day: ST.day, income: a, spent: b, served: T.served, lost: T.lost }); CUR = chest;
       $('msg').innerHTML = `<span class="good">${t('owlok')(profit, Math.abs(a - b))}</span>
         <table class="say"><tr><td>${t('served')}</td><td>${T.served}</td></tr><tr><td>${t('left')}</td><td>${T.lost}</td></tr><tr><td>${t('till')}</td><td>${money(ST.cash)}</td></tr><tr><td>${t('stockleft')}</td><td>🍓 ${ST.stock}</td></tr></table>
         ${ST.cash < 0 ? `<div class="note">${t('loannote')}</div>` : ''}
@@ -272,6 +279,7 @@ function evening() {
 
 // ---------------- 4 升级 ----------------
 function upgrades() {
+  CUR = upgrades;
   actors(A.penguin(), '', ''); const own = ST.upgrades;
   panel(`<div class="say"><span class="who">${t('penguin')}:</span> ${t('whatbuy')(money(ST.cash))}</div>
     ${UPGRADES.map(u => `<div class="shopitem"><span>${t('U')[u.id][0]} — £${u.cost}<br><span class="note">${t('U')[u.id][1]}</span></span>${own.includes(u.id) ? (u.id === 'space' || u.id === 'sea' ? `<button class="alt" data-theme="${u.id}">${t('use')}</button>` : '<span class="good">✓</span>') : `<button data-buy="${u.id}" ${ST.cash < u.cost ? 'disabled' : ''}>${t('buy')}</button>`}</div>`).join('')}
@@ -284,26 +292,31 @@ function upgrades() {
 
 // ---------------- 5 宝箱：自选档次，答对得奖，答错降一档 ----------------
 function chest() {
+  CUR = chest;
   actors(A.penguin(), '<div style="font-size:80px">🎁</div>', A.dragon(DRAGONS[ST.day % 3]));
   panel(`<div class="say">${t('chestq')}</div><div class="row"><button data-t="bronze">${t('bronze')} (£2)</button><button data-t="silver">${t('silver')} (£5)</button><button data-t="gold">${t('gold')} (£10)</button></div>`);
   $('panel').querySelectorAll('[data-t]').forEach(b => b.onclick = () => openChest(b.dataset.t));
 }
 function openChest(tier) {
+  CUR = () => openChest(tier);
   const VAL = { bronze: 2, silver: 5, gold: 10 }, DOWN = { gold: 'silver', silver: 'bronze', bronze: 'bronze' };
   const band = { bronze: [0, 0.3], silver: [0.3, 0.45], gold: [0.45, 1] }[tier];
   const pool = C.items.filter(i => i.level === 1 && !i.item_id.includes('BIZ') && i.action !== 'drag' && i.action !== 'choose' && i.action !== 'judge' && i.difficulty >= band[0] && i.difficulty <= band[1]);
-  const item = pool[R(0, pool.length - 1)] || C.byItem['IT.L1.MUL.005'];
+  if (!T.chestPick || T.chestPick.tier !== tier) T.chestPick = { tier, id: (pool[R(0, pool.length - 1)] || C.byItem['IT.L1.MUL.005']).item_id, seed: R(1, 1e9), who: DRAGONS[R(0, 2)] };
+  const item = C.byItem[T.chestPick.id];
   let wrong = false;
-  ask(item.item_id, { who: DRAGONS[R(0, 2)] }, {
+  ask(item.item_id, { who: T.chestPick.who }, { seed: T.chestPick.seed,
     speaker: '🎁', button: t('openq'), chosen: true, reward: tier, placeholder: '?',
     onAnswer: () => { wrong = true; $('msg').innerHTML = `<span class="bad">${t('locked')}</span>`; return 'reject'; },
     onDone: () => {
-      const got = wrong ? DOWN[tier] : tier; ST.cash += VAL[got]; ST.chests.push({ tier: got, day: ST.day }); hud();
+      const got = wrong ? DOWN[tier] : tier; ST.cash += VAL[got]; ST.chests.push({ tier: got, day: ST.day }); hud(); T.chestPick = null; CUR = showSleep;
       $('msg').innerHTML = `<span class="good">${t('opened')(got, VAL[got])}</span>${wrong && got !== tier ? `<div class="note">${t('became')(got)}</div>` : ''}<div class="row"><button id="nx">${t('sleep')}</button></div>`;
       $('nx').onclick = () => { ST.day++; save(); morning(); };
     }
   });
 }
+
+function showSleep() { CUR = showSleep; actors(A.penguin(), '', A.dragon(DRAGONS[ST.day % 3])); panel(`<div class="row"><button id="nx">${t('sleep')}</button></div>`); $('nx').onclick = () => { ST.day++; save(); morning(); }; }
 
 // ---------------- 存档与上传 ----------------
 function save() { ST.evidence = ST.evidence.slice(-200); ST.history = ST.history.slice(-60); MQStore.saveProgress(S.name, ST); flush(); }
