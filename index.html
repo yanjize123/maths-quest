@@ -1,0 +1,131 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Maths Quest</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<style>
+:root{--bg:#0f1530;--card:#1b2350;--ink:#f3f5ff;--mut:#a9b1d6;--acc:#ffcc4d;--ok:#3ddc97;--bad:#ff6b6b;--blue:#5aa9ff}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:radial-gradient(circle at 20% 0,#26306b,var(--bg) 60%);color:var(--ink);min-height:100vh}
+.wrap{max-width:780px;margin:0 auto;padding:18px}h1{margin:.2em 0 .6em;font-size:30px}h1 span{color:var(--acc)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}.lc{background:var(--card);border-radius:18px;padding:22px;cursor:pointer;border:2px solid transparent;transition:.15s}
+.lc:hover{border-color:var(--acc);transform:translateY(-2px)}.lc .big{font-size:44px}.lc h2{margin:.2em 0}.mut{color:var(--mut)}
+.add{display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--mut);border:2px dashed #3a4590}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--card);border-radius:14px;padding:10px 14px;margin-bottom:14px}
+.pill{background:#28316a;border-radius:999px;padding:5px 12px;font-size:14px}.xp{flex:1;min-width:120px;height:10px;background:#28316a;border-radius:9px;overflow:hidden}
+.xp i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),#ff9f43)}
+.q{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 10px 30px #0006}.tag{display:inline-block;background:#323d85;border-radius:8px;padding:3px 10px;font-size:13px;color:#cfd6ff;margin:0 4px 4px 0}
+.rev{background:#5a3d00;color:var(--acc)}.qt{font-size:22px;line-height:1.5;margin:14px 0;white-space:pre-line}.emo{font-size:36px;float:right}
+.fmt{color:var(--mut);font-size:14px;margin-bottom:10px}input,select{font-size:20px;padding:10px 12px;border-radius:12px;border:2px solid #3a4590;background:#10163a;color:var(--ink)}
+#ans{width:100%;font-size:22px}input:focus{outline:none;border-color:var(--acc)}.row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+button{font-size:17px;padding:11px 18px;border-radius:12px;border:0;cursor:pointer;font-weight:600}.go{background:var(--acc);color:#222}.ghost{background:#2b3577;color:var(--ink)}.danger{background:#5a1d26;color:#ffd0d0}
+.keys button{padding:8px 13px;font-size:18px;background:#232c66;color:var(--ink)}
+.fb{margin-top:16px;border-radius:14px;padding:14px 16px;white-space:pre-line;line-height:1.5}.fb.ok{background:#123d2e;border:1px solid var(--ok)}.fb.bad{background:#47161e;border:1px solid var(--bad)}
+.badge{display:inline-block;background:#4a3a00;color:var(--acc);border-radius:10px;padding:4px 10px;margin:6px 6px 0 0}
+table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;border-bottom:1px solid #2c356f;text-align:left;font-size:15px}
+.acc{height:8px;background:#28316a;border-radius:6px;overflow:hidden;min-width:70px}.acc i{display:block;height:100%;background:var(--blue)}
+.tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.tabs button.on{background:var(--acc);color:#222}.hide{display:none!important}
+.w{background:#141b44;border-radius:10px;padding:10px;margin:8px 0;font-size:15px;white-space:pre-line}
+.lvbar{position:relative;height:22px;background:#141b44;border-radius:8px;overflow:hidden}.lvbar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#5aa9ff,#3ddc97)}
+.lvbar b{position:absolute;top:0;bottom:0;width:3px;background:var(--acc)}.foot{margin-top:18px;font-size:13px;color:var(--mut);text-align:center}
+.foot a{color:var(--mut)}.prow{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}.prow input{flex:1;min-width:140px}
+@media(max-width:600px){.cards{grid-template-columns:1fr}.qt{font-size:19px}}
+</style></head><body><div class="wrap">
+<div id="home"><h1>Maths <span>Quest</span> 🧭</h1><p class="mut">Choose your player:</p><div class="cards" id="cards"></div></div>
+<div id="setup" class="hide q"></div>
+<div id="play" class="hide">
+ <div class="bar"><b id="nm"></b><span class="pill" id="yr"></span><span class="pill" id="lv"></span><div class="xp"><i id="xpb"></i></div><span class="pill" id="stk"></span><span class="pill" id="tdy"></span>
+ <button class="ghost" onclick="home()">⇦</button></div>
+ <div class="tabs"><button id="t1" onclick="tab(1)">⚔️ Practice</button><button id="t2" onclick="tab(2)">🧭 Placement test</button><button id="t3" onclick="tab(3)">🎯 Fix my mistakes</button><button id="t4" onclick="tab(4)">📒 Progress</button></div>
+ <div id="ysel" class="row hide" style="margin:0 0 12px"><span class="mut">Question bank:</span><select id="year" onchange="nextQ()"></select></div>
+ <div id="qbox" class="q hide"><span class="emo" id="emo"></span><span class="tag" id="tp"></span><span class="tag rev hide" id="rv"></span>
+  <div class="qt" id="qt"></div><div class="fmt" id="fmt"></div>
+  <input id="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Your answer">
+  <div class="row keys" id="keys"></div>
+  <div class="row"><button class="go" id="sub" onclick="submit()">Check ✔</button>
+  <button class="ghost" id="hb" onclick="hint()">💡 Hint</button><button class="ghost" id="sk" onclick="submit(true)">I don't know</button></div>
+  <div id="hn" class="fmt hide" style="margin-top:10px"></div><div id="fb" class="fb hide"></div>
+  <div class="row hide" id="nx"><button class="go" onclick="nextQ()">Next ➜</button></div></div>
+ <div id="pbox" class="q hide"></div>
+ <div id="bookbox" class="q hide"></div>
+</div>
+<div class="foot"><a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device</div></div>
+<script src="engine.js"></script>
+<script>
+const KEY='mathsquest_v1';
+const YL=MQ.YEAR_LABEL;
+let DB=null,L=null,ST=null,Q=null,mode='mixed',done=false,SUM=null;
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function load(){try{DB=JSON.parse(localStorage.getItem(KEY))}catch(e){DB=null}
+ if(!DB||!Array.isArray(DB.players))DB={players:[],goal:20,states:{}};DB.states=DB.states||{};DB.goal=DB.goal||20}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(DB))}catch(e){alert('Could not save progress on this device: '+e.message)}}
+function stOf(p){return DB.states[p.name]=MQ.fixState(DB.states[p.name])}
+function home(){show0('home');const ps=DB.players;
+ if(!ps.length){openSetup();return}
+ $('cards').innerHTML=ps.map((p,i)=>{const s=MQ.summary(p,stOf(p),DB.goal);return `<div class="lc" onclick="start(${i})"><div class="big">${p.year>=10?'🎓':p.year>=7?'🚀':'🌟'}</div><h2>${esc(p.name)}</h2><div class="mut">${s.year_label} · Level ${s.level} ${s.title}</div><div class="mut">${s.overall!=null?'🧭 Secure up to Year '+s.overall:(s.placement_active?'🧭 Placement test in progress':'🧭 Placement test not taken yet')}</div><div class="mut">⭐ ${s.correct} correct · 🔥 best streak ${s.best_streak}</div></div>`}).join('')+`<div class="lc add" onclick="openSetup()">＋ Add / edit players</div>`}
+function show0(id){['home','setup','play'].forEach(k=>$(k).classList.toggle('hide',k!=id))}
+function openSetup(){show0('setup');const yopts=y=>Object.keys(YL).map(k=>`<option value="${k}" ${+k===+y?'selected':''}>${YL[k]}</option>`).join('');
+ $('setup').innerHTML=`<h2>⚙️ Players</h2><p class="mut">Name and school year for each player. Progress is saved in this browser on this device.</p>
+ <div id="plist">${DB.players.map((p,i)=>`<div class="prow"><input value="${esc(p.name)}" data-i="${i}" class="pn"><select class="py">${yopts(p.year)}</select><button class="danger" onclick="delP(${i})">Remove</button></div>`).join('')}</div>
+ <div class="prow"><input id="newn" placeholder="New player's name"><select id="newy">${yopts(5)}</select><button class="ghost" onclick="addP()">＋ Add</button></div>
+ <div class="prow"><span class="mut">Daily goal (questions):</span><input id="goal" type="number" min="5" max="200" value="${DB.goal}" style="max-width:110px"></div>
+ <div class="row"><button class="go" onclick="saveSetup()">Save ✔</button><button class="ghost" onclick="home()">Cancel</button></div>
+ <h3 style="margin-top:28px">💾 Backup</h3><p class="mut">Progress lives only in this browser. Download a backup now and then; restore it here or on another device.</p>
+ <div class="row"><button class="ghost" onclick="exportDB()">⬇ Download backup</button><label class="ghost" style="padding:11px 18px;border-radius:12px;cursor:pointer;font-weight:600;background:#2b3577">⬆ Restore backup<input type="file" accept=".json,application/json" onchange="importDB(this)" style="display:none"></label></div>`}
+function addP(){const n=$('newn').value.trim();if(!n)return;if(DB.players.some(p=>p.name===n)){alert('That name is already used.');return}
+ syncNames();DB.players.push({name:n,year:+$('newy').value});save();openSetup()}
+function delP(i){const p=DB.players[i];if(!confirm(`Remove ${p.name} and all their progress on this device?`))return;delete DB.states[p.name];DB.players.splice(i,1);save();openSetup()}
+function syncNames(){document.querySelectorAll('#plist .prow').forEach((r,i)=>{const p=DB.players[i];const n=r.querySelector('.pn').value.trim()||p.name;
+ if(n!==p.name&&!DB.players.some((q,j)=>j!==i&&q.name===n)){DB.states[n]=DB.states[p.name];delete DB.states[p.name];p.name=n}p.year=+r.querySelector('.py').value})}
+function saveSetup(){syncNames();const n=$('newn').value.trim();if(n&&!DB.players.some(p=>p.name===n))DB.players.push({name:n,year:+$('newy').value});
+ DB.goal=Math.max(5,Math.min(200,+$('goal').value||20));save();home()}
+function exportDB(){const b=new Blob([JSON.stringify(DB,null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);
+ const d=new Date();a.download=`maths-quest-backup-${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)}
+function importDB(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.players))throw new Error('not a Maths Quest backup');
+ if(!confirm('Replace the progress on this device with this backup?'))return;DB=d;DB.states=DB.states||{};save();home()}catch(e){alert('Could not read backup: '+e.message)}};r.readAsText(f)}
+
+function start(i){L=DB.players[i];ST=stOf(L);show0('play');const s=MQ.summary(L,ST,DB.goal);bar(s);
+ $('year').innerHTML='<option value="">My plan (Year '+L.year+' + gaps)</option>'+Object.keys(YL).map(y=>`<option value="${y}">${YL[y]}</option>`).join('');
+ tab(s.overall==null&&!s.count?2:1)}
+function bar(s){SUM=s;$('nm').textContent=s.name;$('yr').textContent=s.year_label;$('lv').textContent=`Lv ${s.level} ${s.title}`;$('xpb').style.width=s.xp_in_level+'%';$('stk').textContent=`🔥 ${s.streak}`;$('tdy').textContent=`Today ${s.today}/${s.goal}`}
+function show(id){['qbox','pbox','bookbox'].forEach(k=>$(k).classList.toggle('hide',k!=id))}
+function tab(n){[1,2,3,4].forEach(k=>$('t'+k).classList.toggle('on',k==n));$('ysel').classList.toggle('hide',n!=1);
+ if(n==4){show('bookbox');book();return}
+ if(n==2){mode='placement';placementIntro();return}
+ mode=n==3?'mistakes':'mixed';nextQ()}
+function placementIntro(){show('pbox');const s=MQ.summary(L,ST,DB.goal);
+ $('pbox').innerHTML=`<h2>🧭 Placement test</h2><p>About 20–40 questions across 7 areas of maths, from Year 1 up to GCSE. Questions get harder when you are right and easier when you are not, to find where you are secure. No hints. You can stop at any time and carry on later.</p>
+ ${s.overall!=null?`<p class="mut">Last result (${s.placed}): secure up to <b>Year ${s.overall}</b>.</p>`:''}
+ <div class="row"><button class="go" onclick="nextQ()">${s.placement_active?'Continue ➜':'Start ➜'}</button>${s.placement_active?'<button class="ghost" onclick="restartP()">Start again</button>':''}</div>`}
+function restartP(){ST.placement=null;save();nextQ()}
+const KEYS=['/','√','^2','^','(',')','x','n','−',',',':','.'];
+$('keys').innerHTML=KEYS.map(k=>`<button type="button" onclick="ins('${k}')">${k=='^2'?'x²':k}</button>`).join('');
+function ins(k){const a=$('ans');if(a.disabled)return;const v=k=='−'?'-':k;const p=a.selectionStart??a.value.length;a.value=a.value.slice(0,p)+v+a.value.slice(a.selectionEnd??p);a.focus();a.selectionStart=a.selectionEnd=p+v.length}
+function nextQ(){const ys=$('year').value;Q=MQ.nextQuestion(L,ST,DB.goal,mode,mode=='mixed'&&ys?+ys:null);save();
+ if(Q.placement_done){placementResult(Q);return}
+ show('qbox');done=false;$('tp').textContent=Q.why=='placement'?Q.strand:`Y${Q.year} · ${Q.topic}`;$('emo').textContent=Q.emoji;
+ const lab={review:'🎯 Bonus mission',gap:'🧩 Gap filler',challenge:'⚡ Challenge',placement:'🧭 Placement'+(Q.progress?` · ${Q.progress.strands_done}/${Q.progress.strands} areas done · Q${Q.progress.asked+1}`:'')}[Q.why];
+ $('rv').textContent=lab||'';$('rv').classList.toggle('hide',!lab);
+ $('qt').textContent=Q.text;$('fmt').textContent=Q.fmt||'';$('hn').classList.add('hide');$('hn').textContent=Q.hint?'💡 '+Q.hint:'';$('hb').classList.toggle('hide',!Q.hint);
+ $('fb').className='fb hide';$('nx').classList.add('hide');$('sub').disabled=false;$('sk').disabled=false;$('ans').value='';$('ans').disabled=false;$('ans').focus()}
+function hint(){$('hn').classList.remove('hide')}
+function submit(skip){if(done||!Q)return;const a=$('ans').value;if(!a.trim()&&!skip)return;done=true;
+ const r=MQ.answerQuestion(L,ST,DB.goal,Q,a,!!skip);save();
+ const f=$('fb');f.className='fb '+(r.correct?'ok':'bad');
+ f.innerHTML=`<b>${esc(r.msg)}</b>${r.gained?`  +${r.gained} XP`:''}\n${r.correct?'':'Answer: <b>'+esc(r.show)+'</b>\n'}<span class="mut">${esc(r.sol)}</span>`+(r.badges.length?'\n'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):'');
+ $('nx').classList.remove('hide');$('sub').disabled=true;$('sk').disabled=true;$('ans').disabled=true;bar(r.summary)}
+document.addEventListener('keydown',e=>{if(e.key=='Enter'&&!$('qbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!done)submit();else if(!$('nx').classList.contains('hide'))nextQ()}});
+function levelRows(strands,year){return '<table><tr><th>Area</th><th style="width:45%">Secure up to</th><th></th></tr>'+strands.map(s=>{const lv=s.level;
+ const w=lv==null?0:Math.max(0,lv)/11*100,mk=year/11*100;
+ const txt=lv==null?'<span class=mut>not tested</span>':(lv<s.min?`not yet Year ${s.min}`:'Year '+lv);
+ return `<tr><td>${esc(s.name)}</td><td><div class="lvbar"><i style="width:${w}%"></i><b style="left:${mk}%"></b></div></td><td>${txt}</td></tr>`}).join('')+'</table><p class="mut">Yellow line = school year. Areas below it get extra “Gap filler” questions in My plan.</p>'}
+function placementResult(d){show('pbox');bar(d.summary);const s=d.summary;
+ $('pbox').innerHTML=`<h2>🧭 Placement result</h2><p style="font-size:20px">Overall: secure up to <b>Year ${s.overall}</b> <span class="mut">(school year ${s.year})</span></p>${levelRows(d.strands,s.year)}
+ <div class="row"><button class="go" onclick="tab(1)">Start practising ➜</button></div>`}
+function book(){const b=MQ.progress(L,ST,DB.goal);bar(b.summary);const s=b.summary;
+ let h=`<h2>📒 ${esc(s.name)}'s progress</h2>`;
+ h+=s.overall!=null?`<h3>🧭 Placement (${s.placed}): secure up to Year ${s.overall}</h3>${levelRows(b.strands,s.year)}`:'<p class="mut">No placement result yet — try the 🧭 Placement test.</p>';
+ h+=`<h3>Topics</h3><p class="mut">Bonus missions waiting: ${s.review_left} · Answered ${s.count} · Correct ${s.correct}</p><table><tr><th>Year</th><th>Topic</th><th>Stars</th><th>Accuracy</th><th></th></tr>`;
+ h+=b.topics.map(t=>`<tr><td>Y${t.year}</td><td>${esc(t.topic)}</td><td>${'⭐'.repeat(t.stars)||'<span class=mut>new</span>'}</td><td><div class="acc"><i style="width:${t.a?Math.round(100*t.c/t.a):0}%"></i></div></td><td class="mut">${t.c}/${t.a}</td></tr>`).join('')+'</table><h3>Recent mistakes</h3>';
+ h+=b.wrong.length?b.wrong.map(w=>`<div class="w"><span class="mut">${esc(w.t)} · ${esc(w.topic)}</span>\n${esc(w.q)}\nYou: <b style="color:#ff9b9b">${esc(w.yours)}</b> · Right: <b style="color:#7ff0bd">${esc(w.right)}</b></div>`).join(''):'<p class="mut">No mistakes yet!</p>';
+ $('bookbox').innerHTML=h}
+load();home();
+</script></body></html>
