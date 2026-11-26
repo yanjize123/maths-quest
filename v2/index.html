@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Penguin Cupcakes · Maths Quest v2</title>
-<!-- 甜品店 第 1 关 页面 v001（2026-11-26）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
+<!-- 甜品店 第 1 关 页面 v002（2026-11-26 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
      规则：business_loop.md（yanjize123/claude 条目 P-20261126-maths-game）。奖惩不对称：对方吃亏的错误被拒绝要重算，对方占便宜的错误被接受、店里亏。 -->
 <style>
  :root{--pink:#ff7eb6;--ink:#3a2a3a}
@@ -34,13 +34,13 @@
 <body>
 <div class="wrap">
  <div id="login" class="card">
-  <div class="say">🐧 Welcome to <b>Penguin Cupcakes</b>! Log in with your Maths Quest v2 name and password.</div>
-  <div class="row"><input id="lu" placeholder="name"><input id="lp" type="password" placeholder="password"><button id="lb">Open the shop</button><button class="alt" id="ll">Play without saving</button></div>
+  <div class="say" id="lw"></div>
+  <div class="row"><input id="lu"><input id="lp" type="password"><button id="lb"></button><button class="alt" id="ll"></button><button class="alt" id="lang1"></button></div>
   <div id="lm" class="note"></div>
  </div>
 
  <div id="game" class="hide">
-  <div class="bar"><b>🧁 Penguin Cupcakes</b><span class="pill" id="cash"></span><span class="pill" id="stock"></span><span class="pill" id="day"></span><span class="note" id="foot"></span></div>
+  <div class="bar"><b id="btitle"></b><button class="alt" id="lang2" style="font-size:14px;padding:4px 10px"></button><span class="pill" id="cash"></span><span class="pill" id="stock"></span><span class="pill" id="day"></span><span class="note" id="foot"></span></div>
   <div class="stage" id="stage"><div id="bg"></div><div class="actors"><div id="left"></div><div id="mid"></div><div id="right"></div></div></div>
   <div class="card" id="panel"></div>
  </div>
@@ -52,7 +52,7 @@
 <script src="mq_store.js"></script>
 <script src="mq_art.js"></script>
 <script>
-const PAGE_VERSION = 1, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
+const PAGE_VERSION = 2, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
 const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
 const PUNNET = 10;                 // 每盒草莓 10 颗
 const UPGRADES = [
@@ -61,7 +61,37 @@ const UPGRADES = [
   { id: 'space', name: '🚀 Space shop', cost: 40, info: 'Move the shop to outer space!' },
   { id: 'sea', name: '🐠 Seaside shop', cost: 30, info: 'A shop by the sea.' },
 ];
-let C, S, ST, T, flushing = false;   // C 内容、S 会话、ST 存档、T 今天的临时状态
+let C, S, ST, T, flushing = false;
+let LANG = new URLSearchParams(location.search).get('lang') || (() => { try { return localStorage.getItem('mq_v2_lang'); } catch (e) { return null; } })() || 'en';
+const TX = {
+ en: { title:'Penguin Cupcakes', welcome:'🐧 Welcome to <b>Penguin Cupcakes</b>! Log in with your Maths Quest v2 name and password.', name:'name', pass:'password', open:'Open the shop', guest:'Play without saving', needpw:'Type your name and password.', unlocking:'Unlocking the shop door…', noserver:'Cannot reach the server. Check the internet and try again.', loginfail:'Could not log in',
+  loan:' (bank loan)', day:'Day', hint:'💡 Hint', penguin:'Penguin', farmer:'Farmer Fox', owl:'Owl the accountant',
+  morning:"Good morning! Here are today's orders:", lots:'some cupcakes with lots of strawberries', ord:(n,k)=>`${n} cupcakes, ${k} strawberries on each`,
+  have:(s,P,p)=>`You have <b>🍓 ${s}</b> strawberries. The market sells punnets of <b>${P}</b> strawberries for <b>£${p}</b> each.`, howmany:'How many punnets?', market:'Go to the market', noshop:'No shopping today', tip:'Tip: work out how many strawberries the orders need before you buy!',
+  pay:'Pay', notenough:'🦊 "That\'s not enough money!" Try again.', kept:d=>`🦊 "Thank you!" The farmer kept the extra <b>£${d}</b>. Oops — you paid too much.`, exact:'🦊 "Exactly right, thank you!"', opennow:'Open the shop 🔔',
+  wants:(n,k)=>`I'd like ${n} cupcakes with ${k} strawberries on each, please!`, nostock:(s,w)=>`🐧 Oh no — we only have 🍓 ${s}. Not enough strawberries! ${w} goes home sad.`, nextc:'Next customer',
+  tap:'Tap a cupcake to add a strawberry, then type how many you used.', again:'🔄 start again', bake:'Bake!', toofew:w=>`🫠 Not enough strawberries — that's not what ${w} ordered! Bake it again.`, toomany:(w,d)=>`${w} is happy, but you used <b>${d}</b> strawberries too many.`,
+  perfect:w=>`🌈 Perfect! ${w} does the big rainbow dance!`, yum:w=>`Yum! ${w} does a little dance.`, takemoney:'Take the money 💷', charge:'Charge', toomuch:w=>`${w}: "That's too much! I'm not paying that." Check again.`, toolittle:(w,d)=>`${w} pays happily… but you charged <b>£${d}</b> too little!`, kaching:v=>`💷 Ka-ching! +£${v}`, close:'Close the shop 🌙',
+  check:'Check', profitq:(a,b)=>`Today you took £${a} and spent £${b} on strawberries. How much profit did you make?`, lossq:(a,b)=>`Today you spent £${b} on strawberries but only took £${a}. How much money did you lose?`, owlagain:'🦉 "Hoo! Let\'s check that again."',
+  owlok:(p,v)=>`🦉 "Correct! ${p ? 'You made £' + v : 'You lost £' + v} today."`, served:'Customers served', left:'Customers who left', till:'Money in the till', stockleft:'Strawberries left', loannote:'Your money is below zero, so Penguin Bank lent you some. Make a profit to pay it back!', pickchest:'🎁 Pick a chest', upg:'🛠 Shop upgrades',
+  whatbuy:c=>`What shall we buy for the shop? You have ${c}.`, use:'Use', buy:'Buy', normal:'Normal shop', chestq:'Pick a chest! Better chests have harder questions.', bronze:'🥉 Bronze', silver:'🥈 Silver', gold:'🥇 Gold', openq:'Open!', locked:'The chest is still locked. Try again!',
+  opened:(t,v)=>`🎉 The ${t} chest opens: +£${v}!`, became:t=>`(It became a ${t} chest because it took more than one try.)`, sleep:'Sleep 😴 → next day', waiting:n=>`⏳ ${n} waiting to upload`, saved:'✓ saved', other:'中文',
+  U:{ sign:['🌈 Rainbow sign','Cupcakes sell for £1 more.'], oven:['🔥 Bigger oven','One more customer every day.'], space:['🚀 Space shop','Move the shop to outer space!'], sea:['🐠 Seaside shop','A shop by the sea.'] } },
+ zh: { title:'企鹅纸杯蛋糕店', welcome:'🐧 欢迎来到<b>企鹅纸杯蛋糕店</b>！用你的 Maths Quest v2 名字和密码登录。', name:'名字', pass:'密码', open:'开店', guest:'不保存，直接玩', needpw:'请输入名字和密码。', unlocking:'正在打开店门……', noserver:'连不上服务器，请检查网络后再试。', loginfail:'登录失败',
+  loan:'（向银行借的）', day:'第', hint:'💡 提示', penguin:'企鹅', farmer:'狐狸农夫', owl:'猫头鹰会计',
+  morning:'早上好！今天的订单是：', lots:'一些蛋糕，要放很多草莓', ord:(n,k)=>`${n} 个蛋糕，每个放 ${k} 颗草莓`,
+  have:(s,P,p)=>`你现在有 <b>🍓 ${s}</b> 颗草莓。市场上的草莓每盒 <b>${P}</b> 颗，每盒 <b>£${p}</b>。`, howmany:'买几盒？', market:'去市场', noshop:'今天不进货', tip:'小窍门：先算算这些订单一共要多少颗草莓，再决定买几盒！',
+  pay:'付钱', notenough:'🦊“钱不够哦！”再算一算。', kept:d=>`🦊“谢谢！”农夫把多给的 <b>£${d}</b> 收下了。哎呀，你多付了。`, exact:'🦊“刚刚好，谢谢！”', opennow:'开门营业 🔔',
+  wants:(n,k)=>`我要 ${n} 个蛋糕，每个放 ${k} 颗草莓！`, nostock:(s,w)=>`🐧 糟糕，我们只有 🍓 ${s} 颗，草莓不够！${w} 只好伤心地回家了。`, nextc:'下一位顾客',
+  tap:'点蛋糕可以放一颗草莓，放好后填一共用了几颗。', again:'🔄 重新放', bake:'做蛋糕！', toofew:w=>`🫠 草莓放少了，不是 ${w} 要的蛋糕！重新做。`, toomany:(w,d)=>`${w} 很高兴，可是你多用了 <b>${d}</b> 颗草莓。`,
+  perfect:w=>`🌈 太棒了！${w} 跳起了大彩虹舞！`, yum:w=>`真好吃！${w} 跳了一小段舞。`, takemoney:'收钱 💷', charge:'收钱', toomuch:w=>`${w}：“太贵了！我不付这么多。”再算一算。`, toolittle:(w,d)=>`${w} 高高兴兴地付了钱……可是你少收了 <b>£${d}</b>！`, kaching:v=>`💷 叮！+£${v}`, close:'关门 🌙',
+  check:'核对', profitq:(a,b)=>`今天收入 £${a}，进草莓花了 £${b}。今天赚了多少镑？`, lossq:(a,b)=>`今天进草莓花了 £${b}，只收入 £${a}。今天亏了多少镑？`, owlagain:'🦉“咕咕！我们再核对一遍。”',
+  owlok:(p,v)=>`🦉“对了！今天${p ? '赚了' : '亏了'} £${v}。”`, served:'服务的顾客', left:'没买到走掉的顾客', till:'钱箱里的钱', stockleft:'剩下的草莓', loannote:'钱变成负数了，企鹅银行借给你一些。多赚点钱把它还上吧！', pickchest:'🎁 选一个宝箱', upg:'🛠 装修店铺',
+  whatbuy:c=>`给店里买点什么呢？你有 ${c}。`, use:'使用', buy:'买', normal:'普通店面', chestq:'选一个宝箱！越好的宝箱，题目越难。', bronze:'🥉 铜宝箱', silver:'🥈 银宝箱', gold:'🥇 金宝箱', openq:'打开！', locked:'宝箱还锁着，再试一次！',
+  opened:(t,v)=>`🎉 ${{bronze:'铜',silver:'银',gold:'金'}[t]}宝箱打开了：+£${v}！`, became:t=>`（试了不止一次，所以变成了${{bronze:'铜',silver:'银',gold:'金'}[t]}宝箱。）`, sleep:'睡觉 😴 → 第二天', waiting:n=>`⏳ ${n} 条等待上传`, saved:'✓ 已保存', other:'English',
+  U:{ sign:['🌈 彩虹招牌','每个蛋糕多卖 £1。'], oven:['🔥 大烤箱','每天多来一位顾客。'], space:['🚀 太空店','把店搬到太空去！'], sea:['🐠 海边店','开在海边的店。'] } } };
+const t = k => TX[LANG][k];
+function setLang(l) { LANG = l; try { localStorage.setItem('mq_v2_lang', l); } catch (e) {} document.documentElement.lang = l === 'zh' ? 'zh-Hans' : 'en'; document.title = t('title') + ' · Maths Quest v2'; }   // C 内容、S 会话、ST 存档、T 今天的临时状态
 
 const read = p => fetch(p, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(p); return r.text(); });
 async function post(b) { const r = await fetch(BACKEND_V2, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }); return r.json(); }
@@ -73,16 +103,20 @@ function newShop() { return { v: 1, cash: 20, day: 1, stock: 0, mastery: {}, evi
 
 // ---------------- 登录 ----------------
 $('lb').onclick = async () => {
-  const user = $('lu').value.trim(), pass = $('lp').value; if (!user || !pass) { $('lm').textContent = 'Type your name and password.'; return; }
-  $('lb').disabled = true; $('lm').textContent = 'Unlocking the shop door…';
+  const user = $('lu').value.trim(), pass = $('lp').value; if (!user || !pass) { $('lm').textContent = t('needpw'); return; }
+  $('lb').disabled = true; $('lm').textContent = t('unlocking');
   try {
     const r = await post({ action: 'login', user, pass, device: 'v2-shop · ' + navigator.userAgent }); $('lb').disabled = false;
-    if (!r.ok) { $('lm').textContent = r.err || 'Could not log in'; return; }
+    if (!r.ok) { $('lm').textContent = r.err || t('loginfail'); return; }
     S = { user, pass, name: r.name, session: r.session };
     const local = MQStore.loadProgress(r.name), remote = r.state && r.state.v ? r.state : null;
     ST = (!remote || (local && local.day > remote.day)) ? (local || newShop()) : remote; boot();
-  } catch (e) { $('lb').disabled = false; $('lm').textContent = 'Cannot reach the server. Check the internet and try again.'; }
+  } catch (e) { $('lb').disabled = false; $('lm').textContent = t('noserver'); }
 };
+function renderLogin() { setLang(LANG); $('lw').innerHTML = t('welcome'); $('lu').placeholder = t('name'); $('lp').placeholder = t('pass'); $('lb').textContent = t('open'); $('ll').textContent = t('guest'); $('lang1').textContent = t('other'); }
+$('lang1').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); renderLogin(); };
+$('lang2').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); morning(); };
+renderLogin();
 $('ll').onclick = () => { S = { name: 'guest', local: true }; ST = MQStore.loadProgress('guest') || newShop(); boot(); };
 
 async function boot() {
@@ -92,8 +126,8 @@ async function boot() {
 
 // ---------------- 画面 ----------------
 function hud() {
-  $('cash').textContent = '💷 ' + money(ST.cash) + (ST.cash < 0 ? ' (bank loan)' : ''); $('cash').className = 'pill' + (ST.cash < 0 ? ' neg' : '');
-  $('stock').textContent = '🍓 ' + ST.stock; $('day').textContent = '📅 Day ' + ST.day;
+  $('cash').textContent = '💷 ' + money(ST.cash) + (ST.cash < 0 ? t('loan') : ''); $('cash').className = 'pill' + (ST.cash < 0 ? ' neg' : '');
+  $('stock').textContent = '🍓 ' + ST.stock; $('day').textContent = LANG === 'zh' ? `📅 第 ${ST.day} 天` : '📅 Day ' + ST.day; $('btitle').textContent = '🧁 ' + t('title'); $('lang2').textContent = t('other');
   const theme = ST.upgrades.includes('space') && ST.theme === 'space' ? 'space' : ST.upgrades.includes('sea') && ST.theme === 'sea' ? 'sea' : 'shop';
   $('bg').innerHTML = A.scene(theme);
 }
@@ -105,12 +139,12 @@ function dance(el, big) { el.firstElementChild?.classList.add('dance'); $('stage
 // opts.onAnswer(value, res) 返回 'accept' | 'reject'（不对称规则在调用处决定）；onDone(finalValue, res)
 function ask(itemId, params, opts) {
   const item = C.byItem[itemId], seed = R(1, 1e9);
-  const q = E.instantiate(item, seed, C.mis, { lang: 'en', params, who: params.who });
+  const q = E.instantiate(item, seed, C.mis, { lang: LANG, params, who: params.who });
   if (opts.story) q.story = opts.story;
   const st = { attempt: 1, hint: 0, t0: Date.now(), first: null };
   panel(`<div class="say">${opts.speaker ? `<span class="who">${opts.speaker}:</span> ` : ''}${q.story}</div>
     ${opts.extra || ''}
-    <div class="row"><input id="ans" inputmode="numeric" placeholder="${opts.placeholder || '£?'}"><button id="ok">${opts.button || 'OK'}</button><button class="alt" id="hb">💡 Hint</button></div>
+    <div class="row"><input id="ans" inputmode="numeric" placeholder="${opts.placeholder || '£?'}"><button id="ok">${opts.button || 'OK'}</button><button class="alt" id="hb">${t('hint')}</button></div>
     <div id="hints"></div><div class="say" id="msg"></div>`);
   const go = () => {
     const raw = $('ans').value.trim(); if (raw === '') return;
@@ -121,7 +155,7 @@ function ask(itemId, params, opts) {
     const verdict = res.correct ? 'accept' : opts.onAnswer(v, res, q);
     if (verdict === 'accept') { $('ok').disabled = true; $('ans').disabled = true; opts.onDone(v, res, q, st); return; }
     st.attempt++; const mis = res.evidence[0] && C.mis.find(m => m.mis_id === res.evidence[0].mis_id);
-    if (mis) $('msg').innerHTML += `<div class="hint">🤔 ${mis.counterexample}</div>`;
+    if (mis) $('msg').innerHTML += `<div class="hint">🤔 ${LANG === 'zh' ? mis.counterexample : (mis.counterexample_en || mis.counterexample)}</div>`;
     if (st.hint < 3) $('hb').click(); $('ans').select();
   };
   $('ok').onclick = go; $('ans').onkeydown = e => { if (e.key === 'Enter') go(); }; $('ans').focus();
@@ -140,11 +174,11 @@ function morning() {
   const price = R(2, 4);
   T = { orders, idx: 0, price, cakePrice: ST.upgrades.includes('sign') ? 3 : 2, income: 0, spent: 0, punnets: 0, lost: 0, served: 0 };
   actors(A.penguin(), '', A.dragon(orders[0].who));
-  const list = orders.map(o => `<li>${o.who}: ${o.kind === 'IT.L1.MUL.007' ? `some cupcakes with lots of strawberries` : `${o.p.n} cupcakes, ${o.p.k} strawberries on each`}</li>`).join('');
-  panel(`<div class="say"><span class="who">Penguin:</span> Good morning! Here are today's orders:</div><ul class="say">${list}</ul>
-    <div class="say">You have <b>🍓 ${ST.stock}</b> strawberries. The market sells punnets of <b>${PUNNET}</b> strawberries for <b>£${price}</b> each.</div>
-    <div class="row">How many punnets? <button class="alt" id="minus">−</button><b id="pn" style="font-size:24px">1</b><button class="alt" id="plus">+</button><button id="buy">Go to the market</button><button class="alt" id="skip">No shopping today</button></div>
-    <div class="note">Tip: work out how many strawberries the orders need before you buy!</div>`);
+  const list = orders.map(o => `<li>${o.who}: ${o.kind === 'IT.L1.MUL.007' ? t('lots') : t('ord')(o.p.n, o.p.k)}</li>`).join('');
+  panel(`<div class="say"><span class="who">${t('penguin')}:</span> ${t('morning')}</div><ul class="say">${list}</ul>
+    <div class="say">${t('have')(ST.stock, PUNNET, price)}</div>
+    <div class="row">${t('howmany')} <button class="alt" id="minus">−</button><b id="pn" style="font-size:24px">1</b><button class="alt" id="plus">+</button><button id="buy">${t('market')}</button><button class="alt" id="skip">${t('noshop')}</button></div>
+    <div class="note">${t('tip')}</div>`);
   let n = 1; const show = () => $('pn').textContent = n;
   $('minus').onclick = () => { n = Math.max(1, n - 1); show(); }; $('plus').onclick = () => { n = Math.min(8, n + 1); show(); };
   $('skip').onclick = () => serveNext();
@@ -155,15 +189,15 @@ function pay(n) {
   const correct = n * T.price; T.punnets = n;
   actors(A.penguin(), '', '<div style="font-size:70px">🧑‍🌾</div>');
   ask('IT.L1.BIZ.BUY', { n, k: T.price }, {
-    speaker: 'Farmer Fox', button: 'Pay',
+    speaker: t('farmer'), button: t('pay'),
     onAnswer: v => {
-      if (v < correct) { $('msg').innerHTML = '<span class="bad">🦊 "That\'s not enough money!" Try again.</span>'; return 'reject'; }
-      $('msg').innerHTML = `<span class="bad">🦊 "Thank you!" The farmer kept the extra <b>£${v - correct}</b>. Oops — you paid too much.</span>`; return 'accept';
+      if (v < correct) { $('msg').innerHTML = `<span class="bad">${t('notenough')}</span>`; return 'reject'; }
+      $('msg').innerHTML = `<span class="bad">${t('kept')(v - correct)}</span>`; return 'accept';
     },
     onDone: v => {
       ST.cash -= v; T.spent += v; ST.stock += n * PUNNET; hud();
-      if (v === correct) $('msg').innerHTML = `<span class="good">🦊 "Exactly right, thank you!"</span>`;
-      $('msg').innerHTML += `<div class="row"><button id="nx">Open the shop 🔔</button></div>`; $('nx').onclick = serveNext;
+      if (v === correct) $('msg').innerHTML = `<span class="good">${t('exact')}</span>`;
+      $('msg').innerHTML += `<div class="row"><button id="nx">${t('opennow')}</button></div>`; $('nx').onclick = serveNext;
     }
   });
 }
@@ -174,24 +208,24 @@ function serveNext() {
   const o = T.orders[T.idx], item = C.byItem[o.kind], need = E.evalExpr(item.answer, o.p);
   actors(A.penguin(), A.cupcake(0), A.dragon(o.who));
   if (need > ST.stock) {
-    panel(`<div class="say"><span class="who">${o.who}:</span> I'd like ${o.p.n} cupcakes with ${o.p.k} strawberries on each, please!</div>
-      <div class="say bad">🐧 Oh no — we only have 🍓 ${ST.stock}. Not enough strawberries! ${o.who} goes home sad.</div><div class="row"><button id="nx">Next customer</button></div>`);
+    panel(`<div class="say"><span class="who">${o.who}:</span> ${t('wants')(o.p.n, o.p.k)}</div>
+      <div class="say bad">${t('nostock')(ST.stock, o.who)}</div><div class="row"><button id="nx">${t('nextc')}</button></div>`);
     actors(A.penguin('oops'), A.cupcake(0), A.dragon(o.who, 'sad')); T.lost++; T.idx++; $('nx').onclick = serveNext; return;
   }
-  const extra = item.action === 'drag' ? `<div class="note">Tap a cupcake to add a strawberry, then type how many you used.</div><div class="cakes" id="cakes"></div><button class="alt" id="reset">🔄 start again</button>` : '';
+  const extra = item.action === 'drag' ? `<div class="note">${t('tap')}</div><div class="cakes" id="cakes"></div><button class="alt" id="reset">${t('again')}</button>` : '';
   let placed = Array(o.p.n).fill(0);
   ask(o.kind, { ...o.p, who: o.who }, {
-    speaker: o.who, button: 'Bake!', placeholder: '🍓 ?', extra,
+    speaker: o.who, button: t('bake'), placeholder: '🍓 ?', extra,
     onAnswer: (v, res) => {
       if (v < need) { actors(A.penguin('oops'), A.cupcake(0, true), A.dragon(o.who, 'sad')); $('stage').classList.add('wobble'); setTimeout(() => $('stage').classList.remove('wobble'), 900);
-        $('msg').innerHTML = `<span class="bad">🫠 Not enough strawberries — that's not what ${o.who} ordered! Bake it again.</span>`; return 'reject'; }
-      $('msg').innerHTML = `<span class="bad">${o.who} is happy, but you used <b>${v - need}</b> strawberries too many.</span>`; return 'accept';
+        $('msg').innerHTML = `<span class="bad">${t('toofew')(o.who)}</span>`; return 'reject'; }
+      $('msg').innerHTML = `<span class="bad">${t('toomany')(o.who, v - need)}</span>`; return 'accept';
     },
     onDone: (v, res, q, st) => {
       ST.stock -= Math.min(v, ST.stock); hud();
       actors(A.penguin(), A.cupcake(Math.min(o.p.k, 8)), A.dragon(o.who)); dance($('right'), st.first);
-      if (v === need) $('msg').innerHTML = `<span class="good">${st.first ? '🌈 Perfect! ' + o.who + ' does the big rainbow dance!' : 'Yum! ' + o.who + ' does a little dance.'}</span>`;
-      $('msg').innerHTML += `<div class="row"><button id="nx">Take the money 💷</button></div>`; $('nx').onclick = () => charge(o);
+      if (v === need) $('msg').innerHTML = `<span class="good">${st.first ? t('perfect')(o.who) : t('yum')(o.who)}</span>`;
+      $('msg').innerHTML += `<div class="row"><button id="nx">${t('takemoney')}</button></div>`; $('nx').onclick = () => charge(o);
     }
   });
   if (item.action === 'drag') {
@@ -204,15 +238,15 @@ function serveNext() {
 function charge(o) {
   const correct = o.p.n * T.cakePrice;
   ask('IT.L1.BIZ.CHARGE', { n: o.p.n, k: T.cakePrice, who: o.who }, {
-    speaker: 'Penguin', button: 'Charge',
+    speaker: t('penguin'), button: t('charge'),
     onAnswer: v => {
-      if (v > correct) { $('msg').innerHTML = `<span class="bad">${o.who}: "That's too much! I'm not paying that." Check again.</span>`; return 'reject'; }
-      $('msg').innerHTML = `<span class="bad">${o.who} pays happily… but you charged <b>£${correct - v}</b> too little!</span>`; return 'accept';
+      if (v > correct) { $('msg').innerHTML = `<span class="bad">${t('toomuch')(o.who)}</span>`; return 'reject'; }
+      $('msg').innerHTML = `<span class="bad">${t('toolittle')(o.who, correct - v)}</span>`; return 'accept';
     },
     onDone: v => {
       ST.cash += v; T.income += v; T.served++; hud();
-      if (v === correct) $('msg').innerHTML = `<span class="good">💷 Ka-ching! +£${v}</span>`;
-      T.idx++; $('msg').innerHTML += `<div class="row"><button id="nx">${T.idx < T.orders.length ? 'Next customer' : 'Close the shop 🌙'}</button></div>`; $('nx').onclick = serveNext;
+      if (v === correct) $('msg').innerHTML = `<span class="good">${t('kaching')(v)}</span>`;
+      T.idx++; $('msg').innerHTML += `<div class="row"><button id="nx">${T.idx < T.orders.length ? t('nextc') : t('close')}</button></div>`; $('nx').onclick = serveNext;
     }
   });
 }
@@ -222,15 +256,15 @@ function evening() {
   actors(A.penguin(), '', '<div style="font-size:70px">🦉</div>');
   const a = T.income, b = T.spent, profit = a >= b;
   ask('IT.L1.BIZ.PROFIT', profit ? { a, b } : { a: b, b: a }, {
-    speaker: 'Owl the accountant', button: 'Check',
-    story: profit ? `Today you took £${a} and spent £${b} on strawberries. How much profit did you make?` : `Today you spent £${b} on strawberries but only took £${a}. How much money did you lose?`,
-    onAnswer: () => { $('msg').innerHTML = '<span class="bad">🦉 "Hoo! Let\'s check that again."</span>'; return 'reject'; },
+    speaker: t('owl'), button: t('check'),
+    story: profit ? t('profitq')(a, b) : t('lossq')(a, b),
+    onAnswer: () => { $('msg').innerHTML = `<span class="bad">${t('owlagain')}</span>`; return 'reject'; },
     onDone: () => {
       ST.history.push({ day: ST.day, income: a, spent: b, served: T.served, lost: T.lost });
-      $('msg').innerHTML = `<span class="good">🦉 "Correct! ${profit ? 'You made £' + (a - b) : 'You lost £' + (b - a)} today."</span>
-        <table class="say"><tr><td>Customers served</td><td>${T.served}</td></tr><tr><td>Customers who left</td><td>${T.lost}</td></tr><tr><td>Money in the till</td><td>${money(ST.cash)}</td></tr><tr><td>Strawberries left</td><td>🍓 ${ST.stock}</td></tr></table>
-        ${ST.cash < 0 ? '<div class="note">Your money is below zero, so Penguin Bank lent you some. Make a profit to pay it back!</div>' : ''}
-        <div class="row"><button id="nx">🎁 Pick a chest</button><button class="alt" id="up">🛠 Shop upgrades</button></div>`;
+      $('msg').innerHTML = `<span class="good">${t('owlok')(profit, Math.abs(a - b))}</span>
+        <table class="say"><tr><td>${t('served')}</td><td>${T.served}</td></tr><tr><td>${t('left')}</td><td>${T.lost}</td></tr><tr><td>${t('till')}</td><td>${money(ST.cash)}</td></tr><tr><td>${t('stockleft')}</td><td>🍓 ${ST.stock}</td></tr></table>
+        ${ST.cash < 0 ? `<div class="note">${t('loannote')}</div>` : ''}
+        <div class="row"><button id="nx">${t('pickchest')}</button><button class="alt" id="up">${t('upg')}</button></div>`;
       $('nx').onclick = chest; $('up').onclick = upgrades; save();
     }
   });
@@ -239,10 +273,10 @@ function evening() {
 // ---------------- 4 升级 ----------------
 function upgrades() {
   actors(A.penguin(), '', ''); const own = ST.upgrades;
-  panel(`<div class="say"><span class="who">Penguin:</span> What shall we buy for the shop? You have ${money(ST.cash)}.</div>
-    ${UPGRADES.map(u => `<div class="shopitem"><span>${u.name} — £${u.cost}<br><span class="note">${u.info}</span></span>${own.includes(u.id) ? (u.id === 'space' || u.id === 'sea' ? `<button class="alt" data-theme="${u.id}">Use</button>` : '<span class="good">✓</span>') : `<button data-buy="${u.id}" ${ST.cash < u.cost ? 'disabled' : ''}>Buy</button>`}</div>`).join('')}
-    ${own.includes('space') || own.includes('sea') ? '<button class="alt" data-theme="shop">Normal shop</button>' : ''}
-    <div class="row"><button id="nx">🎁 Pick a chest</button></div>`);
+  panel(`<div class="say"><span class="who">${t('penguin')}:</span> ${t('whatbuy')(money(ST.cash))}</div>
+    ${UPGRADES.map(u => `<div class="shopitem"><span>${t('U')[u.id][0]} — £${u.cost}<br><span class="note">${t('U')[u.id][1]}</span></span>${own.includes(u.id) ? (u.id === 'space' || u.id === 'sea' ? `<button class="alt" data-theme="${u.id}">${t('use')}</button>` : '<span class="good">✓</span>') : `<button data-buy="${u.id}" ${ST.cash < u.cost ? 'disabled' : ''}>${t('buy')}</button>`}</div>`).join('')}
+    ${own.includes('space') || own.includes('sea') ? `<button class="alt" data-theme="shop">${t('normal')}</button>` : ''}
+    <div class="row"><button id="nx">${t('pickchest')}</button></div>`);
   $('panel').querySelectorAll('[data-buy]').forEach(b => b.onclick = () => { const u = UPGRADES.find(x => x.id === b.dataset.buy); ST.cash -= u.cost; ST.upgrades.push(u.id); if (u.id === 'space' || u.id === 'sea') ST.theme = u.id; save(); hud(); upgrades(); });
   $('panel').querySelectorAll('[data-theme]').forEach(b => b.onclick = () => { ST.theme = b.dataset.theme; save(); hud(); });
   $('nx').onclick = chest;
@@ -251,7 +285,7 @@ function upgrades() {
 // ---------------- 5 宝箱：自选档次，答对得奖，答错降一档 ----------------
 function chest() {
   actors(A.penguin(), '<div style="font-size:80px">🎁</div>', A.dragon(DRAGONS[ST.day % 3]));
-  panel(`<div class="say">Pick a chest! Better chests have harder questions.</div><div class="row"><button data-t="bronze">🥉 Bronze (£2)</button><button data-t="silver">🥈 Silver (£5)</button><button data-t="gold">🥇 Gold (£10)</button></div>`);
+  panel(`<div class="say">${t('chestq')}</div><div class="row"><button data-t="bronze">${t('bronze')} (£2)</button><button data-t="silver">${t('silver')} (£5)</button><button data-t="gold">${t('gold')} (£10)</button></div>`);
   $('panel').querySelectorAll('[data-t]').forEach(b => b.onclick = () => openChest(b.dataset.t));
 }
 function openChest(tier) {
@@ -261,11 +295,11 @@ function openChest(tier) {
   const item = pool[R(0, pool.length - 1)] || C.byItem['IT.L1.MUL.005'];
   let wrong = false;
   ask(item.item_id, { who: DRAGONS[R(0, 2)] }, {
-    speaker: '🎁', button: 'Open!', chosen: true, reward: tier, placeholder: '?',
-    onAnswer: () => { wrong = true; $('msg').innerHTML = '<span class="bad">The chest is still locked. Try again!</span>'; return 'reject'; },
+    speaker: '🎁', button: t('openq'), chosen: true, reward: tier, placeholder: '?',
+    onAnswer: () => { wrong = true; $('msg').innerHTML = `<span class="bad">${t('locked')}</span>`; return 'reject'; },
     onDone: () => {
       const got = wrong ? DOWN[tier] : tier; ST.cash += VAL[got]; ST.chests.push({ tier: got, day: ST.day }); hud();
-      $('msg').innerHTML = `<span class="good">🎉 The ${got} chest opens: +£${VAL[got]}!</span>${wrong && got !== tier ? `<div class="note">(It became a ${got} chest because it took more than one try.)</div>` : ''}<div class="row"><button id="nx">Sleep 😴 → next day</button></div>`;
+      $('msg').innerHTML = `<span class="good">${t('opened')(got, VAL[got])}</span>${wrong && got !== tier ? `<div class="note">${t('became')(got)}</div>` : ''}<div class="row"><button id="nx">${t('sleep')}</button></div>`;
       $('nx').onclick = () => { ST.day++; save(); morning(); };
     }
   });
@@ -280,7 +314,7 @@ function record(row) {
 async function flush() {
   if (!S || S.local || flushing) return; const mine = qGet().filter(e => e.user === S.name); flushing = true;
   try { const r = await post({ action: 'log', user: S.user, pass: S.pass, events: mine, state: ST }); if (r.ok) { const ids = new Set(mine.map(e => e.id)); qSet(qGet().filter(e => !ids.has(e.id))); } } catch (e) {}
-  flushing = false; const n = qGet().filter(e => e.user === S.name).length; $('foot').textContent = n ? `⏳ ${n} waiting to upload` : '✓ saved';
+  flushing = false; const n = qGet().filter(e => e.user === S.name).length; $('foot').textContent = n ? t('waiting')(n) : t('saved');
 }
 </script>
 </body>
