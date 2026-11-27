@@ -961,7 +961,7 @@ function quota(st, now) {
   const wk = span(wk0, today); const wkFull = span(wk0, new Date(wk0.getFullYear(), wk0.getMonth(), wk0.getDate() + 6, 12));
   const weekTarget = Math.max(wkFull.target, T.week), weekSoFar = Math.max(wk.target, Math.round(T.week * wk.days / 7));
   // counting starts on the first day of practice (so a child who started in November is not 90% behind for the year)
-  const evs = (st.events || []).filter(e => e && e.t), first = evs.length ? new Date(new Date(evs[0].t).toDateString() + " 12:00") : today, from = d => (first > d ? first : d);
+  const evs = (st.events || []).filter(e => e && e.t), first = evs.length ? new Date(new Date(Math.min(...evs.map(e => Date.parse(e.t)))).toDateString() + " 12:00") : today, from = d => (first > d ? first : d);
   const m0 = new Date(today.getFullYear(), today.getMonth(), 1, 12), mo = span(from(m0), today);
   const y0 = new Date(today.getFullYear(), 0, 1, 12), yr = span(from(y0), today);
   const topUp = (sp) => Math.max(sp.target, Math.round(T.week * sp.days / 7));   // the weekly target spread over the days
