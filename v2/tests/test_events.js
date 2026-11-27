@@ -53,8 +53,8 @@ ok((html.match(/const BUILD = '(\w+)'/) || [])[1] === build, `index.html BUILD �
 (html.match(/<script src="[^"]+"/g) || []).forEach(t => ok(t.includes('?b=' + build), '脚本缺版本号 ' + t));
 // ---- 导演节奏：真实数据下模拟答 200 题，节拍间隔不超过 gap 上限，怪兽不超过 monsterMaxGap 拍不来 ----
 const PD = C('pacing.json'), vm = require('vm');
-const ctx = { ST: { flags: {}, states: {}, cust: [], items: {} }, T: {}, LANG: 'zh', pickMonster: () => 0, MQEngine: E, MQScene: S, read: f => Promise.resolve(fs.readFileSync(path.join(__dirname, '..', f), 'utf8')), console };
-vm.createContext(ctx); vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'mq_events.js'), 'utf8') + ';this.MQEv = MQEv;', ctx);
+const ctx = { ST: { flags: {}, states: {}, cust: [], items: {}, seed: 5 }, T: {}, LANG: 'zh', pickMonster: () => 0, MQEngine: E, MQScene: S, read: f => Promise.resolve(fs.readFileSync(path.join(__dirname, '..', f), 'utf8')), console };
+vm.createContext(ctx); vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'rng.js'), 'utf8'), ctx); vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'mq_events.js'), 'utf8') + ';this.MQEv = MQEv;', ctx);
 ctx.MQEv.load().then(() => {
   let beats = 0, mon = 0, last = 0, maxGap = 0, sinceMon = 0, maxNoMon = 0;
   for (let q = 1; q <= 200; q++) {

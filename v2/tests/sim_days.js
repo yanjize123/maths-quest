@@ -11,14 +11,15 @@ function makeCtx(seedRandom) {
   const ctx = { ST: { flags: {}, states: {}, cust: [], items: {}, pantry: {}, cash: 20, stock: 0, weapons: [], cards: {} }, T: {}, LANG: 'zh', MQEngine: E, MQScene: S, MQCake: K, Math: Object.create(Math), console,
     read: f => Promise.resolve(fs.readFileSync(path.join(ROOT, f), 'utf8')), pickMonster: () => 0 };
   if (seedRandom) ctx.Math.random = seedRandom;
-  vm.createContext(ctx); vm.runInContext(fs.readFileSync(path.join(ROOT, 'mq_events.js'), 'utf8') + ';this.MQEv = MQEv;', ctx);
+  vm.createContext(ctx); vm.runInContext(fs.readFileSync(path.join(ROOT, 'rng.js'), 'utf8'), ctx);   // 页面的唯一随机来源（种子 = ST.seed）
+  vm.runInContext(fs.readFileSync(path.join(ROOT, 'mq_events.js'), 'utf8') + ';this.MQEv = MQEv;', ctx);
   return ctx;
 }
 // 可复现的伪随机（模拟本身用；页面里的随机将在第 2 步统一到 rng.js）
 function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 
 async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
-  const rnd = mulberry(seed), ctx = makeCtx(rnd), GD = C('game_data.json'), ED = C('events.json');
+  const rnd = mulberry(seed), ctx = makeCtx(null); ctx.ST.seed = seed; const GD = C('game_data.json'), ED = C('events.json');
   await ctx.MQEv.load();
   const P = id => (GD.events.find(e => e.id === id) || {}).p || 0, roll = p => rnd() * 100 < p;
   const famPure = f => { const g = GD.families[f].gens.filter(x => MQ.G[x]); return g.filter(x => MQ.isPure(x)).length / Math.max(1, g.length); };
@@ -27,7 +28,7 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
   let sinceTrip = 0, maxTripGap = 0, sinceMon = 0, maxMonGap = 0, sinceBeatQ = 0, maxBeatGapQ = 0, prevCat = null, rep = 0;
   const perDay = [];
   for (let d = 1; d <= days; d++) {
-    const ST = ctx.ST; ctx.T = { inBeat: false }; const T = ctx.T;
+    const ST = ctx.ST; ST.day = d; ctx.T = { inBeat: false }; const T = ctx.T;
     const dc = ctx.MQEv.tick(); let nCust = Math.max(2, 5 + dc), day = { q: 0, pure: 0, trips: 0, events: 0, monsters: 0 };
     if (roll(P('helper')) && rnd() < 1 / GD.helpers.length) nCust++;   // 帮手 extra（6 种之一）
     const rush = roll(P('rush'));

@@ -1,0 +1,32 @@
+{
+ "days": 200,
+ "seed": 7,
+ "acc": 0.75,
+ "q_per_day": 21.6,
+ "pure_share": 0.242,
+ "beats_per_day": 3.6,
+ "events_per_day": 2.48,
+ "trips_per_day": 0.78,
+ "monsters_per_day": 1.12,
+ "monster_share": 0.311,
+ "trip_share": 0.313,
+ "days_without_trip": 59,
+ "max_trip_gap_events": 5,
+ "max_monster_gap_beats": 5,
+ "max_beat_gap_questions": 4,
+ "same_cat_repeats": 13,
+ "cat_share": {
+  "trip": 0.313,
+  "story": 0.306,
+  "drill": 0.159,
+  "market": 0.081,
+  "cake": 0.141
+ },
+ "free_events": 38,
+ "never_seen": [
+  "compassTrip",
+  "fireCake",
+  "digTreasure"
+ ],
+ "last_first_seen_day": 88
+}

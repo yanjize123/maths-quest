@@ -40,7 +40,7 @@
   }
 
   // 坏仙子：从可用的错误理解里生成一个错答案（第 11 关机制）
-  function fairyWrong(params, correct, misList, rnd = Math.random) {
+  function fairyWrong(params, correct, misList, rnd = () => 0.5) {   // 调用方（mq_engine）总会传入种子随机；默认值不取随机
     const pool = [];
     for (const m of misList) {
       if (m.fairy !== 'yes' || !R[m.buggy_rule]) continue;
