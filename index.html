@@ -158,8 +158,17 @@ function levelRows(strands,year){return '<table><tr><th>Area</th><th style="widt
 function placementResult(d){show('pbox');bar(d.summary);const s=d.summary;
  $('pbox').innerHTML=`<h2>🧭 Placement result</h2><p style="font-size:20px">Overall: secure up to <b>Year ${s.overall}</b> <span class="mut">(school year ${s.year})</span></p>${levelRows(d.strands,s.year)}
  <div class="row"><button class="go" onclick="tab(1)">Start practising ➜</button></div>`}
+function pct(x){return x==null?'–':Math.round(100*x)+'%'}
+function reportHtml(){const R=MQ.report(ST,L.year);const P=R.periods;let h='<h3>📊 Report</h3>';
+ h+=`<table><tr><th></th><th>Questions</th><th>Right</th><th>Minutes</th><th>Pure calculation</th><th>Hints</th></tr>`+[['Last 7 days',P.d7],['Last 30 days',P.d30],['All',P.all]].map(([n,p])=>`<tr><td>${n}</td><td>${p.n}</td><td>${pct(p.acc)}</td><td>${p.mins}</td><td>${pct(p.pure)}</td><td>${pct(p.hints)}</td></tr>`).join('')+'</table>';
+ const wk=R.weeks;h+=`<p class="mut">Accuracy by week (oldest → this week)</p><div style="display:flex;gap:6px;align-items:flex-end;height:70px">`+wk.map(w=>`<div title="${w.n} questions" style="flex:1;background:${w.acc==null?'#28316a':'var(--blue)'};height:${w.acc==null?4:Math.max(6,Math.round(w.acc*64))}px;border-radius:4px"></div>`).join('')+`</div><div style="display:flex;gap:6px" class="mut">`+wk.map(w=>`<div style="flex:1;text-align:center;font-size:12px">${w.n?pct(w.acc):''}</div>`).join('')+'</div>';
+ h+='<h3>🔎 Weak spots</h3>'+(R.weak.length?`<table><tr><th>Year</th><th>Type</th><th>Last 10</th><th>Trend</th><th>Avg s</th></tr>`+R.weak.map(t=>`<tr><td>Y${t.year}</td><td>${esc(t.topic)}</td><td>${pct(t.recent)}</td><td>${t.trend==null?'':(t.trend>0.05?'↗':t.trend<-0.05?'↘':'→')}</td><td>${t.secs}</td></tr>`).join('')+'</table><p class="mut">Target: 8 out of the next 10 right. 🎯 Fix my mistakes practises these first.</p>':'<p class="mut">No weak spots yet (a type needs at least 3 answers).</p>');
+ h+='<h3>🧩 Mistake types (last 30 days)</h3>'+(R.slips.length?'<table>'+R.slips.slice(0,8).map(x=>`<tr><td>${esc(x.name)}</td><td>${x.n}×</td></tr>`).join('')+'</table>':'<p class="mut">Mistake types come from 🔢 Column and ✍️ Step by step.</p>');
+ h+='<h3>📈 Level by area (last 60 days)</h3><table><tr><th>Area</th><th>Answers</th><th>Right</th><th>Practising securely at</th><th>Placement</th><th>Next target</th></tr>'+R.areas.map(a=>`<tr><td>${esc(a.name)}</td><td>${a.n}</td><td>${pct(a.acc)}</td><td>${a.level?'Year '+a.level:'<span class=mut>–</span>'}</td><td>${a.placed!=null?'Year '+a.placed:'<span class=mut>–</span>'}</td><td>Year ${a.target}</td></tr>`).join('')+'</table><p class="mut">“Securely” = at least 5 answers at that year with 80% right.</p>';
+ if(R.strong.length)h+='<h3>⭐ Secure</h3><p>'+R.strong.map(t=>`<span class="tag">Y${t.year} · ${esc(t.topic)}</span>`).join('')+'</p>';
+ return h}
 function book(){const b=MQ.progress(L,ST,DB.goal);bar(b.summary);const s=b.summary;
- let h=`<h2>📒 ${esc(s.name)}'s progress</h2>`;
+ let h=`<h2>📒 ${esc(s.name)}'s progress</h2>`+reportHtml();
  h+=s.overall!=null?`<h3>🧭 Placement (${s.placed}): secure up to Year ${s.overall}</h3>${levelRows(b.strands,s.year)}`:'<p class="mut">No placement result yet — try the 🧭 Placement test.</p>';
  h+=`<h3>Topics</h3><p class="mut">Bonus missions waiting: ${s.review_left} · Answered ${s.count} · Correct ${s.correct}</p><table><tr><th>Year</th><th>Topic</th><th>Stars</th><th>Accuracy</th><th></th></tr>`;
  h+=b.topics.map(t=>`<tr><td>Y${t.year}</td><td>${esc(t.topic)}</td><td>${'⭐'.repeat(t.stars)||'<span class=mut>new</span>'}</td><td><div class="acc"><i style="width:${t.a?Math.round(100*t.c/t.a):0}%"></i></div></td><td class="mut">${t.c}/${t.a}</td></tr>`).join('')+'</table><h3>Recent mistakes</h3>';
@@ -170,14 +179,14 @@ const BACKEND=(window.MQ_BACKEND||'').trim();
 const CKEY='mathsquest_cred',QKEY='mathsquest_queue';
 let SESSION=null,flushing=false,saveMsg='';
 function backBtn(){if(BACKEND)logout();else home()}
-const PAGE_VERSION='classic page v4 · engine v4 · steps v2 · column v1 (2026-11-27)';
+const PAGE_VERSION='classic page v5 · engine v5 · steps v2 · column v1 (2026-11-27)';
 function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device · <span title="version">'+PAGE_VERSION+'</span>'}
 function footBackend(){const n=queueGet().filter(e=>SESSION&&e.user===SESSION.name).length;
  $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'} · ${PAGE_VERSION}`:''}
 async function post(body){const r=await fetch(BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return r.json()}
 function queueGet(){try{return JSON.parse(localStorage.getItem(QKEY))||[]}catch(e){return[]}}
 function queueSet(q){try{localStorage.setItem(QKEY,JSON.stringify(q))}catch(e){}}
-function slim(st){const s=JSON.parse(JSON.stringify(st));s.wrong=(s.wrong||[]).slice(-30);return s}
+function slim(st){const s=JSON.parse(JSON.stringify(st));s.wrong=(s.wrong||[]).slice(-30);s.events=(s.events||[]).slice(-800);return s}
 function showLogin(msg){show0('login');$('foot').innerHTML='';$('lm').textContent=msg||'';const c=cred();if(c&&!$('lu').value)$('lu').value=c.user;setTimeout(()=>($('lu').value?$('lp'):$('lu')).focus(),50)}
 function cred(){try{return JSON.parse(localStorage.getItem(CKEY))}catch(e){return null}}
 async function doLogin(auto){const user=auto?auto.user:$('lu').value.trim(),pass=auto?auto.pass:$('lp').value;if(!user||!pass){$('lm').textContent='Type your name and password.';return}

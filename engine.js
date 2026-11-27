@@ -607,7 +607,7 @@ G.a5_pow10dec = () => { const a = F(R(11, 9999), choice([10, 100])), p = choice(
 G.a5_fracsame = () => { const d = choice([5, 6, 7, 8, 9, 10, 12]); const a = R(1, d - 1), b = R(1, d - 1); return rnd() < 0.5 ? QC("Adding fractions (same denominator)", `${a}/${d} + ${b}/${d}`, F(a + b, d), { kind: "frac", fmt: FRF }) : (a === b ? QC("Adding fractions (same denominator)", `${a}/${d} + ${b}/${d}`, F(a + b, d), { kind: "frac", fmt: FRF }) : QC("Subtracting fractions (same denominator)", `${Math.max(a, b)}/${d} − ${Math.min(a, b)}/${d}`, F(Math.abs(a - b), d), { kind: "frac", fmt: FRF })); };
 G.a5_mixed = () => { const d = choice([3, 4, 5, 6, 8]); const x = F(R(1, 4) * d + R(1, d - 1), d), y = F(R(0, 2) * d + R(1, d - 1), d); return rnd() < 0.5 ? QC("Adding mixed numbers", `${mixs(x)} + ${mixs(y)}`, x.add(y), { kind: "frac", fmt: FRF }) : (x.cmp(y) > 0 ? QC("Subtracting mixed numbers", `${mixs(x)} − ${mixs(y)}`, x.sub(y), { kind: "frac", fmt: FRF }) : QC("Adding mixed numbers", `${mixs(x)} + ${mixs(y)}`, x.add(y), { kind: "frac", fmt: FRF })); };
 G.a5_sqcalc = () => { const a = R(2, 12), b = R(2, 5); return QC("Squares and cubes", `${a}² + ${b}³`, a * a + b ** 3); };
-G.a6_longdiv = () => { const d = R(12, 49), q = R(21, 299); return QC("Long division", `${cm(d * q)} ÷ ${d}`, q, { hint: "Divide, multiply, subtract, bring down." }); };
+G.a6_longdiv = () => { const d = R(12, 49), q = R(21, 299); return QC("Long division (4-digit ÷ 2-digit)", `${cm(d * q)} ÷ ${d}`, q, { hint: "Divide, multiply, subtract, bring down." }); };
 G.a6_longmul4 = () => { const a = R(1002, 4999), b = R(21, 89); return QC("Long multiplication (4-digit × 2-digit)", `${cm(a)} × ${b}`, a * b); };
 G.a6_decmul = () => { const a = F(R(101, 999), 100), b = R(3, 9); return rnd() < 0.5 ? QC("Decimal × whole number", `${fdec(a)} × ${b}`, a.mul(b), { show: fdec(a.mul(b)) }) : QC("Decimal ÷ whole number", `${fdec(a.mul(b))} ÷ ${b}`, a, { show: fdec(a) }); };
 G.a6_fracunlike = () => { const [d1, d2] = sample([2, 3, 4, 5, 6, 8, 10, 12], 2); const a = F(R(1, d1 - 1), d1), b = F(R(1, d2 - 1), d2); return rnd() < 0.55 || a.cmp(b) <= 0 ? QC("Adding fractions (different denominators)", `${sfrac(a)} + ${sfrac(b)}`, a.add(b), { kind: "frac", fmt: FRF, hint: "Use a common denominator." }) : QC("Subtracting fractions (different denominators)", `${sfrac(a)} − ${sfrac(b)}`, a.sub(b), { kind: "frac", fmt: FRF, hint: "Use a common denominator." }); };
@@ -848,6 +848,53 @@ function progress(L, st, goal) {
   return { topics: rows, wrong: st.wrong.slice(-40).reverse(), summary: summary(L, st, goal), strands: strandRows(st) };
 }
 
-const API = { isPure, PURE_SHARE, STEP_GENS, COLUMN_GENS, makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
+// ================================================================ REPORT: strengths, weak spots, error types, targets (from st.events)
+const SLIP_NAMES = {
+  q_big: "Division: quotient digit too big", q_small: "Division: quotient digit too small", q_missing: "Division: missing 0 in the answer", q_lead: "Division: digit written too early",
+  mul_err: "Multiplying wrongly", sub_err: "Subtracting wrongly", bring_err: "Division: wrong digit brought down", bring_missing: "Division: forgot to bring down", rem_err: "Remainder wrong",
+  partial_err: "Long multiplication: partial product wrong", add_err: "Adding wrongly", carry_missing: "Forgot to carry", small_from_big: "Subtraction: took smaller digit from bigger",
+  order_ops: "Order of operations (worked left to right)", sign: "Minus sign slip", calc_err: "Calculation slip", move_sign: "Equation: sign not changed when moving a term",
+  bracket_first_only: "Bracket: multiplied only the first term", neg_bracket: "Minus before a bracket", subtract_not_divide: "Equation: subtracted instead of dividing",
+  multiply_not_divide: "Equation: multiplied instead of dividing", divide_upside_down: "Equation: divided the wrong way round", unbalanced: "Equation: sides not balanced",
+  ineq_no_flip: "Inequality: sign not flipped for a negative", ineq_strict: "Inequality: < vs ≤ mixed up", ineq_err: "Inequality slip", sys_mult_all: "Simultaneous: didn't multiply every term",
+  sys_combine_sign: "Simultaneous: sign slip when adding/subtracting", sys_err: "Simultaneous: equation not true", sys_lost: "Simultaneous: both letters lost", step_err: "Working slip",
+};
+function report(st, year, now) {
+  const ev = (st.events || []).filter(e => e && e.gen), t0 = now || Date.now(), day = 864e5;
+  const since = d => ev.filter(e => t0 - Date.parse(e.t) <= d * day);
+  const sumUp = list => { const n = list.length, ok = list.filter(e => e.ok).length, secs = list.reduce((a, e) => a + (+e.secs || 0), 0); return { n, ok, acc: n ? ok / n : null, mins: Math.round(secs / 6) / 10, pure: n ? list.filter(e => e.pure).length / n : null, hints: n ? list.filter(e => e.hint).length / n : null }; };
+  const periods = { d7: sumUp(since(7)), d30: sumUp(since(30)), all: sumUp(ev) };
+  // per question type
+  const by = {}; for (const e of ev) (by[e.gen] = by[e.gen] || []).push(e);
+  const topics = Object.entries(by).map(([gen, list]) => {
+    const last = list.slice(-10), half = Math.floor(list.length / 2), early = list.slice(0, half), late = list.slice(half);
+    const acc = l => l.length ? l.filter(e => e.ok).length / l.length : null;
+    const secs = last.reduce((a, e) => a + (+e.secs || 0), 0) / Math.max(1, last.length);
+    const r = { gen, topic: list[list.length - 1].topic, year: YEAR_OF[gen] || list[0].year, strand: list[0].strand, n: list.length, acc: acc(list), recent: acc(last), trend: list.length >= 6 ? acc(late) - acc(early) : null, secs: Math.round(secs * 10) / 10, hints: last.filter(e => e.hint).length / last.length, slips: list.reduce((a, e) => a + (e.slips || []).length, 0) };
+    // weakness: low recent accuracy weighs most; many slips, hints and slowness add a little; needs evidence (n >= 3)
+    r.weak = r.n < 3 ? 0 : (1 - r.recent) * 2 + r.hints * 0.5 + Math.min(1, r.slips / r.n) * 0.5 - (r.trend > 0.2 ? 0.3 : 0);
+    r.status = r.n < 3 ? "new" : r.recent >= 0.9 && r.n >= 5 ? "secure" : r.recent >= 0.7 ? "nearly" : "weak";
+    return r;
+  });
+  const weak = topics.filter(t => t.status === "weak" || (t.status === "nearly" && t.weak > 0.8)).sort((a, b) => b.weak - a.weak).slice(0, 8);
+  const strong = topics.filter(t => t.status === "secure").sort((a, b) => b.year - a.year || b.n - a.n).slice(0, 8);
+  // error types (last 30 days)
+  const slipCount = {}; for (const e of since(30)) for (const c of e.slips || []) slipCount[c] = (slipCount[c] || 0) + 1;
+  const slips = Object.entries(slipCount).sort((a, b) => b[1] - a[1]).map(([code, n]) => ({ code, n, name: SLIP_NAMES[code] || code }));
+  // level per area: highest year whose questions (last 60 days, >= 5 answers) are >= 80% right
+  const areas = STRANDS.map(([c, name]) => {
+    const rec = since(60).filter(e => STRAND[e.gen] === c), byY = {};
+    for (const e of rec) (byY[YEAR_OF[e.gen]] = byY[YEAR_OF[e.gen]] || []).push(e.ok ? 1 : 0);
+    let level = null; for (const y of Object.keys(byY).map(Number).sort((a, b) => a - b)) { const a = byY[y]; if (a.length >= 5 && sum(a) / a.length >= 0.8) level = y; }
+    const placed = (st.levels || {})[c];
+    const target = Math.min(11, Math.max(level || 0, placed || 0, year) + ((level || 0) >= year ? 1 : 0));
+    return { code: c, name, n: rec.length, acc: rec.length ? rec.filter(e => e.ok).length / rec.length : null, level, placed: placed ?? null, target };
+  });
+  // weekly accuracy, last 8 weeks (oldest first)
+  const weeks = []; for (let w = 7; w >= 0; w--) { const l = ev.filter(e => { const d = (t0 - Date.parse(e.t)) / day; return d >= w * 7 && d < (w + 1) * 7; }); weeks.push({ w, n: l.length, acc: l.length ? l.filter(e => e.ok).length / l.length : null }); }
+  return { periods, topics, weak, strong, slips, areas, weeks };
+}
+
+const API = { report, SLIP_NAMES, isPure, PURE_SHARE, STEP_GENS, COLUMN_GENS, makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
 if (typeof module !== "undefined" && module.exports) module.exports = API; else root.MQ = API;
 })(typeof window !== "undefined" ? window : globalThis);
