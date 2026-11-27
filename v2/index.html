@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Penguin Cupcakes · Maths Quest v2</title>
-<!-- 甜品店 第 1 关 页面 v006（2026-11-27 宝箱只给东西不给金币；v005 金币写法统一、草莓不够可去补货、每 3 件一次随机大变化；v004 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
+<!-- 甜品店 第 1 关 页面 v007（2026-11-27 随机事件层 mq_play.js：怪兽来抢+选武器+怪兽卡图鉴、换店员、顾客高峰、多层蛋糕订单；程序化画图 mq_gen.js；题目借用 ../engine.js。v006 宝箱只给东西不给金币；v005 金币写法统一、草莓不够可去补货、每 3 件一次随机大变化；v004 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
      规则：business_loop.md（yanjize123/claude 条目 P-20261126-maths-game）。奖惩不对称：对方吃亏的错误被拒绝要重算，对方占便宜的错误被接受、店里亏。 -->
 <style>
  :root{--pink:#ff7eb6;--ink:#3a2a3a}
@@ -51,8 +51,11 @@
 <script src="mq_engine.js"></script>
 <script src="mq_store.js"></script>
 <script src="mq_art.js"></script>
+<script src="../engine.js"></script>
+<script src="mq_gen.js"></script>
+<script src="mq_play.js"></script>
 <script>
-const PAGE_VERSION = 6, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
+const PAGE_VERSION = 7, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
 const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
 const PUNNET = 10;                 // 每盒草莓 10 颗
 const UPGRADES = [
@@ -126,12 +129,13 @@ $('lb').onclick = async () => {
 };
 function renderLogin() { setLang(LANG); $('lw').innerHTML = t('welcome'); $('lu').placeholder = t('name'); $('lp').placeholder = t('pass'); $('lb').textContent = t('open'); $('ll').textContent = t('guest'); $('lang1').textContent = t('other'); }
 $('lang1').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); renderLogin(); };
-$('lang2').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); hud(); if (CUR) CUR(); };
+$('lang2').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); hud(); if ($('bookb')) $('bookb').textContent = t2('book'); if (CUR) CUR(); };
 renderLogin();
 $('ll').onclick = () => { S = { name: 'guest', local: true }; ST = fixShop(MQStore.loadProgress('guest') || newShop()); boot(); };
 
 async function boot() {
   C = await E.loadContent(read, [1, 'level01biz']); SHOP = JSON.parse(await read('content/shop_A.json')).items;
+  await playBoot();
   $('login').classList.add('hide'); $('game').classList.remove('hide'); morning();
 }
 
@@ -162,10 +166,10 @@ function ask(itemId, params, opts) {
   const go = () => {
     const raw = $('ans').value.trim(); if (raw === '') return;
     const v = Number(raw.replace(/[🪙,\s]/g, '')); if (!Number.isFinite(v)) return;
-    const res = E.check(q, v, C.mis, item); if (st.attempt === 1) st.first = res.correct && st.hint === 0;
+    const res = E.check(q, v, C.mis, item); if (st.attempt === 1) st.first = res.correct && (st.hint === 0 || (T && T.helper && T.helper.bonus === 'hint'));
     res.evidence.forEach(e => ST.evidence.push({ mis_id: e.mis_id, item_id: item.item_id }));
     record(E.makeAttempt({ q, item, content: C, mastery: ST.mastery, answer: v, result: res, attemptNo: st.attempt, hintLevel: st.hint, firstCorrect: st.first, seconds: Math.round((Date.now() - st.t0) / 1000), chosen: !!opts.chosen, reward: opts.reward || '' }));
-    if (res.correct && st.first) { ST.streak = (ST.streak || 0) + 1; const bonus = 1 + (ST.streak % 3 === 0 ? 2 : 0); ST.stock += bonus; hud(); setTimeout(() => { if ($('msg')) $('msg').insertAdjacentHTML('beforeend', `<div class="note good">${t('berry')(bonus)}</div>`); }, 0); } else if (!res.correct) ST.streak = 0;
+    if (res.correct && st.first) { ST.streak = (ST.streak || 0) + 1; const bonus = 1 + (ST.streak % 3 === 0 ? 2 : 0) + (T && T.helper && T.helper.bonus === 'berry' ? 1 : 0); ST.stock += bonus; hud(); setTimeout(() => { if ($('msg')) $('msg').insertAdjacentHTML('beforeend', `<div class="note good">${t('berry')(bonus)}</div>`); }, 0); } else if (!res.correct) ST.streak = 0;
     const verdict = res.correct ? 'accept' : opts.onAnswer(v, res, q);
     if (verdict === 'accept') { $('ok').disabled = true; $('ans').disabled = true; opts.onDone(v, res, q, st); return; }
     st.attempt++; const mis = res.evidence[0] && C.mis.find(m => m.mis_id === res.evidence[0].mis_id);
@@ -190,13 +194,14 @@ function newDay() {
   if (ev && ev.steal) ev.lost = Math.min(ST.stock, ev.steal), ST.stock -= ev.lost;
   if (ev && ev.cost) ST.cash -= ev.cost;
   T = { ev, orders, idx: 0, price, cakePrice: 2 + (ev && ev.cake || 0), income: 0, spent: 0, punnets: 0, lost: 0, served: 0 };
+  playDay();
 }
 function showMorning() {
   CUR = showMorning; hud(); const orders = T.orders, price = T.price;
-  actors(PG(), '', A.dragon(orders[0].who));
-  const list = orders.map(o => `<li>${o.who}: ${o.kind === 'IT.L1.MUL.007' ? t('lots') : t('ord')(o.p.n, o.p.k)}</li>`).join('');
+  actors(PG(), helperArt(), A.dragon(orders[0].who));
+  const list = orders.map(o => `<li>${o.who}: ${o.kind === 'LAYER' ? (LANG === 'zh' ? `${o.p.n} 层蛋糕，每层 ${o.p.k} 颗草莓` : `a ${o.p.n}-tier cake, ${o.p.k} strawberries on each tier`) : o.kind === 'IT.L1.MUL.007' ? t('lots') : t('ord')(o.p.n, o.p.k)}</li>`).join('');
   const evmsg = (ST.spoiled ? `<div class="note">${t('spoiled')(ST.spoiled)}</div>` : '') + (T.ev ? `<div class="hint">${T.ev.icon} ${T.ev[LANG]}${T.ev.lost != null ? ' (−' + T.ev.lost + ' 🍓)' : ''}</div>` : '');
-  panel(`${evmsg}<div class="say"><span class="who">${t('penguin')}:</span> ${t('morning')}</div><ul class="say">${list}</ul>
+  panel(`${evmsg}${helperBlock()}<div class="say"><span class="who">${t('penguin')}:</span> ${t('morning')}</div><ul class="say">${list}</ul>
     <div class="say">${t('have')(ST.stock, PUNNET, price)}</div>
     <div class="row">${t('howmany')} <button class="alt" id="minus">−</button><b id="pn" style="font-size:24px">1</b><button class="alt" id="plus">+</button><button id="buy">${t('market')}</button><button class="alt" id="skip">${t('noshop')}</button></div>
     <div class="note">${t('tip')}</div>`);
@@ -226,7 +231,10 @@ function pay(n) {
 
 // ---------------- 2 营业：做蛋糕、收钱 ----------------
 function serveNext() {
-  CUR = serveNext; hud(); if (T.idx >= T.orders.length) return evening();
+  CUR = serveNext; hud();
+  if (T.monster && !T.monsterDone && T.idx === 0) return battleIntro();
+  if (T.idx >= T.orders.length) return T.rush && !T.rushDone ? rushIntro() : evening();
+  if (T.orders[T.idx].kind === 'LAYER') return serveLayer(T.orders[T.idx]);
   const o = T.orders[T.idx], item = C.byItem[o.kind], need = E.evalExpr(item.answer, o.p);
   actors(PG(), A.cupcake(0), A.dragon(o.who));
   if (need > ST.stock) {
@@ -367,7 +375,7 @@ function openChest(tier) {
   });
 }
 
-function showSleep() { CUR = showSleep; actors(PG(), '', A.dragon(DRAGONS[ST.day % 3])); panel(`<div class="row"><button id="nx">${t('sleep')}</button></div>`); $('nx').onclick = () => { ST.spoiled = Math.floor(ST.stock * 0.25); ST.stock -= ST.spoiled; ST.day++; save(); morning(); }; }
+function showSleep() { CUR = showSleep; actors(PG(), '', A.dragon(DRAGONS[ST.day % 3])); panel(`<div class="row"><button id="nx">${t('sleep')}</button></div>`); $('nx').onclick = () => { ST.spoiled = T && T.helper && T.helper.bonus === 'fresh' ? 0 : Math.floor(ST.stock * 0.25); ST.stock -= ST.spoiled; ST.day++; save(); morning(); }; }
 
 const PALETTES = [{ awning: '#6fd3a8', wall: '#ecfff6' }, { awning: '#f0a35a', wall: '#fff6ea' }, { awning: '#8fb6ff', wall: '#eef4ff' }, { awning: '#c79bff', wall: '#f6efff' }, { awning: '#ff7b7b', wall: '#fff0ee' }, { awning: '#ffd23f', wall: '#fffbe6' }];
 // 大变化：第 3/6/10 件固定内容（颜色随机），之后每 3 件从惊喜池随机挑一个（Jize 00:37：经常有变化、带随机性）

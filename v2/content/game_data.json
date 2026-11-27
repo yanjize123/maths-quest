@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "note": "v007 随机事件、武器、怪兽图鉴、动物店员（P-20261126-maths-game）。题目来自 ../engine.js（v1 刷题页题型），按 family 取题型，按年级档取难度。概率为假设，待试玩调整。",
+  "families": {
+    "add":      { "en": "adding & taking away", "zh": "加减", "gens": ["y1_addsub20","y1_bonds","a1_add10","a1_sub10","a1_add20","y2_addsub","a2_add21","a2_tens","y3_addsub","a3_coladd","a3_colsub","y4_addsub","a4_coladd4","y5_addsub"] },
+    "times":    { "en": "times tables & multiplying", "zh": "乘法", "gens": ["y2_times","y3_times","a3_mul21","y4_tables","a4_mul31","a4_mul10","y3_mult","y4_mult","y5_mult","a5_longmul","a6_longmul4"] },
+    "divide":   { "en": "dividing", "zh": "除法", "gens": ["a2_div","a3_divfacts","a4_shortdiv","a5_shortdiv4","y6_longdiv","a6_longdiv"] },
+    "fraction": { "en": "fractions", "zh": "分数", "gens": ["y1_half","y2_frac","y3_frac","y4_frac","y5_frac_of","y5_frac_add","a5_fracsame","a5_mixed","y5_frac_times","y6_fracadd","a6_fracunlike","a6_fracwhole","y6_fracmul","y7_fracdiv","a7_mixedmul"] },
+    "decimal":  { "en": "decimals & percentages", "zh": "小数与百分数", "gens": ["y4_dec","a4_dec1","y5_decimal","a5_decadd","a5_pow10dec","y5_percent","y6_percent","a6_pctof","y6_decmul","a6_decmul","a7_decdec","y7_pct","y8_pctchange"] },
+    "money":    { "en": "money", "zh": "钱", "gens": ["y1_coins","y2_money","y3_money","y5_percent","y8_pctchange"] },
+    "measure":  { "en": "measuring, area & perimeter", "zh": "测量与面积", "gens": ["y3_perim","y4_area","y4_convert","y5_area","y5_convert","y6_area","y6_miles","y7_trap","y8_circle"] },
+    "algebra":  { "en": "equations", "zh": "方程", "gens": ["a3_missing","f2_missing","f3_missing","f5_missing","y6_algebra","y7_eq","y7_sub","g_linear"] },
+    "power":    { "en": "negatives, squares & powers", "zh": "负数与乘方", "gens": ["y4_neg","y5_negative","y5_sqcube","a5_sqcalc","y6_negcalc","y7_neg","a7_negall","a8_powers","a9_sqrt","y8_indices"] },
+    "mixed":    { "en": "order of operations", "zh": "混合运算", "gens": ["y6_bidmas","a7_clever","y6_lcm","y7_hcf"] }
+  },
+  "weapons": [
+    { "id": "water_hammer",   "en": "Splash Hammer",     "zh": "水花锤",     "shape": "hammer",    "element": "water",  "family": "times",    "rarity": "common", "start": true },
+    { "id": "leaf_spoon",     "en": "Leafy Ladle",       "zh": "树叶大勺",   "shape": "spoon",     "element": "leaf",   "family": "add",      "rarity": "common", "start": true },
+    { "id": "fire_whisk",     "en": "Blazing Whisk",     "zh": "火焰打蛋器", "shape": "whisk",     "element": "fire",   "family": "divide",   "rarity": "common", "start": true },
+    { "id": "wind_fan",       "en": "Whoosh Fan",        "zh": "呼呼扇",     "shape": "fan",       "element": "wind",   "family": "fraction", "rarity": "common" },
+    { "id": "ice_rolling",    "en": "Frosty Rolling Pin","zh": "冰霜擀面杖", "shape": "rolling",   "element": "ice",    "family": "times",    "rarity": "common" },
+    { "id": "bolt_pan",       "en": "Zappy Pan",         "zh": "电电平底锅", "shape": "pan",       "element": "bolt",   "family": "add",      "rarity": "common" },
+    { "id": "bubble_gun",     "en": "Bubble Blaster",    "zh": "泡泡枪",     "shape": "bubblegun", "element": "bubble", "family": "decimal",  "rarity": "common" },
+    { "id": "sugar_sling",    "en": "Sprinkle Slingshot","zh": "彩糖弹弓",   "shape": "slingshot", "element": "sugar",  "family": "money",    "rarity": "common" },
+    { "id": "leaf_boomerang", "en": "Boomer-leaf",       "zh": "回旋叶镖",   "shape": "boomerang", "element": "leaf",   "family": "measure",  "rarity": "rare" },
+    { "id": "water_umbrella", "en": "Rain Umbrella",     "zh": "下雨伞",     "shape": "umbrella",  "element": "water",  "family": "fraction", "rarity": "rare" },
+    { "id": "fire_sword",     "en": "Toasty Sword",      "zh": "烤面包剑",   "shape": "sword",     "element": "fire",   "family": "algebra",  "rarity": "rare" },
+    { "id": "bolt_wand",      "en": "Thunder Wand",      "zh": "雷电魔杖",   "shape": "wand",      "element": "bolt",   "family": "power",    "rarity": "rare" },
+    { "id": "ice_sword",      "en": "Icicle Sabre",      "zh": "冰锥刀",     "shape": "sword",     "element": "ice",    "family": "divide",   "rarity": "rare" },
+    { "id": "wind_umbrella",  "en": "Tornado Brolly",    "zh": "龙卷风伞",   "shape": "umbrella",  "element": "wind",   "family": "mixed",    "rarity": "rare" },
+    { "id": "sugar_wand",     "en": "Candyfloss Wand",   "zh": "棉花糖魔杖", "shape": "wand",      "element": "sugar",  "family": "decimal",  "rarity": "legend" },
+    { "id": "bubble_hammer",  "en": "Bouncy Bubble Mallet","zh": "弹弹泡泡锤","shape": "hammer",   "element": "bubble", "family": "algebra",  "rarity": "legend" }
+  ],
+  "tiers": {
+    "easy":   { "en": "Easy",   "zh": "简单", "dyear": -1, "dmg": 1 },
+    "normal": { "en": "Normal", "zh": "普通", "dyear": 0,  "dmg": 2 },
+    "hard":   { "en": "Hard",   "zh": "困难", "dyear": 1,  "dmg": 3 }
+  },
+  "book": { "size": 24, "seed_prefix": "mq-book-", "legend_from": 20, "rare_from": 12 },
+  "helpers": [
+    { "kind": "bunny",    "bonus": "berry",  "en": "Bunny hops in to help! Every first-time right answer gives 1 extra strawberry today.", "zh": "兔子跳来帮忙！今天每次一次答对多奖 1 颗草莓。" },
+    { "kind": "bear",     "bonus": "cheap",  "en": "Bear knows the farmer: strawberries cost 1 coin less per punnet today.", "zh": "小熊认识农夫：今天草莓每盒便宜 1 金币。" },
+    { "kind": "fox",      "bonus": "price",  "en": "Fox is great at selling: cupcakes sell for 1 coin more today.", "zh": "狐狸很会卖东西：今天每个蛋糕多卖 1 金币。" },
+    { "kind": "owl",      "bonus": "hint",   "en": "Owl joins the shop. Hints are free today — they don't stop you getting a reward.", "zh": "猫头鹰来店里帮忙。今天用提示也照样拿奖励。" },
+    { "kind": "panda",    "bonus": "extra",  "en": "Panda brings a friend: one extra customer today.", "zh": "熊猫带来一位朋友：今天多一位顾客。" },
+    { "kind": "frog",     "bonus": "guard",  "en": "Frog guards the door: monsters can't steal anything today.", "zh": "青蛙守门：今天怪兽什么也偷不走。" },
+    { "kind": "cat",      "bonus": "weapon", "en": "Cat found a weapon in the cupboard!", "zh": "小猫在柜子里找到一件武器！" },
+    { "kind": "hedgehog", "bonus": "fresh",  "en": "Hedgehog keeps the fridge cold: no strawberries go bad tonight.", "zh": "刺猬把冰箱看好了：今晚草莓不会坏。" }
+  ],
+  "events": [
+    { "id": "monster", "p": 28, "where": "open" },
+    { "id": "helper",  "p": 22, "where": "morning" },
+    { "id": "rush",    "p": 15, "where": "close" },
+    { "id": "layer",   "p": 35, "where": "orders" }
+  ],
+  "rush": { "seconds": 60, "gens": ["y2_times","y3_times","y4_tables","a3_divfacts","a2_div","y3_addsub","a2_add21"] }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!-- 自动试玩 v007 随机事件层（headless Chrome 用）：?stop=battle|won|book|layer|rush|helper 停在该画面截图；标题写 PASS/FAIL 与错误。 -->
+<html><head><meta charset="utf-8"><style>body{margin:0}iframe{width:820px;height:1000px;border:0}</style></head><body>
+<iframe id="f" src="../index.html?lang=zh"></iframe>
+<script>
+const stop = new URLSearchParams(location.search).get('stop') || 'all', errs = [];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const f = document.getElementById('f');
+f.onload = async () => {
+  const w = f.contentWindow, d = w.document; w.onerror = (m, s, l) => errs.push(m + '@' + l);
+  let lastQ = null; const mk = w.MQ.makeQuestion; w.MQ.makeQuestion = g => (lastQ = mk(g));
+  const ansOf = q => typeof q.answer === 'number' ? String(q.answer) : w.MQ.sfrac(q.answer);
+  const click = sel => { const e = d.querySelector(sel); if (!e) throw new Error('no ' + sel); e.click(); };
+  const type = v => { d.getElementById('ans2').value = v; d.getElementById('ok2').click(); };
+  try {
+    try { w.localStorage.clear(); } catch (e) {}
+    click('#ll'); await sleep(800);
+    w.eval("ST.year = 4; T.helper = GD.helpers[5]; T.monster = { idx: 21 }; T.monsterDone = false; showMorning()");
+    if (stop === 'helper') return done();
+    w.eval('serveNext()'); await sleep(200);
+    click('[data-w="water_hammer"]'); click('[data-t="hard"]');
+    if (stop === 'battle0') return done();
+    click('#fg'); await sleep(200);
+    if (stop === 'battle') return done();
+    type('999999'); await sleep(150);   // 故意答错一次
+    if (stop === 'miss') return done();
+    for (let i = 0; i < 12 && d.getElementById('ans2'); i++) {
+      if (d.getElementById('ans2').disabled) { click('#nx2'); await sleep(150); continue; }
+      type(ansOf(lastQ)); await sleep(150);
+      if (stop === 'hit' && i === 0) return done();
+      if (d.getElementById('nx2')) { click('#nx2'); await sleep(150); }
+    }
+    if (!d.body.innerHTML.includes('🆕')) throw new Error('battle not won');
+    if (stop === 'won') return done();
+    click('#bk2'); await sleep(100); if (stop === 'book') return done();
+    w.eval("T.orders = [{ who: 'Yummy', kind: 'LAYER', p: { n: 4, k: 3, fl: 'chocolate' } }]; T.idx = 0; ST.stock = 50; T.monsterDone = true; serveNext()"); await sleep(100);
+    type('12'); await sleep(100); if (stop === 'layer') return done();
+    click('#nx2'); await sleep(100); type(String(4 * w.eval('T.cakePrice'))); await sleep(100); click('#nx2'); await sleep(100);
+    w.eval('T.rush = true; T.rushDone = false; serveNext()'); await sleep(100); click('#go'); await sleep(100);
+    for (let i = 0; i < 5; i++) { type(ansOf(lastQ)); await sleep(400); }
+    if (stop === 'rush') return done();
+    done();
+  } catch (e) { errs.push(String(e)); done(); }
+  function done() { document.title = (errs.length ? 'FAIL ' : 'PASS ') + errs.join(' | '); document.body.setAttribute('data-result', document.title); }
+};
+</script></body></html>
