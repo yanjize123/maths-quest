@@ -1,7 +1,7 @@
 // mq_play.js — 甜品店随机事件层 v1（2026-11-27，P-20261126-maths-game）：怪兽来抢（选武器打怪、怪兽卡图鉴）、换店员（动物加成）、顾客高峰（限时）、多层蛋糕订单。
 // 依赖 index.html 里的全局（ST、T、C、LANG、panel、actors、hud、record、save、serveNext、evening、PG、R、money、$），以及 MQ（../engine.js 题目生成）、MQGen（mq_gen.js 画图）。
 // 数据在 content/game_data.json（武器、题型族、店员、事件概率）。版本写在文件内。
-const PLAY_VERSION = 2;   // v2：怪兽 30、武器 40 来自数据表；克制按题型族
+const PLAY_VERSION = 3;   // v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
 let GD = null;
 const TX2 = {
   en: { book: '🃏 Monster cards', back: '← Back', bookIntro: (n, m) => `You have caught <b>${n}</b> of ${m} monsters. Defeat monsters with maths to collect their cards!`, unknown: '???',
@@ -102,8 +102,21 @@ function askMQ(opts) {
   $('ok2').onclick = go; $('ans2').onkeydown = e => { if (e.key === 'Enter') go(); }; $('ans2').focus();
   return q;
 }
+// ---------------- 自动难度：每个题型族一个水平值（按年级计，可带小数），不问孩子 ----------------
+// 前 4 题是隐藏小测（阶梯法：对 +1、错 −1，起点取已测族的平均或 3）；之后对 +0.15、错 −0.3（目标正确率约 2/3–3/4）。
+function level(family) {
+  ST.ability = ST.ability || {}; ST.abilityN = ST.abilityN || {};
+  if (ST.ability[family] == null) { const v = Object.values(ST.ability); ST.ability[family] = v.length ? v.reduce((a, b) => a + b, 0) / v.length : 3; ST.abilityN[family] = 0; }
+  return ST.ability[family];
+}
+function updateLevel(family, qYear, ok, attempt) {
+  if (attempt > 1) return; const n = ST.abilityN[family] || 0, a = level(family);
+  const step = n < 4 ? (ok ? 1 : -1) : (ok ? 0.15 : -0.3);
+  const next = n < 4 ? (ok ? Math.max(a, qYear) + step * 0.5 + 0.5 : Math.min(a, qYear) - 0.5) : a + step * (ok ? (qYear >= a ? 1 : 0.4) : (qYear <= a ? 1 : 0.4));
+  ST.ability[family] = Math.max(1, Math.min(11, next)); ST.abilityN[family] = n + 1;
+}
 function gensFor(family, tierKey) {
-  const fam = GD.families[family], y = Math.max(1, Math.min(11, (ST.year || 4) + GD.tiers[tierKey].dyear));
+  const fam = GD.families[family], y = Math.max(1, Math.min(11, Math.round(level(family) + GD.tiers[tierKey].dyear)));
   const all = fam.gens.filter(g => MQ.G[g]);
   let pool = all.filter(g => MQ.YEAR_OF[g] === y);
   if (!pool.length) { const d = Math.min(...all.map(g => Math.abs(MQ.YEAR_OF[g] - y))); pool = all.filter(g => Math.abs(MQ.YEAR_OF[g] - y) === d); }
@@ -115,10 +128,6 @@ function battleIntro() {
   CUR = battleIntro; const B = T.monster, s = bookSpec(B.idx);
   if (B.hp == null) B.hp = B.max = s.hp * 2;
   actors(PG('oops'), helperArt(), MQGen.monster(s, 'angry'));
-  if (!ST.year) {
-    panel(`<div class="say">${t2('raid')(nm(s.name))}</div><div class="say">${t2('year')}</div><div class="row">${[2, 3, 4, 5, 6, 7, 8, 9].map(y => `<button class="alt" data-y="${y}">${t2('yearN')(y)}</button>`).join('')}</div>`);
-    $('panel').querySelectorAll('[data-y]').forEach(b => b.onclick = () => { ST.year = +b.dataset.y; save(); battleIntro(); }); return;
-  }
   const mine = GD.weapons.filter(w => ST.weapons.includes(w.id));
   panel(`<div class="say">${t2('raid')(nm(s.name))} ${MQGen.hpBar(B.hp, B.max)}</div><div class="note">${t2('weak')(nm(GD.families[s.weakFam]))}</div>
     <div class="say">${t2('pickW')}</div><div class="row" id="wl">${mine.map(w => `<button class="alt" data-w="${w.id}" style="display:flex;align-items:center;gap:4px">${MQGen.weapon(w).replace('<svg', '<svg width="34" height="34"')}<span style="text-align:left;font-size:15px">${nm(w)}<br><span class="note">${MQGen.ELEMENTS[w.element].icon} ${nm(GD.families[w.family])}</span></span></button>`).join('')}</div>
@@ -138,6 +147,7 @@ function battleTurn() {
   const pool = gensFor(w.family, B.tier), gen = pool[R(0, pool.length - 1)];
   B.turns = (B.turns || 0) + 1;
   askMQ({ gen, family: w.family, reward: 'battle-' + B.tier, scene: 'monster', chosen: true, onResult: (ok, q, attempt) => {
+    updateLevel(w.family, MQ.YEAR_OF[gen], ok, attempt);
     if (ok) {
       const sup = w.family === s.weakFam, dmg = tier.dmg * (sup ? 2 : 1); B.hp = Math.max(0, B.hp - dmg);
       $('wpn').innerHTML = MQGen.weapon(w, 'swing').replace('<svg', '<svg width="60" height="60"');
@@ -177,7 +187,7 @@ function rushRun() {
   const end = Date.now() + GD.rush.seconds * 1000; let right = 0; CUR = null;
   panel(`<div style="height:12px;background:#eee;border-radius:6px;overflow:hidden"><div id="tbar" style="height:100%;width:100%;background:#ff7eb6;transition:width 1s linear"></div></div><div class="say">✅ <b id="rc">0</b></div><div id="qbox"></div>`);
   const tick = setInterval(() => { const left = end - Date.now(); if ($('tbar')) $('tbar').style.width = Math.max(0, left / (GD.rush.seconds * 10)) + '%'; if (left <= 0) { clearInterval(tick); finish(); } }, 250);
-  const next = () => { if (Date.now() >= end || !$('qbox')) return; const g = GD.rush.gens[R(0, GD.rush.gens.length - 1)]; askMQ({ gen: g, family: 'rush', reward: 'rush', scene: 'rush', button: '✓', onResult: ok => { if (ok) { right++; $('rc').textContent = right; dance($('right')); } setTimeout(next, ok ? 150 : 700); if (!ok) $('msg2').innerHTML = '<span class="bad">✗</span>'; return 'done'; } }); };
+  const next = () => { if (Date.now() >= end || !$('qbox')) return; const fam = ['add', 'times', 'divide'][R(0, 2)], pool = gensFor(fam, 'easy'), g = pool[R(0, pool.length - 1)]; askMQ({ gen: g, family: fam, reward: 'rush', scene: 'rush', button: '✓', onResult: (ok, q, att) => { updateLevel(fam, MQ.YEAR_OF[g], ok, att); if (ok) { right++; $('rc').textContent = right; dance($('right')); } setTimeout(next, ok ? 150 : 700); if (!ok) $('msg2').innerHTML = '<span class="bad">✗</span>'; return 'done'; } }); };
   const finish = () => { ST.cash += right; T.income += right; T.rushDone = true; hud(); save(); CUR = evening;
     panel(`<div class="say good">${t2('rushEnd')(right, right)}</div><div class="row"><button id="nx">${t2('toEvening')}</button></div>`); $('nx').onclick = evening; };
   next();

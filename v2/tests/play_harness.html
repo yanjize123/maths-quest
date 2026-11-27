@@ -15,7 +15,7 @@ f.onload = async () => {
   try {
     try { w.localStorage.clear(); } catch (e) {}
     click('#ll'); await sleep(800);
-    w.eval("ST.year = 4; T.helper = GD.helpers[5]; T.monster = { idx: 23 }; T.monsterDone = false; showMorning()");
+    w.eval("T.helper = GD.helpers[5]; T.monster = { idx: 23 }; T.monsterDone = false; showMorning()");
     if (stop === 'helper') return done();
     w.eval('serveNext()'); await sleep(200);
     click('[data-w="times_table_tongs"]'); click('[data-t="hard"]');
