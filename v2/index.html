@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Penguin Cupcakes · Maths Quest v2</title>
-<!-- 甜品店 第 1 关 页面 v007b（怪兽 45% + 保底：最多隔 2 天必来；mq_play v3 起不问年级、自动定难度；2026-11-27 随机事件层 mq_play.js：怪兽来抢+选武器+怪兽卡图鉴、换店员、顾客高峰、多层蛋糕订单；程序化画图 mq_gen.js；题目借用 ../engine.js。v006 宝箱只给东西不给金币；v005 金币写法统一、草莓不够可去补货、每 3 件一次随机大变化；v004 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
+<!-- 甜品店 第 1 关 页面 v008a（场景事件机制：content/scenes.json + events.json，通用执行器 mq_events.js、通用画法 mq_scene.js；墙洞、群怪、虫洞、恐龙、传送门、冰封 6 个事件；怪兽 45% + 保底：最多隔 2 天必来；mq_play v3 起不问年级、自动定难度；2026-11-27 随机事件层 mq_play.js：怪兽来抢+选武器+怪兽卡图鉴、换店员、顾客高峰、多层蛋糕订单；程序化画图 mq_gen.js；题目借用 ../engine.js。v006 宝箱只给东西不给金币；v005 金币写法统一、草莓不够可去补货、每 3 件一次随机大变化；v004 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
      规则：business_loop.md（yanjize123/claude 条目 P-20261126-maths-game）。奖惩不对称：对方吃亏的错误被拒绝要重算，对方占便宜的错误被接受、店里亏。 -->
 <style>
  :root{--pink:#ff7eb6;--ink:#3a2a3a}
@@ -54,6 +54,8 @@
 <script src="../engine.js"></script>
 <script src="mq_gen.js"></script>
 <script src="mq_play.js"></script>
+<script src="mq_scene.js"></script>
+<script src="mq_events.js"></script>
 <script>
 const PAGE_VERSION = 7, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
 const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
@@ -135,7 +137,7 @@ $('ll').onclick = () => { S = { name: 'guest', local: true }; ST = fixShop(MQSto
 
 async function boot() {
   C = await E.loadContent(read, [1, 'level01biz']); SHOP = JSON.parse(await read('content/shop_A.json')).items;
-  await playBoot();
+  await playBoot(); await MQEv.load();
   $('login').classList.add('hide'); $('game').classList.remove('hide'); morning();
 }
 
@@ -145,7 +147,8 @@ function hud() {
   $('stock').textContent = '🍓 ' + ST.stock; $('day').textContent = LANG === 'zh' ? `📅 第 ${ST.day} 天` : '📅 Day ' + ST.day; $('btitle').textContent = '🧁 ' + t('title'); $('lang2').textContent = t('other');
   const n = ST.owned.length, theme = ST.theme || (n >= 10 ? 'sea' : 'shop');
   const palette = ST.palette || {};
-  $('bg').innerHTML = A.scene(theme, palette, ST.owned.map(id => (SHOP.find(x => x.id === id) || {}).emoji || ''));
+  const shelf = ST.owned.map(id => (SHOP.find(x => x.id === id) || {}).emoji || ''), shopSvg = A.scene(theme, palette, shelf);
+  $('bg').innerHTML = typeof MQEv !== 'undefined' && MQEv.data() ? MQEv.backdrop(shopSvg, '') : shopSvg;
 }
 function PG(m = 'happy') { const one = A.penguin(m, ST.apron, true); return ST.owned.length >= 6 ? `<span style="display:inline-flex;align-items:flex-end">${one}${A.penguin('happy', ST.helper || '#7fc8ff', false).replace('art-penguin', 'art-penguin helper')}</span>` : one; }
 function actors(left, mid, right) { $('left').innerHTML = left || ''; $('mid').innerHTML = mid || ''; $('right').innerHTML = right || ''; }
@@ -184,7 +187,8 @@ function ask(itemId, params, opts) {
 // ---------------- 1 早上：看订单预告、进货 ----------------
 function morning() { newDay(); showMorning(); }
 function newDay() {
-  const ev = pickEvent(); const nCust = 5 + (ST.owned.includes(12) ? 1 : 0) + (ev && ev.orders || 0);
+  const dc = MQEv.tick(); const ev = pickEvent(); if (ev && ev.id === 'oven') MQEv.on('oven');
+  const nCust = Math.max(2, 5 + (ST.owned.includes(12) ? 1 : 0) + (ev && ev.orders || 0) + dc);
   const orders = Array.from({ length: nCust }, (_, i) => {
     const who = DRAGONS[(ST.day + i) % 3], kind = ['IT.L1.MUL.001', 'IT.L1.MUL.003', 'IT.L1.MUL.007'][R(0, 2)];
     const p = kind === 'IT.L1.MUL.003' ? { n: 10, k: R(2, 4) } : kind === 'IT.L1.MUL.001' ? { n: R(2, 5), k: R(2, 5) } : { n: R(3, 6), k: R(2, 4) };
@@ -233,6 +237,7 @@ function pay(n) {
 function serveNext() {
   CUR = serveNext; hud();
   if (T.monster && !T.monsterDone && T.idx === 0) return battleIntro();
+  if (T.sev && !T.sevDone && T.idx === 0) return MQEv.run();
   if (T.idx >= T.orders.length) return T.rush && !T.rushDone ? rushIntro() : evening();
   if (T.orders[T.idx].kind === 'LAYER') return serveLayer(T.orders[T.idx]);
   const o = T.orders[T.idx], item = C.byItem[o.kind], need = E.evalExpr(item.answer, o.p);

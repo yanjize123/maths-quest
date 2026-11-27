@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- 场景事件自动试玩（headless Chrome）：?ev=<事件id>&at=q|end 强制该事件，按正确答案走完，停在第一题(q)或结果(end)截图；标题写 PASS/FAIL。 -->
+<html><head><meta charset="utf-8"><style>body{margin:0}iframe{width:820px;height:1000px;border:0}</style></head><body>
+<iframe id="f" src="../index.html?lang=zh"></iframe>
+<script>
+const P = new URLSearchParams(location.search), id = P.get('ev'), at = P.get('at') || 'end', errs = [];
+const sleep = ms => new Promise(r => setTimeout(r, ms)), f = document.getElementById('f');
+f.onload = async () => {
+  const w = f.contentWindow, d = w.document; w.onerror = (m, s, l) => errs.push(m + '@' + l);
+  try {
+    try { w.localStorage.clear(); } catch (e) {}
+    d.querySelector('#ll').click(); await sleep(900);
+    w.eval(`T.monster = null; const e = MQEv.data().events.find(x => x.id === '${id}'); T.sev = { e, v: MQEv.vars(e), seed: 12345 }; T.sevDone = false; T.idx = 0; serveNext()`);
+    await sleep(150);
+    const e = w.eval('T.sev.e'), v = w.eval('T.sev.v');
+    for (let i = 0; i < e.steps.length; i++) {
+      if (at === 'q') break;
+      d.getElementById('ans2').value = String(w.MQEngine.evalExpr(e.steps[i].a, v)); d.getElementById('ok2').click(); await sleep(80);
+      d.getElementById('nx3').click(); await sleep(80);
+    }
+    if (at === 'end' && !w.eval('T.sevDone')) errs.push('未结束');
+  } catch (x) { errs.push(String(x)); }
+  document.title = errs.length ? 'FAIL ' + errs.join(' | ') : 'PASS';
+};
+</script></body></html>

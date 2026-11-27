@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "note": "场景 = 模板参数（这里）× 种子（每次进入随机）。新场景只加一段 scenes 条目；新装饰只加一条 sprites（40×40 局部坐标，{c} = 随机主色，{d} = 深色）。画法在 mq_scene.js，不需要改。",
+  "sprites": {
+    "planet":  "<circle cx='20' cy='20' r='13' fill='{c}'/><ellipse cx='20' cy='20' rx='20' ry='5' fill='none' stroke='{d}' stroke-width='2'/>",
+    "rocket":  "<path d='M20 4 Q28 14 26 30 H14 Q12 14 20 4Z' fill='#eee'/><circle cx='20' cy='16' r='4' fill='{c}'/><path d='M14 30 L10 36 H16Z M26 30 L30 36 H24Z' fill='{d}'/><path d='M17 31 L20 39 L23 31Z' fill='#ffb000'/>",
+    "comet":   "<circle cx='30' cy='12' r='5' fill='#fff'/><path d='M26 15 L4 34' stroke='{c}' stroke-width='4' stroke-linecap='round' opacity='.7'/>",
+    "ufo":     "<ellipse cx='20' cy='24' rx='18' ry='6' fill='{c}'/><path d='M10 22 Q20 6 30 22Z' fill='#bdf'/><circle cx='12' cy='25' r='1.6' fill='#ff0'/><circle cx='20' cy='27' r='1.6' fill='#ff0'/><circle cx='28' cy='25' r='1.6' fill='#ff0'/>",
+    "fish":    "<ellipse cx='18' cy='20' rx='12' ry='7' fill='{c}'/><path d='M30 20 L38 13 V27Z' fill='{d}'/><circle cx='12' cy='18' r='1.8' fill='#222'/>",
+    "shell":   "<path d='M6 32 Q20 2 34 32Z' fill='{c}'/><path d='M20 8 V32 M13 14 L11 32 M27 14 L29 32' stroke='{d}' stroke-width='1.5'/>",
+    "weed":    "<path d='M14 40 Q6 28 14 18 Q22 8 14 0 M24 40 Q32 28 24 16' stroke='{c}' stroke-width='4' fill='none' stroke-linecap='round'/>",
+    "tree":    "<rect x='17' y='24' width='6' height='16' fill='#8a5a3a'/><circle cx='20' cy='17' r='13' fill='{c}'/><circle cx='13' cy='21' r='8' fill='{d}' opacity='.5'/>",
+    "mushroom":"<rect x='16' y='22' width='8' height='14' rx='3' fill='#fff3dc'/><path d='M4 24 Q20 0 36 24Z' fill='{c}'/><circle cx='14' cy='16' r='3' fill='#fff'/><circle cx='25' cy='13' r='2.5' fill='#fff'/>",
+    "flower":  "<path d='M20 40 V22' stroke='#4a9a4a' stroke-width='3'/><circle cx='20' cy='16' r='5' fill='#ffd23f'/><circle cx='12' cy='16' r='5' fill='{c}'/><circle cx='28' cy='16' r='5' fill='{c}'/><circle cx='20' cy='8' r='5' fill='{c}'/><circle cx='20' cy='24' r='5' fill='{c}'/>",
+    "pine":    "<rect x='18' y='30' width='4' height='10' fill='#8a5a3a'/><path d='M20 2 L34 30 H6Z' fill='{c}'/><path d='M20 2 L27 16 H13Z' fill='#fff' opacity='.85'/>",
+    "snowman": "<circle cx='20' cy='29' r='10' fill='#fff' stroke='#cde' /><circle cx='20' cy='13' r='7' fill='#fff' stroke='#cde'/><path d='M20 13 L27 15 L20 16Z' fill='#ff8a00'/><rect x='12' y='19' width='16' height='3' fill='{c}'/>",
+    "igloo":   "<path d='M2 38 Q20 2 38 38Z' fill='#f4fbff' stroke='#bcd' stroke-width='1.5'/><path d='M14 38 Q20 24 26 38Z' fill='{d}'/><path d='M8 26 H32 M5 32 H35' stroke='#bcd'/>",
+    "volcano": "<path d='M2 40 L16 10 H24 L38 40Z' fill='#6b4a3a'/><path d='M16 10 Q20 0 24 10Z' fill='{c}'/><path d='M18 10 Q17 18 20 22 Q23 18 22 10' fill='{c}' opacity='.8'/>",
+    "fern":    "<path d='M20 40 Q18 20 30 4' stroke='{c}' stroke-width='3' fill='none'/><path d='M19 30 L10 26 M20 22 L11 16 M23 14 L16 8 M20 26 L29 22 M22 18 L31 13' stroke='{c}' stroke-width='2.5'/>",
+    "egg":     "<ellipse cx='20' cy='24' rx='10' ry='13' fill='#fff4dc'/><circle cx='16' cy='20' r='2.5' fill='{c}'/><circle cx='23' cy='28' r='3' fill='{c}'/>",
+    "bone":    "<path d='M8 20 H32' stroke='#f4ecd8' stroke-width='5' stroke-linecap='round'/><circle cx='7' cy='17' r='4' fill='#f4ecd8'/><circle cx='7' cy='23' r='4' fill='#f4ecd8'/><circle cx='33' cy='17' r='4' fill='#f4ecd8'/><circle cx='33' cy='23' r='4' fill='#f4ecd8'/>",
+    "crystal": "<path d='M20 2 L28 16 L20 38 L12 16Z' fill='{c}' opacity='.85'/><path d='M20 2 L20 38' stroke='#fff' opacity='.6'/>"
+  },
+  "states": {
+    "hole":   "<g transform='translate(240 54)'><path d='M0 30 L10 4 L26 12 L38 0 L50 16 L46 40 L30 52 L8 48Z' fill='#2a1d14'/><path d='M8 20 L-8 12 M46 22 L62 14 M30 52 L36 66' stroke='#7a5a40' stroke-width='2'/><circle cx='22' cy='28' r='2.5' fill='#ffd23f'/><circle cx='32' cy='28' r='2.5' fill='#ffd23f'/></g>",
+    "scorch": "<g opacity='.55'><ellipse cx='120' cy='110' rx='34' ry='12' fill='#3a2a20'/><ellipse cx='300' cy='112' rx='22' ry='8' fill='#3a2a20'/></g>",
+    "frozen": "<rect width='400' height='160' fill='#bfe8ff' opacity='.35'/><path d='M0 0 L30 26 L55 0 M120 0 L140 18 L160 0 M300 0 L320 22 L345 0' fill='#e8f8ff'/>",
+    "clock":  "<g transform='translate(200 70)'><circle r='22' fill='#fff' stroke='#7a4fbf' stroke-width='4'/><path d='M0 0 V-15 M0 0 L11 6' stroke='#333' stroke-width='3'/><path d='M-30 -26 A40 40 0 0 1 30 -26' fill='none' stroke='#c08bff' stroke-width='3' stroke-dasharray='6 5'/></g>"
+  },
+  "scenes": {
+    "shop":   { "builtin": "shop", "en": "the shop", "zh": "店里" },
+    "space":  { "en": "outer space", "zh": "太空", "sky": ["#140f33", "#3a2a7a"], "ground": "#3a3270", "hue": [-40, 40], "particles": "stars", "decor": ["planet", "rocket", "comet", "ufo", "crystal"], "n": [2, 4], "money": { "en": "star coins", "zh": "星币" } },
+    "sea":    { "en": "under the sea", "zh": "海底", "sky": ["#7fd6ff", "#1f78b8"], "ground": "#f3d9a4", "hue": [-25, 25], "particles": "bubbles", "decor": ["fish", "shell", "weed", "fish"], "n": [3, 5], "money": { "en": "pearls", "zh": "珍珠" } },
+    "forest": { "en": "the magic forest", "zh": "魔法森林", "sky": ["#bdf2c9", "#5aa86a"], "ground": "#6b9a4a", "hue": [-30, 30], "particles": "leaves", "decor": ["tree", "mushroom", "flower", "tree"], "n": [3, 5], "money": { "en": "acorns", "zh": "橡果" } },
+    "ice":    { "en": "the ice land", "zh": "冰雪国", "sky": ["#e8f6ff", "#9ccfee"], "ground": "#f8fcff", "hue": [-20, 20], "particles": "snow", "decor": ["pine", "snowman", "igloo", "crystal"], "n": [2, 4], "money": { "en": "ice gems", "zh": "冰晶" } },
+    "dino":   { "en": "the dinosaur age", "zh": "恐龙时代", "sky": ["#ffd7a0", "#ff9a6a"], "ground": "#a07a4a", "hue": [-20, 20], "particles": "ash", "decor": ["volcano", "egg", "bone", "tree"], "n": [2, 4], "money": { "en": "shiny stones", "zh": "亮石头" } }
+  }
+}
