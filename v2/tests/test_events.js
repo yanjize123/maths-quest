@@ -29,5 +29,22 @@ for (const [id, s] of Object.entries(SD.scenes)) {
   (s.decor || []).forEach(k => ok(SD.sprites[k], `scene ${id}: 无装饰 ${k}`));
   for (let seed = 1; seed < 20; seed++) { const svg = S.render(S.roll(id, seed), ['hole'], ''); ok(svg && svg.startsWith('<svg') && !/\{[cd]\}/.test(svg) && !/NaN|undefined/.test(svg), `scene ${id} seed ${seed} 画不出`); }
 }
-console.log(fail ? `${fail} 项失败` : `全部通过：${ED.events.length} 个事件、${Object.keys(SD.scenes).length} 个场景、${Object.keys(SD.sprites).length} 个装饰`);
-process.exit(fail ? 1 : 0);
+// ---- 版本一致（防缓存混用）：index.html 的 BUILD、所有 <script ?b=>、content/build.json 必须相同 ----
+const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8'), build = C('build.json').build;
+ok((html.match(/const BUILD = '(\w+)'/) || [])[1] === build, `index.html BUILD ≠ build.json ${build}`);
+(html.match(/<script src="[^"]+"/g) || []).forEach(t => ok(t.includes('?b=' + build), '脚本缺版本号 ' + t));
+// ---- 导演节奏：真实数据下模拟答 200 题，节拍间隔不超过 gap 上限，怪兽不超过 monsterMaxGap 拍不来 ----
+const PD = C('pacing.json'), vm = require('vm');
+const ctx = { ST: { flags: {}, states: {}, cust: [], items: {} }, T: {}, LANG: 'zh', pickMonster: () => 0, MQEngine: E, MQScene: S, read: f => Promise.resolve(fs.readFileSync(path.join(__dirname, '..', f), 'utf8')), console };
+vm.createContext(ctx); vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'mq_events.js'), 'utf8') + ';this.MQEv = MQEv;', ctx);
+ctx.MQEv.load().then(() => {
+  let beats = 0, mon = 0, last = 0, maxGap = 0, sinceMon = 0, maxNoMon = 0;
+  for (let q = 1; q <= 200; q++) {
+    ctx.MQEv.count(); const b = ctx.MQEv.due();
+    if (b) { beats++; maxGap = Math.max(maxGap, q - last); last = q; if (b === 'monster') { mon++; sinceMon = 0; ctx.MQEv.on('battle'); } else { sinceMon++; maxNoMon = Math.max(maxNoMon, sinceMon); ctx.T.sev.done = true; ctx.T.inBeat = false; } }
+  }
+  ok(maxGap <= PD.gap[1], `节拍最大间隔 ${maxGap} > ${PD.gap[1]}`); ok(beats >= 200 / PD.gap[1], `200 题只有 ${beats} 拍`); ok(maxNoMon <= PD.monsterMaxGap, `连续 ${maxNoMon} 拍没怪兽`);
+  console.log(`导演模拟 200 题：${beats} 拍（怪兽 ${mon}），最大间隔 ${maxGap} 题`);
+  console.log(fail ? `${fail} 项失败` : `全部通过：${ED.events.length} 个事件、${Object.keys(SD.scenes).length} 个场景、${Object.keys(SD.sprites).length} 个装饰`);
+  process.exit(fail ? 1 : 0);
+});

@@ -1,0 +1,14 @@
+{
+ "version": 1,
+ "note": "导演：何时出事件只在这里调。按答题数计：每答 gap 道题来一次“节拍”，节拍类型按 beats 权重选；前因成立的事件优先。每天开门第 first 道题后就可以来第一次。",
+ "gap": [
+  2,
+  4
+ ],
+ "first": 1,
+ "beats": {
+  "event": 75,
+  "monster": 25
+ },
+ "monsterMaxGap": 5
+}

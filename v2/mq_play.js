@@ -1,7 +1,7 @@
 // mq_play.js — 甜品店随机事件层 v1（2026-11-27，P-20261126-maths-game）：怪兽来抢（选武器打怪、怪兽卡图鉴）、换店员（动物加成）、顾客高峰（限时）、多层蛋糕订单。
 // 依赖 index.html 里的全局（ST、T、C、LANG、panel、actors、hud、record、save、serveNext、evening、PG、R、money、$），以及 MQ（../engine.js 题目生成）、MQGen（mq_gen.js 画图）。
 // 数据在 content/game_data.json（武器、题型族、店员、事件概率）。版本写在文件内。
-const PLAY_VERSION = 6;   // v6：每天 2–3 个场景事件（MQEv.pickDay）； v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
+const PLAY_VERSION = 7;   // v7：怪兽交给导演（不再按天掷），打完回到当前订单（原来重置 idx=0）； v6：每天 2–3 个场景事件（MQEv.pickDay）； v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
 let GD = null;
 const TX2 = {
   en: { book: '🃏 Monster cards', back: '← Back', bookIntro: (n, m) => `You have caught <b>${n}</b> of ${m} monsters. Defeat monsters with maths to collect their cards!`, unknown: '???',
@@ -70,11 +70,9 @@ function playDay() {
     if (h.bonus === 'weapon') { const left = GD.weapons.filter(w => !ST.weapons.includes(w.id) && w.rarity !== 'legend'); if (left.length) { const w = left[R(0, left.length - 1)]; ST.weapons.push(w.id); T.newWeapon = w; } }
   }
   // 怪兽或高峰（一天最多一个）
-  ST.noMonster = ST.noMonster || 0;
-  if (ST.noMonster >= 2 || roll(P('monster'))) { T.monster = { idx: pickMonster() }; ST.noMonster = 0; }
-  else { ST.noMonster++; if (roll(P('rush'))) T.rush = true; }
+  // 怪兽与场景事件由导演（mq_events.js due，参数 content/pacing.json）按答题数安排；这里只掷高峰
+  if (roll(P('rush'))) T.rush = true;
   // 场景事件（mq_events.js）：前因成立的事件优先；怪兽日也可出“前因事件”（如墙洞），其余事件只在非怪兽日
-  if (typeof MQEv !== 'undefined') T.sevs = MQEv.pickDay(T.orders.length);
   // 多层蛋糕订单：替换一单
   if (roll(P('layer')) && T.orders.length > 1) {
     const i = R(1, T.orders.length - 1), fl = ['vanilla', 'chocolate', 'strawberry', 'lemon', 'blueberry', 'mint'][R(0, 5)];
@@ -175,7 +173,7 @@ function battleWon() {
   let drop = ''; const left = GD.weapons.filter(x => !ST.weapons.includes(x.id) && (x.rarity !== 'legend' || s.rarity === 'legend'));
   if (left.length && Math.random() < (s.rarity === 'common' ? 0.35 : 0.6)) { const x = left[R(0, left.length - 1)]; ST.weapons.push(x.id); drop = `<div class="say good" style="display:flex;align-items:center;gap:6px">${MQGen.weapon(x).replace('<svg', '<svg width="48" height="48"')}${t2('weaponNew')(nm(x))} <span class="note">${MQGen.ELEMENTS[x.element].icon} ${nm(GD.families[x.family])}</span></div>`; }
   save();
-  CUR = () => { T.idx = 0; serveNext(); };
+  CUR = () => serveNext();
   actors(PG(), `<div class="mqg-pop" style="background:#fff;border:4px solid ${{ common: '#e9dff0', rare: '#9fd0ff', legend: '#ffd23f' }[s.rarity]};border-radius:14px;padding:6px">${MQGen.monster(s, 'idle').replace('<svg', '<svg width="110" height="110"')}</div>`, helperArt());
   panel(`<div class="say good">${t2('won')(nm(s.name))}</div><div class="say">${k === 1 ? t2('newCard') : t2('dupe')(k)}</div>${drop}<div class="row"><button id="nx">${t2('reopen')}</button><button class="alt" id="bk2">${t2('book')}</button></div>`);
   $('nx').onclick = CUR; $('bk2').onclick = openBook;

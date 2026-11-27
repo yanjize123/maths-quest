@@ -1,6 +1,6 @@
 {
- "version": 2,
- "note": "场景事件全部写在这里；通用执行器 mq_events.js 不需要改。字段说明见 content/README_events.md。v2：每天必出 perDay 个事件（按 p 加权抽，前因成立的先排），分散在营业开头、中间、结尾。",
+ "version": 3,
+ "note": "场景事件全部写在这里；何时出由导演 content/pacing.json 决定；字段说明见 content/README_events.md。",
  "on": {
   "battle": [
    [
@@ -39,6 +39,46 @@
    "icon": "💎",
    "en": "ice gem",
    "zh": "冰晶"
+  },
+  "cloudCandy": {
+   "icon": "☁️",
+   "en": "cloud candy",
+   "zh": "云朵糖"
+  },
+  "mirrorShard": {
+   "icon": "🪞",
+   "en": "mirror shard",
+   "zh": "魔镜碎片"
+  },
+  "ghostCoin": {
+   "icon": "👻",
+   "en": "ghost coin",
+   "zh": "幽灵币"
+  },
+  "giantSpoon": {
+   "icon": "🥄",
+   "en": "giant spoon",
+   "zh": "巨人勺"
+  },
+  "magicHat": {
+   "icon": "🎩",
+   "en": "magic hat",
+   "zh": "魔术帽"
+  },
+  "gingerMan": {
+   "icon": "🍪",
+   "en": "gingerbread friend",
+   "zh": "姜饼小人"
+  },
+  "robotBolt": {
+   "icon": "🔩",
+   "en": "robot bolt",
+   "zh": "机器人螺丝"
+  },
+  "treasureMap": {
+   "icon": "🗺️",
+   "en": "treasure map",
+   "zh": "藏宝图"
   }
  },
  "events": [
@@ -470,10 +510,802 @@
      ]
     ]
    }
+  },
+  {
+   "id": "tornado",
+   "p": 10,
+   "scene": "sky",
+   "icon": "🌪️",
+   "vars": {
+    "n": [
+     2,
+     6
+    ],
+    "k": [
+     2,
+     5
+    ],
+    "tot": "n*k",
+    "m": [
+     2,
+     6
+    ],
+    "d": [
+     5,
+     10
+    ],
+    "h": "m*d"
+   },
+   "intro": {
+    "en": "🌪️ A tornado lifts the whole shop up to {place}! Cloud birds are hungry.",
+    "zh": "🌪️ 一阵龙卷风把整个小店卷上了{place}！云雀们饿了。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "{n} cloud birds each buy {k} cupcakes. How many cupcakes?",
+      "zh": "{n} 只云雀，每只买 {k} 个蛋糕，一共几个？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "The shop is {h} m up and floats down {d} m each minute. How many minutes to land?",
+      "zh": "小店在 {h} 米高，每分钟降 {d} 米，几分钟落地？"
+     },
+     "a": "m",
+     "fam": "div"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Soft landing! The birds paid {n} coins and left cloud candy.",
+     "zh": "平稳落地！云雀付了 {n} 金币，还留下云朵糖。"
+    },
+    "do": [
+     [
+      "cash",
+      "n"
+     ],
+     [
+      "item",
+      "cloudCandy"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Bumpy landing — {k} strawberries fell out.",
+     "zh": "落地有点颠，掉了 {k} 颗草莓。"
+    },
+    "do": [
+     [
+      "stock",
+      "-k"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "magician",
+   "p": 10,
+   "scene": "shop",
+   "icon": "🎩",
+   "vars": {
+    "a": [
+     2,
+     6
+    ],
+    "b": [
+     2,
+     4
+    ],
+    "ab": "a*b",
+    "c": [
+     1,
+     3
+    ],
+    "left": "ab-c"
+   },
+   "intro": {
+    "en": "🎩 A travelling magician taps your tray with a wand: \"Abracadabra!\"",
+    "zh": "🎩 一位流浪魔术师用魔杖点了点你的托盘：“变变变！”"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "You had {a} cupcakes. The magic makes {b} times as many. How many now?",
+      "zh": "原来有 {a} 个蛋糕，魔法让它变成 {b} 倍，现在几个？"
+     },
+     "a": "ab",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "The magician takes {c} as payment. How many are left?",
+      "zh": "魔术师拿走 {c} 个当酬劳，还剩几个？"
+     },
+     "a": "left",
+     "fam": "sub"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "✨ You sell the magic cupcakes for {left} coins! The magician leaves his hat.",
+     "zh": "✨ 魔法蛋糕卖了 {left} 金币！魔术师把帽子留给了你。"
+    },
+    "do": [
+     [
+      "cash",
+      "left"
+     ],
+     [
+      "item",
+      "magicHat"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Poof! The magic wears off.",
+     "zh": "噗！魔法失效了。"
+    },
+    "do": []
+   },
+   "states": [
+    "sparkle"
+   ]
+  },
+  {
+   "id": "mirror",
+   "p": 8,
+   "scene": "shop",
+   "icon": "🪞",
+   "vars": {
+    "x": [
+     2,
+     5
+    ],
+    "t": [
+     2,
+     5
+    ],
+    "two": "2*x*t"
+   },
+   "intro": {
+    "en": "🪞 You polish the old mirror… and a second penguin steps out! Your twin wants to help.",
+    "zh": "🪞 你擦了擦旧镜子… 镜子里走出另一只企鹅！你的分身要来帮忙。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "You each make {x} cupcakes a minute for {t} minutes. How many together?",
+      "zh": "你们每人每分钟做 {x} 个，做 {t} 分钟，一共做几个？"
+     },
+     "a": "two",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Double speed! You earn {t} extra coins. The twin leaves a mirror shard.",
+     "zh": "双倍速度！多赚 {t} 金币。分身留下一块魔镜碎片。"
+    },
+    "do": [
+     [
+      "cash",
+      "t"
+     ],
+     [
+      "item",
+      "mirrorShard"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The twin gets confused and steps back into the mirror.",
+     "zh": "分身搞糊涂了，又走回镜子里。"
+    },
+    "do": []
+   }
+  },
+  {
+   "id": "treasure",
+   "p": 9,
+   "scene": "cave",
+   "icon": "💰",
+   "vars": {
+    "r": [
+     2,
+     5
+    ],
+    "h": [
+     1,
+     4
+    ],
+    "c": "2*h",
+    "tot": "r*c",
+    "half": "r*h"
+   },
+   "intro": {
+    "en": "💰 While digging a new cellar, the floor gives way — you slide into {place}! A treasure chest!",
+    "zh": "💰 挖新地窖时地板塌了，你滑进了{place}！有个宝箱！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "The chest has {r} rows of {c} gold coins. How many coins?",
+      "zh": "宝箱里金币摆成 {r} 排，每排 {c} 枚，一共多少枚？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "You share them equally with the mole who found it first. How many do you get?",
+      "zh": "和最先发现的鼹鼠平分，你得几枚？"
+     },
+     "a": "half",
+     "fam": "div"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "You climb out with {half} coins and a treasure map!",
+     "zh": "你带着 {half} 金币和一张藏宝图爬了出来！"
+    },
+    "do": [
+     [
+      "cash",
+      "half"
+     ],
+     [
+      "item",
+      "treasureMap"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The mole grabs the chest and digs away!",
+     "zh": "鼹鼠抱起宝箱挖洞跑了！"
+    },
+    "do": []
+   }
+  },
+  {
+   "id": "snowroad",
+   "p": 8,
+   "scene": "ice",
+   "icon": "❄️",
+   "vars": {
+    "k": [
+     3,
+     6
+    ],
+    "n": [
+     2,
+     5
+    ],
+    "need": "n*k"
+   },
+   "intro": {
+    "en": "❄️ Snow blocks the road — the strawberry van is stuck in {place}! Take the sledge.",
+    "zh": "❄️ 大雪封路，草莓车被困在{place}！坐雪橇去拉货。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "You need {need} strawberries. The sledge carries {k} each trip. How many trips?",
+      "zh": "要运 {need} 颗草莓，雪橇每趟能拉 {k} 颗，要跑几趟？"
+     },
+     "a": "n",
+     "fam": "div"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "All delivered! The driver gives you {k} extra strawberries.",
+     "zh": "全部运到！司机多送你 {k} 颗草莓。"
+    },
+    "do": [
+     [
+      "stock",
+      "k"
+     ],
+     [
+      "item",
+      "iceGem"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Too cold — you bring back only {n} strawberries.",
+     "zh": "太冷了，只拉回 {n} 颗草莓。"
+    },
+    "do": [
+     [
+      "stock",
+      "n"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "clockstop",
+   "p": 8,
+   "scene": "shop",
+   "icon": "⏰",
+   "vars": {
+    "t": [
+     2,
+     4
+    ],
+    "m": [
+     10,
+     25
+    ],
+    "tot": "t*m"
+   },
+   "intro": {
+    "en": "⏰ The kitchen clock has stopped! You must time the oven yourself.",
+    "zh": "⏰ 厨房的钟停了！只能自己算烤箱的时间。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "You bake {t} trays, one after another, {m} minutes each. How many minutes in total?",
+      "zh": "烤 {t} 盘，一盘接一盘，每盘 {m} 分钟，一共几分钟？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Perfect timing — the cupcakes are golden. +{t} coins.",
+     "zh": "时间刚好，蛋糕烤得金黄。+{t} 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "t"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "One tray burns a little.",
+     "zh": "有一盘有点烤焦了。"
+    },
+    "do": [
+     [
+      "state",
+      "scorch",
+      1
+     ]
+    ]
+   },
+   "states": [
+    "clock"
+   ]
+  },
+  {
+   "id": "candyland",
+   "p": 9,
+   "scene": "candy",
+   "icon": "🍭",
+   "vars": {
+    "n": [
+     2,
+     5
+    ],
+    "p": [
+     2,
+     6
+    ],
+    "tot": "n*p",
+    "r": [
+     2,
+     4
+    ],
+    "g": [
+     1,
+     3
+    ],
+    "tot2": "r*g"
+   },
+   "intro": {
+    "en": "🍭 A rainbow slide opens behind the fridge — WHEEE! You land in {place}!",
+    "zh": "🍭 冰箱后面出现一条彩虹滑梯——呜！你滑进了{place}！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "Gingerbread kids buy {n} cupcakes at {p} {money} each. How many {money}?",
+      "zh": "姜饼小孩买 {n} 个蛋糕，每个 {p} {money}，一共多少{money}？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "Each of the {r} sugar trees gives you {g} lollipops. How many lollipops?",
+      "zh": "{r} 棵糖果树，每棵送你 {g} 根棒棒糖，一共几根？"
+     },
+     "a": "tot2",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "A gingerbread friend comes home with you!",
+     "zh": "一个姜饼小人跟着你回家了！"
+    },
+    "do": [
+     [
+      "item",
+      "gingerMan"
+     ],
+     [
+      "cash",
+      "r"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "You eat too many sweets and slide home sleepy.",
+     "zh": "糖吃太多，迷迷糊糊滑回了家。"
+    },
+    "do": []
+   }
+  },
+  {
+   "id": "giant",
+   "p": 8,
+   "scene": "shop",
+   "icon": "🦶",
+   "vars": {
+    "s": [
+     2,
+     6
+    ],
+    "k": [
+     3,
+     9
+    ],
+    "big": "s*k"
+   },
+   "intro": {
+    "en": "🦶 THUMP… THUMP… A friendly giant bends down to the door: \"One cake, my size please!\"",
+    "zh": "🦶 咚… 咚… 一位友好的巨人弯腰到门口：“来一个我这么大的蛋糕！”"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "A normal cake uses {s} strawberries. The giant's cake is {k} times bigger. How many strawberries?",
+      "zh": "普通蛋糕用 {s} 颗草莓，巨人的蛋糕大 {k} 倍，要几颗？"
+     },
+     "a": "big",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "The giant pays {k} coins and gives you a giant spoon!",
+     "zh": "巨人付了 {k} 金币，还送你一把巨人勺！"
+    },
+    "do": [
+     [
+      "cash",
+      "k"
+     ],
+     [
+      "item",
+      "giantSpoon"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The cake is too small — the giant shrugs and leaves.",
+     "zh": "蛋糕太小，巨人耸耸肩走了。"
+    },
+    "do": []
+   },
+   "states": [
+    "giant"
+   ]
+  },
+  {
+   "id": "ghost",
+   "p": 8,
+   "scene": "shop",
+   "icon": "👻",
+   "vars": {
+    "s": [
+     6,
+     15
+    ],
+    "g": [
+     1,
+     5
+    ],
+    "left": "s-g",
+    "k": [
+     2,
+     4
+    ]
+   },
+   "intro": {
+    "en": "👻 At closing time the lights flicker… a little ghost floats in!",
+    "zh": "👻 打烊时灯一闪一闪… 一只小幽灵飘了进来！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "You have {s} cupcakes. The ghost gobbles {g}. How many are left?",
+      "zh": "你有 {s} 个蛋糕，幽灵吃了 {g} 个，还剩几个？"
+     },
+     "a": "left",
+     "fam": "sub"
+    },
+    {
+     "q": {
+      "en": "The ghost pays {k} ghost coins for each one it ate. How many ghost coins?",
+      "zh": "幽灵每吃一个付 {k} 枚幽灵币，一共付几枚？"
+     },
+     "a": "g*k",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "The ghost giggles and leaves a ghost coin as a souvenir.",
+     "zh": "幽灵咯咯笑着，留下一枚幽灵币做纪念。"
+    },
+    "do": [
+     [
+      "item",
+      "ghostCoin"
+     ],
+     [
+      "cash",
+      "g"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Boo! The ghost vanishes without paying.",
+     "zh": "呜！幽灵没付钱就消失了。"
+    },
+    "do": []
+   },
+   "states": [
+    "night"
+   ]
+  },
+  {
+   "id": "parade",
+   "p": 8,
+   "scene": "shop",
+   "icon": "🎺",
+   "vars": {
+    "r": [
+     2,
+     5
+    ],
+    "h": [
+     1,
+     4
+    ],
+    "c": "2*h",
+    "tot": "r*c",
+    "half": "r*h"
+   },
+   "intro": {
+    "en": "🎺 A parade marches past the shop — animals in {r} rows of {c}!",
+    "zh": "🎺 游行队伍经过小店——动物们排成 {r} 排，每排 {c} 只！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "How many animals are in the parade?",
+      "zh": "游行队伍里一共有多少只动物？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "Half of them stop for a cupcake. How many cupcakes?",
+      "zh": "其中一半停下来买蛋糕，要几个蛋糕？"
+     },
+     "a": "half",
+     "fam": "div"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Busy, busy! +{half} coins.",
+     "zh": "忙坏了！+{half} 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "half"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The parade moves on before you are ready.",
+     "zh": "你还没准备好，队伍就走远了。"
+    },
+    "do": []
+   }
+  },
+  {
+   "id": "robot",
+   "p": 7,
+   "scene": "shop",
+   "icon": "🤖",
+   "vars": {
+    "p": [
+     3,
+     9
+    ],
+    "ch": "20-p",
+    "n": [
+     2,
+     4
+    ],
+    "cost": "n*p"
+   },
+   "intro": {
+    "en": "🤖 BEEP! A robot inspector rolls in to test your sums.",
+    "zh": "🤖 嘀！一台机器人检查员滚进来考你算账。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "The robot pays with a 20-coin note for a {p}-coin cake. How much change?",
+      "zh": "机器人用 20 金币买一个 {p} 金币的蛋糕，找多少零钱？"
+     },
+     "a": "ch",
+     "fam": "sub"
+    },
+    {
+     "q": {
+      "en": "It buys {n} more at {p} coins each. How much is that?",
+      "zh": "它又买了 {n} 个，每个 {p} 金币，一共多少？"
+     },
+     "a": "cost",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "BEEP BOOP — inspection passed! It gives you a shiny bolt.",
+     "zh": "嘀嘟——检查通过！它送你一颗亮晶晶的螺丝。"
+    },
+    "do": [
+     [
+      "cash",
+      "n"
+     ],
+     [
+      "item",
+      "robotBolt"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "ERROR… the robot rolls away to recalculate.",
+     "zh": "错误… 机器人滚回去重新计算了。"
+    },
+    "do": []
+   }
+  },
+  {
+   "id": "bosstrio",
+   "p": 8,
+   "scene": "shop",
+   "icon": "👹",
+   "vars": {
+    "b": [
+     2,
+     4
+    ],
+    "m": [
+     2,
+     5
+    ],
+    "d": [
+     2,
+     5
+    ],
+    "h": "m*d",
+    "all": "b*m",
+    "w": [
+     2,
+     4
+    ],
+    "n": [
+     3,
+     6
+    ],
+    "wn": "w*n"
+   },
+   "intro": {
+    "en": "👹 Not one, but {b} big monsters — and their minions come in {w} waves!",
+    "zh": "👹 来了 {b} 只大怪兽，小怪还分 {w} 波冲进来！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "Each wave has {n} minions. How many minions altogether?",
+      "zh": "每波 {n} 只小怪，一共几只？"
+     },
+     "a": "wn",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "Each big monster has {h} hearts; your cannon takes {d} per shot. How many shots for ALL {b} big monsters?",
+      "zh": "每只大怪 {h} 颗心，奶油炮每发打 {d} 颗，打倒全部 {b} 只要几发？"
+     },
+     "a": "all",
+     "fam": "div"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "🎉 Victory! The monsters drop {b} coins each.",
+     "zh": "🎉 胜利！每只大怪掉 {b} 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "b*b"
+     ],
+     [
+      "flag",
+      "bigHit",
+      1
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "They take {w} strawberries and stomp off.",
+     "zh": "它们抢了 {w} 颗草莓，咚咚咚走了。"
+    },
+    "do": [
+     [
+      "stock",
+      "-w"
+     ],
+     [
+      "flag",
+      "bigHit",
+      1
+     ]
+    ]
+   },
+   "show": {
+    "grid": [
+     "w",
+     "n"
+    ],
+    "boss": true
+   }
   }
- ],
- "perDay": [
-  2,
-  3
  ]
 }
