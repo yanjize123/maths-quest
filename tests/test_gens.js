@@ -2,11 +2,12 @@
 const M = require("../engine.js"), S = require("../steps.js");
 let pass = 0, fail = 0; const t = (n, c, x = "") => { if (c) pass++; else { fail++; if (fail < 30) console.log("FAIL", n, x); } };
 for (const g of Object.keys(M.G)) for (let i = 0; i < 150; i++) {
-  const q = M.G[g](); if (!/^(a\d|s\d|e\d)/.test(g)) continue;
+  const q = M.G[g](); if (!/^(a\d|s\d|e\d|c\d|i\d|q\d)/.test(g)) continue;
   t(`self ${g}`, M.check(q, String(q.show).split("  (=")[0]), q.text + " | " + q.show);
   if (q.step) {
-    const st = q.step; let v; try { v = st.type === "eq" ? S.solve(st.start, "x") : S.evaluate(st.start); } catch (e) { v = null; }
-    t(`step value ${g}`, v && v.eq(st.value), st.start);
+    const st = q.step; if (st.type === "eq" || st.type === "calc") { let v; try { v = st.type === "eq" ? S.solve(st.start, "x") : S.evaluate(st.start); } catch (e) { v = null; }
+    t(`step value ${g}`, v && v.eq(st.value), st.start); }
+    if (st.type === "ineq") t(`ineq end ${g}`, S.checkLine(st, [], `x ${st.op} ${q.answer.v}`).done, st.start);
     const lines = []; let ok = false;
     for (let k = 0; k < 14; k++) { const [nx] = S.nextStep(st, lines); if (!nx) break; const r = S.checkLine(st, lines, nx); if (!r.ok) { t(`hint ${g}`, false, st.start + " → " + nx + " : " + r.msg); break; } lines.push(nx); if (r.done) { ok = true; break; } }
     t(`hint path ${g}`, ok, st.start + " :: " + lines.join(" | "));

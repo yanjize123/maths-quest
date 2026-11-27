@@ -32,7 +32,7 @@ const fail = m => { throw new StepError(m); };
 function normalise(s, v) {
   s = String(s || "").trim();
   s = s.replace(/\s*(?:→|->|=>)\s*$/, "");
-  const map = [["−", "-"], ["–", "-"], ["—", "-"], ["×", "*"], ["·", "*"], ["∙", "*"], ["✕", "*"], ["÷", "÷"], ["[", "("], ["]", ")"], ["{", "("], ["}", ")"], ["²", "^2"], ["³", "^3"], ["**", "^"], ["＝", "="], ["（", "("], ["）", ")"]];
+  const map = [["−", "-"], ["–", "-"], ["—", "-"], ["×", "*"], ["·", "*"], ["∙", "*"], ["✕", "*"], ["÷", "÷"], ["[", "("], ["]", ")"], ["{", "("], ["}", ")"], ["²", "^2"], ["³", "^3"], ["**", "^"], ["＝", "="], ["（", "("], ["）", ")"], ["<=", "≤"], ["=<", "≤"], [">=", "≥"], ["=>", "≥"]];
   for (const [a, b] of map) s = s.split(a).join(b);
   s = s.replace(/\b(\d{1,3}(?:,\d{3})+)(?!\d)/g, m => m.replace(/,/g, ""));
   s = s.toLowerCase();
@@ -58,9 +58,9 @@ function tokenise(s, v) {
       }
       toks.push({ t: "num", v: val }); continue;
     }
-    if (v && c === v) { toks.push({ t: "var" }); i++; continue; }
+    if (v && v.includes(c)) { toks.push({ t: "var", n: c }); i++; continue; }
     if ("+-*/÷:^()%".includes(c)) { toks.push({ t: c === ":" || c === "÷" ? "÷" : c }); i++; continue; }
-    if (/[a-z]/.test(c)) fail(v ? `Use only ${v}, numbers and + − × ÷ ( ). I don't understand "${c}".` : `Use only numbers and + − × ÷ ( ). I don't understand "${c}".`);
+    if (/[a-z]/.test(c)) fail(v && v.length > 1 ? `Use only ${v.split("").join(" and ")}, numbers and + − × ÷ ( ). I don't understand "${c}".` : v ? `Use only ${v}, numbers and + − × ÷ ( ). I don't understand "${c}".` : `Use only numbers and + − × ÷ ( ). I don't understand "${c}".`);
     fail(`I don't understand "${c}".`);
   }
   return toks;
@@ -96,7 +96,7 @@ function parseToks(toks) {
     const t = peek();
     if (!t) fail("Something is missing at the end of the line.");
     if (t.t === "num") { p++; return { k: "num", v: t.v, frac: t.frac }; }
-    if (t.t === "var") { p++; return { k: "var" }; }
+    if (t.t === "var") { p++; return { k: "var", n: t.n }; }
     if (t.t === "(") { p++; const e = expr(); if (!eat(")")) fail("A closing bracket ) is missing."); return { k: "par", a: e }; }
     if (t.t === ")") fail("There is a ) without a matching (.");
     fail(`Something is missing before "${t.t === "÷" ? "÷" : t.t}".`);
@@ -120,6 +120,25 @@ function toPoly(n) {
       if (!isConst(b)) fail("Dividing by an expression with the letter isn't needed — multiply both sides instead.");
       if (pco(b, 0).n === 0) fail("You can't divide by 0.");
       return pscale(a, ONE.div(pco(b, 0)));
+    }
+  }
+  fail("I can't read this line.");
+}
+// Linear form in several variables: {x: Fr, y: Fr, 1: Fr}
+function toLin(n) {
+  const add = (a, b, k = ONE) => { const o = Object.assign({}, a); for (const key in b) o[key] = (o[key] || ZERO).add(b[key].mul(k)); for (const key in o) if (o[key].n === 0) delete o[key]; return o; };
+  const isC = a => Object.keys(a).every(k => k === "1"), cv = a => a["1"] || ZERO, sc = (a, k) => add({}, a, k);
+  switch (n.k) {
+    case "num": return n.v.n ? { 1: n.v } : {};
+    case "var": return { [n.n]: ONE };
+    case "par": return toLin(n.a);
+    case "neg": return sc(toLin(n.a), F(-1));
+    case "pow": { const b = toLin(n.a); if (n.n === 1) return b; if (!isC(b)) fail("Only straight-line (linear) equations here — no powers of the letters."); const v = valueOf(n); return v.n ? { 1: v } : {}; }
+    case "op": {
+      const a = toLin(n.a), b = toLin(n.b);
+      if (n.o === "+") return add(a, b); if (n.o === "-") return add(a, b, F(-1));
+      if (n.o === "*") { if (isC(a)) return sc(b, cv(a)); if (isC(b)) return sc(a, cv(b)); fail("Two letters multiplied together — check the line."); }
+      if (!isC(b)) fail("Don't divide by a letter here."); if (cv(b).n === 0) fail("You can't divide by 0."); return sc(a, ONE.div(cv(b)));
     }
   }
   fail("I can't read this line.");
@@ -338,19 +357,118 @@ function nextEq(task, prev) {
 }
 function nextCalc(task, prev) { const ast = parse(prev, null), r = reduceOnce(ast); return r ? [show(r), `Work out ${firstOp(ast)} first.`] : [show(strip(ast)), "That's the answer — type it on its own line."]; }
 
+// ------------------------------------------------------------ inequalities: a line keeps the same solution set {x op c}
+const INEQ = /[<>≤≥]/g, FLIP = { "<": ">", ">": "<", "≤": "≥", "≥": "≤" };
+function ineqSides(line, v) {
+  const raw = stripNote(String(line).trim()).replace(/<=|=</g, "≤").replace(/>=|=>/g, "≥");
+  const ops = raw.match(INEQ) || [];
+  if (raw.includes("=")) fail("An inequality uses < > ≤ ≥ (type <= or >= for ≤ ≥), not =.");
+  if (ops.length !== 1) fail(ops.length ? "Use one inequality sign per line." : "This line needs an inequality sign: < > ≤ or ≥.");
+  const [l, r] = raw.split(INEQ);
+  if (!l.trim() || !r.trim()) fail("Something is missing next to the inequality sign.");
+  return [parse(l, v), parse(r, v), ops[0], l.trim(), r.trim()];
+}
+function ineqSet(L, R, op) {            // -> {op, c} meaning x op c
+  const d = psub(toPoly(L), toPoly(R)); if (pdeg(d) > 1) return { deg: true };
+  const a = pco(d, 1), b = pco(d, 0); if (a.n === 0) return { none: true };
+  const c = b.mul(-1).div(a); return { op: a.n > 0 ? op : FLIP[op], c };
+}
+function checkIneqLine(task, prev, line) {
+  const v = task.v || "x"; let L, R, op, l, r;
+  try { [L, R, op, l, r] = ineqSides(line, v); } catch (e) { if (e.learner) return { ok: false, msg: e.message, format: true }; throw e; }
+  let s; try { s = ineqSet(L, R, op); } catch (e) { if (e.learner) return { ok: false, msg: e.message, format: true }; throw e; }
+  if (s.deg) return { ok: false, msg: `This line has ${v}² in it — check the line before.`, code: "ineq_err" };
+  if (s.none) return { ok: false, msg: `The ${v} has disappeared — check the ${v} terms.`, code: "ineq_err" };
+  if (s.c.eq(task.value) && s.op !== task.op) {
+    if (s.op === FLIP[task.op]) return { ok: false, code: "ineq_no_flip", msg: "The sign points the wrong way. When you multiply or divide both sides by a negative number, flip the inequality sign." };
+    return { ok: false, code: "ineq_strict", msg: "Check whether the sign should include “or equal to” (≤ ≥) or not (< >)." };
+  }
+  if (!s.c.eq(task.value)) {
+    const [Lp, Rp] = ineqSides(prev, v);
+    const hit = slips(Lp, Rp).find(c => c.x.eq(s.c));
+    return { ok: false, code: hit ? hit.code : "unbalanced", msg: "This line doesn't keep the same answer as the line before. " + (hit ? hit.msg : "Do the same to both sides.") };
+  }
+  const re = new RegExp(`^\\s*${v}\\s*$`), done = (re.test(l) && FINAL_NUM.test(r)) || (re.test(r) && FINAL_NUM.test(l));
+  return { ok: true, done, msg: done ? "Solved! 🎉" : "✓" };
+}
+function nextIneq(task, prev) {
+  const v = task.v || "x"; const [L, R, op] = ineqSides(prev, v);
+  const eqLine = stripNote(String(prev).trim()).replace(/<=|=<|>=|=>/g, "=").replace(/[<>≤≥]/g, "=");
+  const [nx, why] = nextEq(Object.assign({}, task, { type: "eq" }), eqLine);
+  const m = nx.split("="); const Ln = parse(m[0], v), Rn = parse(m[1], v);
+  // the sign flips exactly when we divide or multiply by a negative: compare orientation of x coefficient
+  const before = pco(psub(toPoly(L), toPoly(R)), 1), after = pco(psub(toPoly(Ln), toPoly(Rn)), 1);
+  const op2 = before.cmp(0) * after.cmp(0) < 0 ? FLIP[op] : op;
+  return [`${m[0].trim()} ${op2} ${m[1].trim()}`, why + (op2 !== op ? " Dividing by a negative number flips the sign." : "")];
+}
+// ------------------------------------------------------------ simultaneous equations: every line must be true for the solution
+function splitEqs(line) { return String(line).split(/[;,]|\band\b/i).map(x => x.trim()).filter(Boolean); }
+function linEq(e, vars) {
+  const raw = stripNote(e); const n = (raw.match(/=/g) || []).length;
+  if (n !== 1) fail(n ? "One = per equation (separate two equations with a comma)." : "Each equation needs an = sign.");
+  const [l, r] = raw.split("="); if (!l.trim() || !r.trim()) fail("Something is missing next to =.");
+  const d = toLin({ k: "op", o: "-", a: parse(l, vars), b: parse(r, vars) });
+  return { d, l: l.trim(), r: r.trim() };
+}
+const linAt = (d, sol) => { let s = ZERO; for (const k in d) s = s.add(k === "1" ? d[k] : d[k].mul(sol[k])); return s; };
+function checkSysLine(task, lines, line) {
+  const vars = task.vars || "xy"; let eqs;
+  try { eqs = splitEqs(line).map(e => linEq(e, vars)); } catch (e) { if (e.learner) return { ok: false, msg: e.message, format: true }; throw e; }
+  if (!eqs.length) return { ok: false, msg: "Type an equation.", format: true };
+  for (const q of eqs) {
+    const keys = Object.keys(q.d).filter(k => k !== "1");
+    if (!keys.length) return q.d["1"] ? { ok: false, code: "sys_err", msg: "This line says two different numbers are equal — something went wrong in the line before." } : { ok: false, code: "sys_lost", msg: "Both letters have disappeared (0 = 0). Subtract when the coefficients are the same, add when they are opposite — and do it to every term." };
+    if (linAt(q.d, task.value).n !== 0) {
+      const orig = splitEqs(task.start).map(e => linEq(e, vars).d);
+      const sameVarsAs = (d, e) => ["x", "y"].concat(vars.split("")).every(k => k === "1" || (d[k] || ZERO).eq(e[k] || ZERO));
+      let msg = "This equation isn't true for the answer — check each term.", code = "sys_err";
+      for (const E of orig) for (let k = -9; k <= 9; k++) { if (!k || k === 1) continue; const kE = {}; for (const key in E) kE[key] = E[key].mul(k); if (sameVarsAs(q.d, kE) && !(q.d["1"] || ZERO).eq(kE["1"] || ZERO)) { msg = "When you multiply an equation, multiply every term — including the number on the other side."; code = "sys_mult_all"; } }
+      if (orig.length === 2) for (const sgn of [1, -1]) { const comb = {}; for (const key of new Set(Object.keys(orig[0]).concat(Object.keys(orig[1])))) comb[key] = (orig[0][key] || ZERO).add((orig[1][key] || ZERO).mul(sgn)); if (sameVarsAs(q.d, comb) && !(q.d["1"] || ZERO).eq(comb["1"] || ZERO)) { msg = `When you ${sgn > 0 ? "add" : "subtract"} the equations, ${sgn > 0 ? "add" : "subtract"} the numbers on the right too (watch the signs).`; code = "sys_combine_sign"; } }
+      return { ok: false, msg, code };
+    }
+  }
+  const all = lines.concat([line]).flatMap(splitEqs), found = {};
+  for (const e of all) { const m = e.replace(/\s+/g, "").replace(/[−–]/g, "-").match(/^([a-z])=(-?[\d./]+)$|^(-?[\d./]+)=([a-z])$/); if (m) found[m[1] || m[4]] = true; }
+  const done = vars.split("").every(k => found[k]);
+  return { ok: true, done, msg: done ? "Solved! 🎉" : "✓" };
+}
+function nextSys(task, lines) {
+  const vars = task.vars || "xy", [a, b] = vars.split(""), E = splitEqs(task.start).map(e => linEq(e, vars).d);
+  const co = (d, k) => d[k] || ZERO, rhs = d => (d["1"] || ZERO).mul(-1);
+  const fmt = (d) => { let s = ""; for (const k of [a, b]) { const c = co(d, k); if (c.n === 0) continue; const neg = c.n < 0, m = neg ? c.mul(-1) : c, cs = m.eq(ONE) ? "" : sfr(m); s += s ? (neg ? " − " : " + ") + cs + k : (neg ? "−" : "") + cs + k; } return `${s || "0"} = ${sfr(rhs(d))}`; };
+  const sc = (d, k) => { const o = {}; for (const key in d) o[key] = d[key].mul(k); return o; };
+  const plan = [];
+  const yb1 = co(E[0], b), yb2 = co(E[1], b); let l1 = E[0], l2 = E[1];
+  if (yb1.n && yb2.n && yb1.d === 1 && yb2.d === 1) { const A = Math.abs(yb1.n), B = Math.abs(yb2.n), lcm = A / gcdi(A, B) * B; if (lcm / A !== 1) l1 = sc(E[0], F(lcm / A)); if (lcm / B !== 1) l2 = sc(E[1], F(lcm / B)); }
+  if (!(l1 === E[0])) plan.push([fmt(l1), `Multiply the first equation so the ${b} terms match.`]);
+  if (!(l2 === E[1])) plan.push([fmt(l2), `Multiply the second equation so the ${b} terms match.`]);
+  const same = co(l1, b).eq(co(l2, b)), comb = {}; for (const key of new Set(Object.keys(l1).concat(Object.keys(l2)))) comb[key] = (l1[key] || ZERO).add((l2[key] || ZERO).mul(same ? -1 : 1));
+  plan.push([fmt(comb), same ? `The ${b} terms are the same: subtract the equations.` : `The ${b} terms are opposite: add the equations.`]);
+  const xv = task.value[a], yv = task.value[b];
+  plan.push([`${a} = ${sfr(xv)}`, `Divide both sides by ${sfr(co(comb, a))}.`]);
+  const ca = co(E[0], a), cb = co(E[0], b);
+  plan.push([`${sfr(cb).replace(/^1$/, "")}${b} = ${sfr(rhs(E[0]).sub(ca.mul(xv)))}`, `Put ${a} = ${sfr(xv)} into the first equation and move the number across.`]);
+  plan.push([`${b} = ${sfr(yv)}`, `Divide both sides by ${sfr(cb)}.`]);
+  const have = new Set(lines.flatMap(splitEqs).map(e => { try { const d = linEq(e, vars).d; return JSON.stringify(Object.keys(d).sort().map(k => [k, d[k].n, d[k].d])); } catch (x) { return e; } }));
+  const key = l => { const d = linEq(l, vars).d; return JSON.stringify(Object.keys(d).sort().map(k => [k, d[k].n, d[k].d])); };
+  for (const [l, why] of plan) if (!have.has(key(l))) return [l, why];
+  return [null, "You have both values — you're done."];
+}
 // ------------------------------------------------------------ public API
 // task = {type:'calc', start:'36 − 4 × (7 − 2)', value:Fr}  or  {type:'eq', start:'3(x − 2) = 12', v:'x', value:Fr}
 function checkLine(task, lines, line) {
   const prev = lines.length ? lines[lines.length - 1] : task.start;
-  try { return task.type === "eq" ? checkEqLine(task, prev, line) : checkCalcLine(task, prev, line); }
+  try { return task.type === "eq" ? checkEqLine(task, prev, line) : task.type === "ineq" ? checkIneqLine(task, prev, line) : task.type === "sys" ? checkSysLine(task, lines, line) : checkCalcLine(task, prev, line); }
   catch (e) { if (e.learner) return { ok: false, msg: e.message, format: true }; return { ok: false, msg: "I can't read this line." }; }
 }
 function nextStep(task, lines) {
   const prev = lines.length ? lines[lines.length - 1] : task.start;
-  try { return task.type === "eq" ? nextEq(task, prev) : nextCalc(task, prev); } catch (e) { return [null, "Look at the line before again."]; }
+  try { return task.type === "eq" ? nextEq(task, prev) : task.type === "ineq" ? nextIneq(task, prev) : task.type === "sys" ? nextSys(task, lines) : nextCalc(task, prev); } catch (e) { return [null, "Look at the line before again."]; }
 }
 const FORMAT = {
   calc: "One step per line. Use + − × ÷ (or * /, or x for ×), brackets ( ), fractions like 3/4, mixed numbers like 2 1/2. You can start a line with =. Finish with the answer on its own.",
+  ineq: "One inequality per line, e.g. 3x + 5 < 20, then 3x < 15, then x < 5. Type <= or >= for ≤ ≥. If you multiply or divide by a negative number, flip the sign. Finish with x < … (or ≤ > ≥).",
+  sys: "One or two equations per line (separate two with a comma), e.g. 2x + 3y = 12. Every line must be true for the answer. Finish with x = … and y = … (in any order, on one line or two).",
   eq: "One equation per line, e.g. 3x + 5 = 20, then 3x = 15, then x = 5. Write 3x or 3*x; 3(x − 2) is fine; fractions like x/4 or (x + 1)/3. You may add a note at the end like (÷3). Finish with x = …",
 };
 function evaluate(s) { return valueOf(parse(String(s).trim().replace(/^=\s*/, ""), null)); }

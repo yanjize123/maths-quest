@@ -192,6 +192,12 @@ function check(q, ans) {
       return vals.every((v, i) => close(v, exp[i], tol != null ? tol : null));
     }
     if (k === "text") { const n = ans.replace(/\s+/g, "").toUpperCase(); return (Array.isArray(exp) ? exp : [exp]).some(e => e.toUpperCase() === n); }
+    if (k === "ineq") {                                  // x ≤ 3, 3 >= x, x<=3
+      const a = clean(ans).replace(/\s+/g, "").replace(/<=|=</g, "≤").replace(/>=|=>/g, "≥"), FL = { "<": ">", ">": "<", "≤": "≥", "≥": "≤" };
+      let m = a.match(/^[a-z]([<>≤≥])(.+)$/), op, v;
+      if (m) { op = m[1]; v = parseNum(m[2]); } else { m = a.match(/^(.+?)([<>≤≥])[a-z]$/); if (!m) return false; op = FL[m[2]]; v = parseNum(m[1]); }
+      return !!v && op === exp.op && v.eq(toFr(exp.v));
+    }
     if (k === "rem") {                                   // quotient and remainder: "72 r 5", "72 remainder 5", "72 余 5", "72 ... 5"
       const m = clean(ans).replace(/\s+/g, " ").match(/^(\d+)\s*(?:r|rem|remainder|余|\.{2,}|…+|，|,)\s*(\d+)$/);
       if (m) return +m[1] === exp[0] && +m[2] === exp[1];
@@ -661,8 +667,19 @@ G.c5_mul2 = () => colq("Long multiplication (written)", "mul", R(102, 2999), R(1
 G.c6_div2 = () => { const d = R(12, 49), q = R(21, 299); return colq("Long division by 2 digits (written)", "div", d * q, d); };
 G.c6_div2r = () => { const d = R(12, 49), q = R(21, 199), r = R(1, d - 1); return colq("Long division with remainder (written)", "div", d * q + r, d, { rem: true }); };
 G.a4_divrem = () => { const d = R(3, 9), q = R(4, 30), r = R(1, d - 1); return Q("Division with remainder", `${d * q + r} ÷ ${d} = ?`, "rem", [q, r], `${q} r ${r}`, { fmt: REMF, hint: `How many ${d}s fit? What is left?` }); };
+// --- inequalities and simultaneous equations (step by step)
+const INQF = "e.g. x < 5  or  x >= -2";
+const ineqq = (topic, txt, op, x) => sstep(Object.assign(Q(topic, `Solve ${fmtE(txt)}`, "ineq", { op, v: x }, `x ${op} ${x}`, { fmt: INQF, hint: "Like an equation — but × or ÷ by a negative flips the sign." })), "ineq", fmtE(txt), x, "x");
+const sstepI = (q, op) => { q.step.op = op; return q; };
+G.i8_ineq = () => { const a = R(2, 9), x = R(-5, 10), b = nz(-12, 15), op = choice(["<", ">", "≤", "≥"]); return sstepI(ineqq("Inequalities (step by step)", `${lin(a, b)} ${op} ${a * x + b}`, op, x), op); };
+G.i9_ineqneg = () => { const a = R(2, 6), x = R(-5, 6), b = R(1, 20), op = choice(["<", ">", "≤", "≥"]), fl = { "<": ">", ">": "<", "≤": "≥", "≥": "≤" }[op]; return sstepI(ineqq("Inequalities with a negative x term (step by step)", `${b} - ${a}x ${op} ${b - a * x}`, fl, x), fl); };
+G.i9_ineqboth = () => { const x = R(-5, 8), a = R(2, 5), b = nz(-6, 6), c = R(a + 1, a + 4), op = choice(["<", ">", "≤", "≥"]), d = a * (x + b) - c * x, fl = { "<": ">", ">": "<", "≤": "≥", "≥": "≤" }[op]; return sstepI(ineqq("Inequalities with brackets (step by step)", `${a}(${lin(1, b)}) ${op} ${lin(c, d)}`, fl, x), fl); };
+const sysTerm = (a, b) => `${a === 1 ? "" : a === -1 ? "−" : sg(a)}x ${b < 0 ? "−" : "+"} ${Math.abs(b) === 1 ? "" : Math.abs(b)}y`;
+const sysq = (topic, a1, b1, a2, b2, x, y) => { const st = `${sysTerm(a1, b1)} = ${sg(a1 * x + b1 * y)}, ${sysTerm(a2, b2)} = ${sg(a2 * x + b2 * y)}`; const q = Q(topic, `Solve the simultaneous equations ${st}`, "pair", [x, y], `x = ${x}, y = ${y}`, { fmt: "e.g. x = 3, y = -2", hint: "Make the y terms match, then add or subtract." }); q.names = ["x", "y"]; q.step = { type: "sys", start: st, vars: "xy", value: { x: F(x), y: F(y) } }; return q; };
+G.q9_sys = () => { const x = R(-5, 8), y = R(-5, 8), a1 = R(1, 5), a2 = R(1, 5), b = choice([1, 2, 3]), sgn = choice([1, -1]); if (a1 === a2 && sgn === 1) return G.q9_sys(); return sysq("Simultaneous equations — same y term (step by step)", a1, b, a2, sgn * b, x, y); };
+G.q10_sys = () => { const x = R(-6, 8), y = R(-6, 8); let a1, b1, a2, b2; do { a1 = nz(-5, 6); b1 = nz(-5, 6); a2 = nz(-5, 6); b2 = nz(-5, 6); } while (a1 * b2 === a2 * b1 || Math.abs(b1) === Math.abs(b2)); return sysq("Simultaneous equations — multiply first (step by step)", a1, b1, a2, b2, x, y); };
 const COLUMN_GENS = ["c3_add", "c3_sub", "c4_mul1", "c4_div1", "c5_div1r", "c5_short", "c5_mul2", "c6_div2", "c6_div2r"];
-const STEP_GENS = ["s5_order", "s6_order", "s7_order", "s8_powers", "s8_fracorder", "e7_two", "e8_both", "e8_brk", "e9_frac", "e9_neg", "e10_fracboth"];
+const STEP_GENS = ["s5_order", "s6_order", "s7_order", "s8_powers", "s8_fracorder", "e7_two", "e8_both", "e8_brk", "e9_frac", "e9_neg", "e10_fracboth", "i8_ineq", "i9_ineqneg", "i9_ineqboth", "q9_sys", "q10_sys"];
 
 // ================================================================ REGISTRY
 const STRANDS = [["N", "Number & place value"], ["C", "Calculation"], ["F", "Fractions, decimals & %"], ["M", "Measurement"], ["G", "Geometry"], ["A", "Algebra & ratio"], ["S", "Statistics & probability"]];
@@ -688,10 +705,11 @@ const REG2 = `1C a1_add10 a1_sub10 a1_add20|2C a2_add21 a2_tens a2_div|3C a3_col
 |6C a6_longdiv a6_longmul4 s6_order|6F a6_decmul a6_fracunlike a6_fracwhole a6_pctof|7C a7_negall a7_clever s7_order|7F a7_decdec a7_mixedmul|7A e7_two
 |8C a8_powers s8_powers|8N a8_idxnum|8F a8_ratneg s8_fracorder|8A a8_expand1 a8_collect e8_both e8_brk|9C a9_sqrt|9A a9_idxalg a9_expandsq e9_frac e9_neg
 |3C c3_add c3_sub|4C c4_mul1 c4_div1 a4_divrem|5C c5_div1r c5_short c5_mul2|6C c6_div2 c6_div2r
+|8A i8_ineq|9A i9_ineqneg i9_ineqboth q9_sys|10A q10_sys
 |10N a10_fracidx|10A a10_expand2 e10_fracboth`;
 for (const part of (REG + "|" + REG2).replace(/\n/g, "").split("|")) { const m = part.trim().match(/^(\d+)([A-Z]) (.+)$/); reg(+m[1], m[2], m[3].trim()); }
 // Pure calculation (no words): new types plus older ones that are bare calculations. Target share in Practice: PURE_SHARE.
-const PURE = new Set(Object.keys(G).filter(g => /^(a\d|s\d|e\d|c\d)/.test(g) && YEAR_OF[g]).concat(("y1_bonds y1_double y2_times y3_times y3_frac y4_addsub y4_tables y4_dec y5_sqcube y5_frac_times y5_percent " +
+const PURE = new Set(Object.keys(G).filter(g => /^(a\d|s\d|e\d|c\d|i\d|q\d)/.test(g) && YEAR_OF[g]).concat(("y1_bonds y1_double y2_times y3_times y3_frac y4_addsub y4_tables y4_dec y5_sqcube y5_frac_times y5_percent " +
   "y6_bidmas y6_longdiv y6_fracmul y6_fracadd y6_decmul y6_negcalc y7_neg y7_fracdiv y7_eq y7_simplify y8_indices y8_stdform y8_brackets y9_expand2 y9_factor1 " +
   "g_surds g_linear g_expand g_factorise g_quad_solve g_simul").split(" ")));
 const PURE_SHARE = 0.68;

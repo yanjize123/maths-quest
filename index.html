@@ -170,7 +170,7 @@ const BACKEND=(window.MQ_BACKEND||'').trim();
 const CKEY='mathsquest_cred',QKEY='mathsquest_queue';
 let SESSION=null,flushing=false,saveMsg='';
 function backBtn(){if(BACKEND)logout();else home()}
-const PAGE_VERSION='classic page v3 · engine v3 · steps v1 · column v1 (2026-11-27)';
+const PAGE_VERSION='classic page v4 · engine v4 · steps v2 · column v1 (2026-11-27)';
 function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device · <span title="version">'+PAGE_VERSION+'</span>'}
 function footBackend(){const n=queueGet().filter(e=>SESSION&&e.user===SESSION.name).length;
  $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'} · ${PAGE_VERSION}`:''}
@@ -206,8 +206,8 @@ function setDone(){const secs=Math.round((Date.now()-SET.t0)/1000),y=+($('year')
 let SLINES=[],SDONE=false,SSLIPS=0,SSLIPC=[];
 const SKEYS=['(',')','×','÷','−','/','x','=','^2'];
 function stepShow(){show('sbox');SLINES=[];SDONE=false;SSLIPS=0;SSLIPC=[];Q.hintUsed=false;Q.shownAt=Date.now();
- $('stp').textContent=`Y${Q.year} · ${Q.topic}`;$('sqt').textContent=(Q.step.type=='eq'?'Solve, one step per line:\n':'Work out, one step per line:\n')+Q.step.start;
- $('sfmt').textContent=MQS.FORMAT[Q.step.type];$('skeys').innerHTML=SKEYS.filter(k=>Q.step.type=='eq'||k!='x'&&k!='=').map(k=>`<button type="button" onclick="sins('${k}')">${k=='^2'?'x²':k}</button>`).join('');
+ $('stp').textContent=`Y${Q.year} · ${Q.topic}`;$('sqt').textContent=(Q.step.type=='calc'?'Work out, one step per line:\n':'Solve, one step per line:\n')+Q.step.start;
+ $('sfmt').textContent=MQS.FORMAT[Q.step.type];const ks={calc:['(',')','×','÷','−','/','^2','='],eq:SKEYS,ineq:['(',')','×','÷','−','/','x','<','>','≤','≥'],sys:['x','y','=',',','(',')','×','−','/']}[Q.step.type]||SKEYS;$('skeys').innerHTML=ks.map(k=>`<button type="button" onclick="sins('${k}')">${k=='^2'?'x²':k}</button>`).join('');
  $('smsg').className='fb hide';$('snx').classList.add('hide');$('sin').disabled=false;$('sin').value='';$('sck').disabled=false;stepDraw();$('sin').focus()}
 function sins(k){const a=$('sin');if(a.disabled)return;const p=a.selectionStart??a.value.length;a.value=a.value.slice(0,p)+k+a.value.slice(a.selectionEnd??p);a.focus();a.selectionStart=a.selectionEnd=p+k.length}
 function stepDraw(){$('slines').innerHTML=`<div class="w" style="font-size:20px;white-space:normal">`+[`<span class="mut">${esc(Q.step.start)}</span>`].concat(SLINES.map(l=>`<div>✓ ${esc(l)}</div>`)).join('')+'</div>'}
@@ -220,7 +220,7 @@ function stepUndo(){if(SDONE||!SLINES.length)return;$('sin').value=SLINES.pop();
 function stepHint(){if(SDONE)return;const [nx,why]=MQS.nextStep(Q.step,SLINES);Q.hintUsed=true;stepMsg('ok','💡 '+esc(why)+(nx?`<br><span class="mut">For example: </span><b>${esc(nx)}</b>`:''))}
 function stepGiveUp(){if(SDONE)return;const lines=SLINES.slice();for(let i=0;i<14;i++){const [nx]=MQS.nextStep(Q.step,lines);if(!nx)break;const r=MQS.checkLine(Q.step,lines,nx);if(!r.ok)break;lines.push(nx);if(r.done)break}
  SLINES=lines;stepDraw();stepFinish(false)}
-function stepFinish(solved){SDONE=true;$('sin').disabled=true;$('sck').disabled=true;const segs=(SLINES[SLINES.length-1]||'').split('='),last=Q.step.type=='eq'&&/^\s*x\s*$/i.test(segs[segs.length-1])?segs[0]:segs[segs.length-1];
+function stepFinish(solved){SDONE=true;$('sin').disabled=true;$('sck').disabled=true;const segs=(SLINES[SLINES.length-1]||'').split('='),last=Q.step.type=='ineq'?(SLINES[SLINES.length-1]||''):Q.step.type=='sys'?SLINES.join(', '):Q.step.type=='eq'&&/^\s*x\s*$/i.test(segs[segs.length-1])?segs[0]:segs[segs.length-1];
  const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10,ans=solved?last:'';
  const r=MQ.answerQuestion(L,ST,DB.goal,Q,ans,!solved);logEvent(Q,{mode:'steps',ok:r.correct,secs,hint:!!Q.hintUsed,slips:SSLIPC.slice(),skip:!solved,ans:SLINES.join(' | ')});save();record(Q,SLINES.join(' | ')+(SSLIPS?` [${SSLIPS} slip${SSLIPS>1?'s':''}]`:''),!solved,r.correct,secs);
  stepMsg(r.correct?'ok':'bad',`<b>${esc(solved?(SSLIPS?`Solved! (${SSLIPS} line${SSLIPS>1?'s':''} needed fixing)`:'Solved with every line right! 🎉'):'Here is one way to do it.')}</b>${r.gained?`  +${r.gained} XP`:''}`+(r.badges.length?'<br>'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):''));
