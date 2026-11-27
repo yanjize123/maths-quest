@@ -16,8 +16,8 @@
    "rep_from": "story",
    "rep_to": "symbolic",
    "action": "type",
-   "story": "你要买 {n} 盒草莓，每盒 £{k}。一共要付多少镑？",
-   "story_en": "You are buying {n} punnets of strawberries at £{k} each. How much do you pay?",
+   "story": "你要买 {n} 盒草莓，每盒 {k} 金币。一共要付多少金币？",
+   "story_en": "You are buying {n} punnets of strawberries at {k} coins each. How many coins do you pay?",
    "params": {
     "n": [
      1,
@@ -37,13 +37,13 @@
     "MIS.MUL.COUNTOFF"
    ],
    "hints": [
-    "每盒 £{k}，买 {n} 盒。",
-    "{n} 个 £{k}。",
+    "每盒 {k} 金币，买 {n} 盒。",
+    "{n} 个 {k} 金币。",
     "{n}×{k}"
    ],
    "hints_en": [
-    "Each punnet is £{k}, and you buy {n}.",
-    "{n} lots of £{k}.",
+    "Each punnet is {k} coins, and you buy {n}.",
+    "{n} lots of {k} coins.",
     "{n}×{k}"
    ],
    "context_load": "money",
@@ -65,8 +65,8 @@
    "rep_from": "story",
    "rep_to": "symbolic",
    "action": "type",
-   "story": "{who} 买了 {n} 个纸杯蛋糕，每个 £{k}。应该收多少镑？",
-   "story_en": "{who} bought {n} cupcakes at £{k} each. How much should you charge?",
+   "story": "{who} 买了 {n} 个纸杯蛋糕，每个 {k} 金币。应该收多少金币？",
+   "story_en": "{who} bought {n} cupcakes at {k} coins each. How many coins should you charge?",
    "params": {
     "n": [
      1,
@@ -86,13 +86,13 @@
     "MIS.MUL.COUNTOFF"
    ],
    "hints": [
-    "每个 £{k}，{n} 个。",
-    "{n} 个 £{k}。",
+    "每个 {k} 金币，{n} 个。",
+    "{n} 个 {k} 金币。",
     "{n}×{k}"
    ],
    "hints_en": [
-    "£{k} each, {n} cupcakes.",
-    "{n} lots of £{k}.",
+    "{k} coins each, {n} cupcakes.",
+    "{n} lots of {k} coins.",
     "{n}×{k}"
    ],
    "context_load": "money",
@@ -118,8 +118,8 @@
    "rep_from": "story",
    "rep_to": "bar",
    "action": "type",
-   "story": "今天收入 £{a}，进货花了 £{b}。今天赚了多少镑？",
-   "story_en": "Today you took £{a} and spent £{b} on stock. How much profit did you make?",
+   "story": "今天收入 {a} 金币，进货花了 {b} 金币。今天赚了多少金币？",
+   "story_en": "Today you took {a} coins and spent {b} coins on stock. How many coins of profit did you make?",
    "params": {
     "a": [
      20,
@@ -138,12 +138,12 @@
    ],
    "hints": [
     "利润 = 收入 − 成本。",
-    "£{a} 里拿走 £{b}，还剩多少？",
+    "{a} 里拿走 {b}，还剩多少？",
     "{a}−{b}"
    ],
    "hints_en": [
     "Profit = money in − money out.",
-    "Take £{b} away from £{a}. What is left?",
+    "Take {b} away from {a}. What is left?",
     "{a}−{b}"
    ],
    "context_load": "money",
@@ -151,6 +151,147 @@
    "difficulty": 0.4,
    "status": "hypothesised",
    "source": "business_loop.md"
+  },
+  {
+   "version": 1,
+   "target": "procedure",
+   "rep_from": "story",
+   "rep_to": "symbolic",
+   "action": "type",
+   "variation_group": "VG.BIZ.SHOP",
+   "example_stage": "independent",
+   "context_load": "money",
+   "time_limit": "none",
+   "status": "hypothesised",
+   "source": "Codex Q-20261126-2350 方案 A",
+   "item_id": "IT.L1.BIZ.SHOPMUL",
+   "skills": [
+    [
+     "MD.MONEY.01",
+     1.0
+    ]
+   ],
+   "story": "{thing}：{n} 件，每件 {k} 金币。一共要付多少金币？",
+   "story_en": "{thing}: {n} pieces at {k} coins each. How many coins do you pay?",
+   "params": {
+    "n": [
+     2,
+     9
+    ],
+    "k": [
+     2,
+     9
+    ]
+   },
+   "answer": "n*k",
+   "distractors": [
+    "MIS.MUL.ADD",
+    "MIS.MUL.ONEGROUP",
+    "MIS.MUL.COUNTOFF"
+   ],
+   "hints": [
+    "每件 {k} 金币，买 {n} 件。",
+    "{n} 个 {k}。",
+    "{n}×{k}"
+   ],
+   "hints_en": [
+    "{k} coins each, {n} pieces.",
+    "{n} lots of {k}.",
+    "{n}×{k}"
+   ],
+   "difficulty": 0.3
+  },
+  {
+   "version": 1,
+   "target": "procedure",
+   "rep_from": "story",
+   "rep_to": "symbolic",
+   "action": "type",
+   "variation_group": "VG.BIZ.SHOP",
+   "example_stage": "independent",
+   "context_load": "money",
+   "time_limit": "none",
+   "status": "hypothesised",
+   "source": "Codex Q-20261126-2350 方案 A",
+   "item_id": "IT.L1.BIZ.SHOPADD",
+   "skills": [
+    [
+     "MD.ADD.02",
+     1.0
+    ]
+   ],
+   "story": "{thing} 分两部分卖：{a} 金币和 {b} 金币。一共要付多少金币？",
+   "story_en": "{thing} comes in two parts: {a} coins and {b} coins. How many coins do you pay?",
+   "params": {
+    "a": [
+     5,
+     20
+    ],
+    "b": [
+     5,
+     20
+    ]
+   },
+   "answer": "a+b",
+   "distractors": [],
+   "hints": [
+    "把两部分加起来。",
+    "先加十位，再加个位。",
+    "{a}+{b}"
+   ],
+   "hints_en": [
+    "Add the two parts.",
+    "Add the tens, then the ones.",
+    "{a}+{b}"
+   ],
+   "difficulty": 0.2
+  },
+  {
+   "version": 1,
+   "target": "procedure",
+   "rep_from": "story",
+   "rep_to": "symbolic",
+   "action": "type",
+   "variation_group": "VG.BIZ.SHOP",
+   "example_stage": "independent",
+   "context_load": "money",
+   "time_limit": "none",
+   "status": "hypothesised",
+   "source": "Codex Q-20261126-2350 方案 A",
+   "item_id": "IT.L1.BIZ.SHOPCHANGE",
+   "skills": [
+    [
+     "MD.SUB.02",
+     1.0
+    ]
+   ],
+   "story": "{thing} 卖 {c} 金币。你付了 {p} 金币，应该找你多少金币？",
+   "story_en": "{thing} costs {c} coins. You pay {p} coins. How much change should you get?",
+   "params": {
+    "p": [
+     20,
+     50
+    ],
+    "c": [
+     10,
+     19
+    ]
+   },
+   "answer": "p-c",
+   "distractors": [
+    "MIS.SUB.SMALLER"
+   ],
+   "hints": [
+    "找零 = 付的钱 − 价钱。",
+    "从 {c} 数到 {p} 要多少？",
+    "{p}−{c}"
+   ],
+   "hints_en": [
+    "Change = money paid − price.",
+    "Count up from {c} to {p}.",
+    "{p}−{c}"
+   ],
+   "difficulty": 0.35
   }
  ]
 }

@@ -1,17 +1,17 @@
 // mq_art.js — 原创卡通形象（SVG 字符串）。企鹅店员、三条小龙、纸杯蛋糕、草莓、硬币、店铺背景。
 // 只用原创形象。版本写在文件内（组件库文件名不变）。v1 2026-11-26，P-20261126-maths-game。
 (function (root) {
-  const ART_VERSION = 1;
+  const ART_VERSION = 2;
   const svg = (w, h, body, cls = '') => `<svg class="${cls}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${body}</svg>`;
 
   // 海滩企鹅店员（围裙 + 厨师帽）
-  function penguin(mood = 'happy') {
+  function penguin(mood = 'happy', apron = '#ff8fc0', hat = true) {
     const mouth = mood === 'oops' ? '<ellipse cx="50" cy="47" rx="5" ry="4" fill="#f4a03a"/>' : '<path d="M44 45 L56 45 L50 51 Z" fill="#f4a03a"/>';
     return svg(100, 120, `
       <ellipse cx="50" cy="112" rx="26" ry="5" fill="#0002"/>
       <ellipse cx="50" cy="70" rx="30" ry="38" fill="#23263a"/>
       <ellipse cx="50" cy="76" rx="20" ry="28" fill="#fff"/>
-      <path d="M32 60 Q50 66 68 60 L66 100 Q50 106 34 100 Z" fill="#ff8fc0"/>
+      <path d="M32 60 Q50 66 68 60 L66 100 Q50 106 34 100 Z" fill="${apron}"/>
       <circle cx="50" cy="80" r="4" fill="#fff6"/>
       <ellipse cx="20" cy="74" rx="7" ry="18" fill="#23263a" transform="rotate(20 20 74)"/>
       <ellipse cx="80" cy="74" rx="7" ry="18" fill="#23263a" transform="rotate(-20 80 74)"/>
@@ -20,8 +20,7 @@
       <circle cx="43" cy="38" r="1" fill="#fff"/><circle cx="59" cy="38" r="1" fill="#fff"/>
       ${mouth}
       <circle cx="34" cy="47" r="4" fill="#ff9db8" opacity=".6"/><circle cx="66" cy="47" r="4" fill="#ff9db8" opacity=".6"/>
-      <rect x="34" y="12" width="32" height="12" rx="3" fill="#fff" stroke="#ddd"/>
-      <circle cx="40" cy="10" r="8" fill="#fff"/><circle cx="50" cy="6" r="9" fill="#fff"/><circle cx="60" cy="10" r="8" fill="#fff"/>
+      ${hat ? '<rect x="34" y="12" width="32" height="12" rx="3" fill="#fff" stroke="#ddd"/><circle cx="40" cy="10" r="8" fill="#fff"/><circle cx="50" cy="6" r="9" fill="#fff"/><circle cx="60" cy="10" r="8" fill="#fff"/>' : ''}
       <ellipse cx="38" cy="108" rx="9" ry="4" fill="#f4a03a"/><ellipse cx="62" cy="108" rx="9" ry="4" fill="#f4a03a"/>`, 'art-penguin');
   }
 
@@ -71,16 +70,19 @@
   function coin(v = 1) { return svg(40, 40, `<circle cx="20" cy="20" r="17" fill="#ffd23f" stroke="#e0a800" stroke-width="3"/><text x="20" y="26" font-size="15" font-weight="700" text-anchor="middle" fill="#8a6000">£${v}</text>`, 'art-coin'); }
 
   // 店铺背景：theme = shop | space | sea
-  function scene(theme = 'shop') {
-    if (theme === 'space') return svg(400, 160, `<rect width="400" height="160" fill="#1b1640"/>${[...Array(40)].map((_, i) => `<circle cx="${(i * 97) % 400}" cy="${(i * 53) % 160}" r="${(i % 3) + 0.6}" fill="#fff" opacity=".8"/>`).join('')}<circle cx="330" cy="40" r="22" fill="#ffb3d9"/><ellipse cx="330" cy="40" rx="36" ry="7" fill="none" stroke="#c9a7ff" stroke-width="3"/><rect x="0" y="130" width="400" height="30" fill="#3a3270"/>`, 'art-scene');
-    if (theme === 'sea') return svg(400, 160, `<rect width="400" height="160" fill="#7fd6ff"/><path d="M0 100 Q50 90 100 100 T200 100 T300 100 T400 100 V160 H0 Z" fill="#3aa8e0"/>${[...Array(8)].map((_, i) => `<circle cx="${30 + i * 48}" cy="${40 + (i % 3) * 18}" r="5" fill="#fff" opacity=".6"/>`).join('')}<rect x="0" y="140" width="400" height="20" fill="#f3d9a4"/>`, 'art-scene');
+  // palette：{awning, wall}；shelf：柜台上摆的已购物品 emoji
+  function scene(theme = 'shop', palette = {}, shelf = []) {
+    const aw = palette.awning || '#ff8fc0', wall = palette.wall || '#fff0f6';
+    const sh = shelf.slice(-12).map((e, i) => `<text x="${120 + i * 14}" y="122" font-size="13">${e}</text>`).join('');
+    if (theme === 'space') return svg(400, 160, `<rect width="400" height="160" fill="#1b1640"/>${[...Array(40)].map((_, i) => `<circle cx="${(i * 97) % 400}" cy="${(i * 53) % 160}" r="${(i % 3) + 0.6}" fill="#fff" opacity=".8"/>`).join('')}<circle cx="330" cy="40" r="22" fill="#ffb3d9"/><ellipse cx="330" cy="40" rx="36" ry="7" fill="none" stroke="#c9a7ff" stroke-width="3"/><rect x="0" y="130" width="400" height="30" fill="#3a3270"/>${sh}`, 'art-scene');
+    if (theme === 'sea') return svg(400, 160, `<rect width="400" height="160" fill="#7fd6ff"/><path d="M0 100 Q50 90 100 100 T200 100 T300 100 T400 100 V160 H0 Z" fill="#3aa8e0"/>${[...Array(8)].map((_, i) => `<circle cx="${30 + i * 48}" cy="${40 + (i % 3) * 18}" r="5" fill="#fff" opacity=".6"/>`).join('')}<rect x="0" y="140" width="400" height="20" fill="#f3d9a4"/>${sh}`, 'art-scene');
     return svg(400, 160, `
-      <rect width="400" height="160" fill="#fff0f6"/>
-      <path d="M0 0 H400 V34 H0 Z" fill="#ff8fc0"/>${[...Array(10)].map((_, i) => `<path d="M${i * 40} 34 h40 a20 14 0 0 1 -40 0 Z" fill="${i % 2 ? '#ffb3d9' : '#fff'}"/>`).join('')}
+      <rect width="400" height="160" fill="${wall}"/>
+      <path d="M0 0 H400 V34 H0 Z" fill="${aw}"/>${[...Array(10)].map((_, i) => `<path d="M${i * 40} 34 h40 a20 14 0 0 1 -40 0 Z" fill="${i % 2 ? aw : '#fff'}" opacity="${i % 2 ? .7 : 1}"/>`).join('')}
       <text x="200" y="24" font-size="18" font-weight="700" text-anchor="middle" fill="#fff">Penguin Cupcakes</text>
       <rect x="20" y="70" width="70" height="50" rx="6" fill="#d8f3ff"/><path d="M20 95 H90 M55 70 V120" stroke="#fff" stroke-width="3"/>
       <rect x="310" y="70" width="70" height="50" rx="6" fill="#d8f3ff"/><path d="M310 95 H380 M345 70 V120" stroke="#fff" stroke-width="3"/>
-      <rect x="0" y="126" width="400" height="34" fill="#c98a5a"/><rect x="0" y="126" width="400" height="6" fill="#e0a476"/>`, 'art-scene');
+      <rect x="0" y="126" width="400" height="34" fill="#c98a5a"/><rect x="0" y="126" width="400" height="6" fill="#e0a476"/>${sh}`, 'art-scene');
   }
 
   const api = { ART_VERSION, penguin, dragon, cupcake, strawberry, coin, scene, DRAGONS };

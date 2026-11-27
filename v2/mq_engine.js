@@ -48,7 +48,8 @@
   function instantiate(item, seed, mis, opts = {}) {
     const r = rng(seed), p = {};
     for (const [k, [lo, hi]] of Object.entries(item.params)) p[k] = lo + Math.floor(r() * (hi - lo + 1));
-    Object.assign(p, opts.params || {});   // 店铺等场景给定的数（如真实进货盒数、价格）
+    Object.assign(p, opts.params || {});
+    if (!('thing' in p)) p.thing = opts.lang === 'en' ? 'This item' : '这件东西';   // 购买题的商品名   // 店铺等场景给定的数（如真实进货盒数、价格）
     p.who = opts.who || 'Pink Fluffy Unicorn';
     const correct = item.answer === 'same' ? 'same' : evalExpr(item.answer, p);
     let fairy = null;
