@@ -14,7 +14,7 @@
 .q{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 10px 30px #0006}.tag{display:inline-block;background:#323d85;border-radius:8px;padding:3px 10px;font-size:13px;color:#cfd6ff;margin:0 4px 4px 0}
 .rev{background:#5a3d00;color:var(--acc)}.qt{font-size:22px;line-height:1.5;margin:14px 0;white-space:pre-line}.emo{font-size:36px;float:right}
 .fmt{color:var(--mut);font-size:14px;margin-bottom:10px}input,select{font-size:20px;padding:10px 12px;border-radius:12px;border:2px solid #3a4590;background:#10163a;color:var(--ink)}
-#ans{width:100%;font-size:22px}input:focus{outline:none;border-color:var(--acc)}.row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+#ans,#sin{width:100%;font-size:22px}input:focus{outline:none;border-color:var(--acc)}.row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
 button{font-size:17px;padding:11px 18px;border-radius:12px;border:0;cursor:pointer;font-weight:600}.go{background:var(--acc);color:#222}.ghost{background:#2b3577;color:var(--ink)}.danger{background:#5a1d26;color:#ffd0d0}
 .keys button{padding:8px 13px;font-size:18px;background:#232c66;color:var(--ink)}
 .fb{margin-top:16px;border-radius:14px;padding:14px 16px;white-space:pre-line;line-height:1.5}.fb.ok{background:#123d2e;border:1px solid var(--ok)}.fb.bad{background:#47161e;border:1px solid var(--bad)}
@@ -38,7 +38,7 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
 <div id="play" class="hide">
  <div class="bar"><b id="nm"></b><span class="pill" id="yr"></span><span class="pill" id="lv"></span><div class="xp"><i id="xpb"></i></div><span class="pill" id="stk"></span><span class="pill" id="tdy"></span>
  <button class="ghost" id="backbtn" onclick="backBtn()">⇦</button></div>
- <div class="tabs"><button id="t1" onclick="tab(1)">⚔️ Practice</button><button id="t2" onclick="tab(2)">🧭 Placement test</button><button id="t3" onclick="tab(3)">🎯 Fix my mistakes</button><button id="t4" onclick="tab(4)">📒 Progress</button></div>
+ <div class="tabs"><button id="t1" onclick="tab(1)">⚔️ Practice</button><button id="t5" onclick="tab(5)">🧮 Sets of 10</button><button id="t6" onclick="tab(6)">✍️ Step by step</button><button id="t2" onclick="tab(2)">🧭 Placement test</button><button id="t3" onclick="tab(3)">🎯 Fix my mistakes</button><button id="t4" onclick="tab(4)">📒 Progress</button></div>
  <div id="ysel" class="row hide" style="margin:0 0 12px"><span class="mut">Question bank:</span><select id="year" onchange="nextQ()"></select></div>
  <div id="qbox" class="q hide"><span class="emo" id="emo"></span><span class="tag" id="tp"></span><span class="tag rev hide" id="rv"></span>
   <div class="qt" id="qt"></div><div class="fmt" id="fmt"></div>
@@ -48,12 +48,22 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
   <button class="ghost" id="hb" onclick="hint()">💡 Hint</button><button class="ghost" id="sk" onclick="submit(true)">I don't know</button></div>
   <div id="hn" class="fmt hide" style="margin-top:10px"></div><div id="fb" class="fb hide"></div>
   <div class="row hide" id="nx"><button class="go" onclick="nextQ()">Next ➜</button></div></div>
+ <div id="sbox" class="q hide"><span class="emo">✍️</span><span class="tag" id="stp"></span>
+  <div class="qt" id="sqt"></div><div class="fmt" id="sfmt"></div>
+  <div id="slines"></div>
+  <input id="sin" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Next line of working, then Enter">
+  <div class="row keys" id="skeys"></div>
+  <div class="row"><button class="go" id="sck" onclick="stepCheck()">Check line ✔</button><button class="ghost" onclick="stepUndo()">↶ Undo line</button>
+  <button class="ghost" id="shn" onclick="stepHint()">💡 Next step</button><button class="ghost" id="sgu" onclick="stepGiveUp()">Show me</button></div>
+  <div id="smsg" class="fb hide"></div>
+  <div class="row hide" id="snx"><button class="go" onclick="nextQ()">Next ➜</button></div></div>
  <div id="pbox" class="q hide"></div>
  <div id="bookbox" class="q hide"></div>
 </div>
 <div class="foot" id="foot"></div></div>
 <script src="config.js"></script>
 <script src="engine.js"></script>
+<script src="steps.js"></script>
 <script>
 const KEY='mathsquest_v1';
 const YL=MQ.YEAR_LABEL;
@@ -93,8 +103,10 @@ function start(i){L=DB.players[i];ST=stOf(L);show0('play');const s=MQ.summary(L,
  $('year').innerHTML='<option value="">My plan (Year '+L.year+' + gaps)</option>'+Object.keys(YL).map(y=>`<option value="${y}">${YL[y]}</option>`).join('');
  tab(s.overall==null&&!s.count?2:1)}
 function bar(s){SUM=s;$('nm').textContent=s.name;$('yr').textContent=s.year_label;$('lv').textContent=`Lv ${s.level} ${s.title}`;$('xpb').style.width=s.xp_in_level+'%';$('stk').textContent=`🔥 ${s.streak}`;$('tdy').textContent=`Today ${s.today}/${s.goal}`}
-function show(id){['qbox','pbox','bookbox'].forEach(k=>$(k).classList.toggle('hide',k!=id))}
-function tab(n){[1,2,3,4].forEach(k=>$('t'+k).classList.toggle('on',k==n));$('ysel').classList.toggle('hide',n!=1);
+function show(id){['qbox','pbox','bookbox','sbox'].forEach(k=>$(k).classList.toggle('hide',k!=id))}
+function tab(n){[1,2,3,4,5,6].forEach(k=>$('t'+k).classList.toggle('on',k==n));$('ysel').classList.toggle('hide',![1,5,6].includes(n));
+ if(n==5){mode='pure';SET={n:0,ok:0,t0:Date.now()};nextQ();return}
+ if(n==6){mode='steps';nextQ();return}
  if(n==4){show('bookbox');book();return}
  if(n==2){mode='placement';placementIntro();return}
  mode=n==3?'mistakes':'mixed';nextQ()}
@@ -106,10 +118,12 @@ function restartP(){ST.placement=null;save();nextQ()}
 const KEYS=['/','√','^2','^','(',')','x','n','−',',',':','.'];
 $('keys').innerHTML=KEYS.map(k=>`<button type="button" onclick="ins('${k}')">${k=='^2'?'x²':k}</button>`).join('');
 function ins(k){const a=$('ans');if(a.disabled)return;const v=k=='−'?'-':k;const p=a.selectionStart??a.value.length;a.value=a.value.slice(0,p)+v+a.value.slice(a.selectionEnd??p);a.focus();a.selectionStart=a.selectionEnd=p+v.length}
-function nextQ(){const ys=$('year').value;Q=MQ.nextQuestion(L,ST,DB.goal,mode,mode=='mixed'&&ys?+ys:null);save();
+function nextQ(){if(mode=='pure'&&SET&&SET.n>=10){setDone();return}
+ const ys=$('year').value;Q=MQ.nextQuestion(L,ST,DB.goal,mode,['mixed','pure','steps'].includes(mode)&&ys?+ys:null);save();
  if(Q.placement_done){placementResult(Q);return}
+ if(mode=='steps'&&Q.step){stepShow();return}
  show('qbox');done=false;$('tp').textContent=Q.why=='placement'?Q.strand:`Y${Q.year} · ${Q.topic}`;$('emo').textContent=Q.emoji;
- const lab={review:'🎯 Bonus mission',gap:'🧩 Gap filler',challenge:'⚡ Challenge',placement:'🧭 Placement'+(Q.progress?` · ${Q.progress.strands_done}/${Q.progress.strands} areas done · Q${Q.progress.asked+1}`:'')}[Q.why];
+ const lab={set:`🧮 Set · ${SET?SET.n+1:1}/10`,review:'🎯 Bonus mission',gap:'🧩 Gap filler',challenge:'⚡ Challenge',placement:'🧭 Placement'+(Q.progress?` · ${Q.progress.strands_done}/${Q.progress.strands} areas done · Q${Q.progress.asked+1}`:'')}[Q.why];
  $('rv').textContent=lab||'';$('rv').classList.toggle('hide',!lab);
  $('qt').textContent=Q.text;$('fmt').textContent=Q.fmt||'';$('hn').classList.add('hide');$('hn').textContent=Q.hint?'💡 '+Q.hint:'';$('hb').classList.toggle('hide',!Q.hint);
  $('fb').className='fb hide';$('nx').classList.add('hide');$('sub').disabled=false;$('sk').disabled=false;$('ans').value='';$('ans').disabled=false;$('ans').focus();Q.shownAt=Date.now()}
@@ -117,10 +131,11 @@ function hint(){$('hn').classList.remove('hide');if(Q)Q.hintUsed=true}
 function submit(skip){if(done||!Q)return;const a=$('ans').value;if(!a.trim()&&!skip)return;done=true;
  const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10;
  const r=MQ.answerQuestion(L,ST,DB.goal,Q,a,!!skip);save();record(Q,a,!!skip,r.correct,secs);
+ if(mode=='pure'&&SET){SET.n++;if(r.correct)SET.ok++}
  const f=$('fb');f.className='fb '+(r.correct?'ok':'bad');
  f.innerHTML=`<b>${esc(r.msg)}</b>${r.gained?`  +${r.gained} XP`:''}\n${r.correct?'':'Answer: <b>'+esc(r.show)+'</b>\n'}<span class="mut">${esc(r.sol)}</span>`+(r.badges.length?'\n'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):'');
  $('nx').classList.remove('hide');$('sub').disabled=true;$('sk').disabled=true;$('ans').disabled=true;bar(r.summary)}
-document.addEventListener('keydown',e=>{if(e.key=='Enter'&&!$('login').classList.contains('hide')){e.preventDefault();doLogin();return}if(e.key=='Enter'&&!$('qbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!done)submit();else if(!$('nx').classList.contains('hide'))nextQ()}});
+document.addEventListener('keydown',e=>{if(e.key=='Enter'&&!$('sbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!SDONE)stepCheck();else nextQ();return}if(e.key=='Enter'&&!$('login').classList.contains('hide')){e.preventDefault();doLogin();return}if(e.key=='Enter'&&!$('qbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!done)submit();else if(!$('nx').classList.contains('hide'))nextQ()}});
 function levelRows(strands,year){return '<table><tr><th>Area</th><th style="width:45%">Secure up to</th><th></th></tr>'+strands.map(s=>{const lv=s.level;
  const w=lv==null?0:Math.max(0,lv)/11*100,mk=year/11*100;
  const txt=lv==null?'<span class=mut>not tested</span>':(lv<s.min?`not yet Year ${s.min}`:'Year '+lv);
@@ -140,9 +155,10 @@ const BACKEND=(window.MQ_BACKEND||'').trim();
 const CKEY='mathsquest_cred',QKEY='mathsquest_queue';
 let SESSION=null,flushing=false,saveMsg='';
 function backBtn(){if(BACKEND)logout();else home()}
-function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device'}
+const PAGE_VERSION='classic page v2 · engine v2 · steps v1 (2026-11-27)';
+function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device · <span title="version">'+PAGE_VERSION+'</span>'}
 function footBackend(){const n=queueGet().filter(e=>SESSION&&e.user===SESSION.name).length;
- $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'}`:''}
+ $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'} · ${PAGE_VERSION}`:''}
 async function post(body){const r=await fetch(BACKEND,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});return r.json()}
 function queueGet(){try{return JSON.parse(localStorage.getItem(QKEY))||[]}catch(e){return[]}}
 function queueSet(q){try{localStorage.setItem(QKEY,JSON.stringify(q))}catch(e){}}
@@ -164,6 +180,36 @@ function startSession(){L={name:SESSION.name,year:SESSION.year};ST=DB.states[L.n
  const s=MQ.summary(L,ST,DB.goal);bar(s);
  $('year').innerHTML='<option value="">My plan (Year '+L.year+' + gaps)</option>'+Object.keys(YL).map(y=>`<option value="${y}">${YL[y]}</option>`).join('');
  footBackend();tab(s.overall==null&&!s.count?2:1)}
+// ------------------------------------------------------------ 🧮 sets of 10 (pure calculation)
+let SET=null;
+function setDone(){const secs=Math.round((Date.now()-SET.t0)/1000),y=+($('year').value||L.year);ST.sets=ST.sets||{};const k='Y'+y,b=ST.sets[k];
+ const better=!b||SET.ok>b.ok||(SET.ok==b.ok&&secs<b.secs);if(better)ST.sets[k]={ok:SET.ok,secs,day:new Date().toISOString().slice(0,10)};save();
+ show('pbox');$('pbox').innerHTML=`<h2>🧮 Set finished</h2><p style="font-size:22px"><b>${SET.ok}/10</b> correct in <b>${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}</b></p>
+ <p class="mut">${better?'🏆 New personal best for this question bank!':`Personal best: ${b.ok}/10 in ${Math.floor(b.secs/60)}:${String(b.secs%60).padStart(2,'0')}`}</p><p class="mut">Accuracy first, then speed.</p>
+ <div class="row"><button class="go" onclick="tab(5)">Another set ➜</button><button class="ghost" onclick="tab(6)">✍️ Step by step</button></div>`}
+// ------------------------------------------------------------ ✍️ step by step (each line checked, no AI)
+let SLINES=[],SDONE=false,SSLIPS=0;
+const SKEYS=['(',')','×','÷','−','/','x','=','^2'];
+function stepShow(){show('sbox');SLINES=[];SDONE=false;SSLIPS=0;Q.hintUsed=false;Q.shownAt=Date.now();
+ $('stp').textContent=`Y${Q.year} · ${Q.topic}`;$('sqt').textContent=(Q.step.type=='eq'?'Solve, one step per line:\n':'Work out, one step per line:\n')+Q.step.start;
+ $('sfmt').textContent=MQS.FORMAT[Q.step.type];$('skeys').innerHTML=SKEYS.filter(k=>Q.step.type=='eq'||k!='x'&&k!='=').map(k=>`<button type="button" onclick="sins('${k}')">${k=='^2'?'x²':k}</button>`).join('');
+ $('smsg').className='fb hide';$('snx').classList.add('hide');$('sin').disabled=false;$('sin').value='';$('sck').disabled=false;stepDraw();$('sin').focus()}
+function sins(k){const a=$('sin');if(a.disabled)return;const p=a.selectionStart??a.value.length;a.value=a.value.slice(0,p)+k+a.value.slice(a.selectionEnd??p);a.focus();a.selectionStart=a.selectionEnd=p+k.length}
+function stepDraw(){$('slines').innerHTML=`<div class="w" style="font-size:20px;white-space:normal">`+[`<span class="mut">${esc(Q.step.start)}</span>`].concat(SLINES.map(l=>`<div>✓ ${esc(l)}</div>`)).join('')+'</div>'}
+function stepMsg(cls,h){const m=$('smsg');m.className='fb '+cls;m.innerHTML=h}
+function stepCheck(){if(SDONE)return;const line=$('sin').value.trim();if(!line)return;const r=MQS.checkLine(Q.step,SLINES,line);
+ if(!r.ok){if(!r.format)SSLIPS++;stepMsg('bad',(r.format?'✏️ ':'✘ ')+esc(r.msg)+(r.format?`<br><span class="mut">${esc(MQS.FORMAT[Q.step.type])}</span>`:''));return}
+ SLINES.push(line);$('sin').value='';stepDraw();
+ if(r.done)stepFinish(true);else stepMsg('ok',esc(r.msg)+(SLINES.length==1?' <span class="mut">Keep going — one step per line.</span>':''))}
+function stepUndo(){if(SDONE||!SLINES.length)return;$('sin').value=SLINES.pop();stepDraw();$('smsg').className='fb hide'}
+function stepHint(){if(SDONE)return;const [nx,why]=MQS.nextStep(Q.step,SLINES);Q.hintUsed=true;stepMsg('ok','💡 '+esc(why)+(nx?`<br><span class="mut">For example: </span><b>${esc(nx)}</b>`:''))}
+function stepGiveUp(){if(SDONE)return;const lines=SLINES.slice();for(let i=0;i<14;i++){const [nx]=MQS.nextStep(Q.step,lines);if(!nx)break;const r=MQS.checkLine(Q.step,lines,nx);if(!r.ok)break;lines.push(nx);if(r.done)break}
+ SLINES=lines;stepDraw();stepFinish(false)}
+function stepFinish(solved){SDONE=true;$('sin').disabled=true;$('sck').disabled=true;const segs=(SLINES[SLINES.length-1]||'').split('='),last=Q.step.type=='eq'&&/^\s*x\s*$/i.test(segs[segs.length-1])?segs[0]:segs[segs.length-1];
+ const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10,ans=solved?last:'';
+ const r=MQ.answerQuestion(L,ST,DB.goal,Q,ans,!solved);save();record(Q,SLINES.join(' | ')+(SSLIPS?` [${SSLIPS} slip${SSLIPS>1?'s':''}]`:''),!solved,r.correct,secs);
+ stepMsg(r.correct?'ok':'bad',`<b>${esc(solved?(SSLIPS?`Solved! (${SSLIPS} line${SSLIPS>1?'s':''} needed fixing)`:'Solved with every line right! 🎉'):'Here is one way to do it.')}</b>${r.gained?`  +${r.gained} XP`:''}`+(r.badges.length?'<br>'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):''));
+ $('snx').classList.remove('hide');bar(r.summary)}
 function record(q,ans,skip,ok,secs){if(!BACKEND||!SESSION)return;
  const q2=queueGet();q2.push({id:Math.random().toString(36).slice(2),user:SESSION.name,session:SESSION.session,time:new Date().toISOString(),mode:q.why,year:q.year,area:q.strand,topic:q.topic,
   question:q.text,answer:skip?'(skipped)':ans,correct_answer:q.show,correct:ok?1:0,seconds:secs,hint:q.hintUsed?1:0,type:q.gen});

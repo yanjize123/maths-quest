@@ -4,14 +4,18 @@ Maths practice for UK Year 1 to GCSE (Year 11 Higher), as a static web page — 
 
 **Open:** https://yanjize123.github.io/maths-quest/ (classic) · https://yanjize123.github.io/maths-quest/quest.html (adventure)
 
-- 126 question types, grouped into a question bank per school year and 7 areas (number, calculation, fractions/decimals/%, measurement, geometry, algebra & ratio, statistics & probability).
+- 180 question types (86 pure calculation), grouped into a question bank per school year and 7 areas (number, calculation, fractions/decimals/%, measurement, geometry, algebra & ratio, statistics & probability).
 - **Placement test:** adaptive, per area; finds the year each area is secure up to.
 - **My plan:** 60% school-year questions, 30% gap fillers from the placement result, 10% challenge.
 - Wrong answers come back as "Bonus missions" (new numbers, same skill) after 2 and 6 questions.
 - XP, levels, streaks, badges, daily goal.
 - Progress is stored in the browser on each device (localStorage). Use ⚙️ → Download backup / Restore backup to move it.
 
-Files: `index.html` (interface), `engine.js` (question generators, answer checking, placement and selection logic).
+- **Pure calculation:** about 68% of Practice questions are bare calculations (no words). Types follow the KS2 arithmetic paper (column +/−, short/long ×, short/long ÷, ×÷10/100/1000, decimals, fractions, % of, order of operations), the Chinese calculation sequence (mental facts, calculating cleverly, mixed operations, negatives, powers) and KS3/GCSE algebra (expand, collect, index laws, equations).
+- **🧮 Sets of 10:** ten pure calculations from the chosen question bank, timed, with a personal best per bank.
+- **✍️ Step by step:** order-of-operations calculations and linear equations, one line of working at a time. Every line is checked (same value / same solution as the line before); common slips are named (worked left to right instead of BIDMAS, sign not changed when moving a term, bracket not fully multiplied, subtracted instead of divided). Input is tolerant: × x * ·, ÷ : /, 3/4, 2 1/2, 3x, 2(x+1), [ ], ², 1,250, leading =, notes like (÷3). 💡 Next step suggests one line; Show me completes the working. No AI.
+
+Files: `index.html` (interface), `engine.js` (question generators, answer checking, placement and selection logic), `steps.js` (line-by-line checker). Tests: `node tests/test_steps.js`, `node tests/test_gens.js`.
 
 ## Accounts and records (optional backend)
 

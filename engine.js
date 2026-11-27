@@ -1,4 +1,4 @@
-/* Maths Quest engine — question generators (UK Year 1–11 / GCSE), answer checking,
+/* Maths Quest engine v2 (2026-11-27: pure calculation types, 68% pure share, step-by-step types) — question generators (UK Year 1–11 / GCSE), answer checking,
    placement test, adaptive selection, gamification. Runs in the browser and in Node. */
 (function (root) {
 "use strict";
@@ -559,6 +559,89 @@ G.g_recurring = () => {
 G.g_stats = () => { const s0 = R(0, 3), vals = range(s0, s0 + 3), fr = vals.map(() => R(1, 12)), tot = sum(vals.map((v, i) => v * fr[i])), m = tot / sum(fr); return Q("Statistics (frequency tables)", `A football club's results — ${vals.map((v, i) => `${v} goals: ${fr[i]} matches`).join(", ")}. Find the mean number of goals per match (1 d.p.).`, "num", m, m.toFixed(1), { tol: dpTol(1), hint: "Σ(value × frequency) ÷ Σfrequency", sol: `${tot} ÷ ${sum(fr)} = ${m.toFixed(1)}`, emoji: "⚽" }); };
 G.g_bounds = () => { const L = R(5, 30), u = choice(["cm", "m"]); if (rnd() < 0.5) { const ub = (L + 0.5) ** 2; return Q("Bounds", `The side of a square is ${L} ${u}, correct to the nearest ${u}. Find the upper bound of its area.`, "num", ub, `${ub} ${u}²`, { tol: 1e-6, hint: "Use the upper bound of the side.", sol: `Upper bound of side = ${L + 0.5}; (${L + 0.5})² = ${ub}` }); } const d = R(50, 300), t = R(2, 9), ub = (d + 0.5) / (t - 0.5); return Q("Bounds", `A distance of ${d} m (nearest m) is run in ${t} s (nearest s). Find the upper bound of the speed (2 d.p.).`, "num", ub, `${ub.toFixed(2)} m/s`, { tol: dpTol(2), hint: "Max speed = max distance ÷ min time.", sol: `${d + 0.5} ÷ ${t - 0.5} = ${ub.toFixed(2)}` }); };
 
+// ================================================================ PURE CALCULATION (added 2026-11-27, engine v2)
+// Context-free calculation types: KS2 Paper 1 arithmetic content (column +/−, short/long ×, short/long ÷,
+// ×÷10/100/1000, decimals, fractions, % of, order of operations), the Chinese 计算 line (口算, 简便运算,
+// 四则混合, 有理数, 乘方, 整式, 解方程), KS3/GCSE algebraic manipulation. Steps types carry q.step for steps.js.
+const ng = n => (n < 0 ? `(−${-n})` : String(n));          // a negative number in a calculation
+const sg = n => (n < 0 ? `−${-n}` : String(n));            // a leading negative number
+const fs = f => { f = toFr(f); return f.n < 0 ? `−${sfrac(f.mul(-1))}` : sfrac(f); };
+const mixs = f => { f = toFr(f); const w = Math.floor(f.val()), r = f.sub(w); return r.n === 0 ? String(w) : w ? `${w} ${r.n}/${r.d}` : `${r.n}/${r.d}`; };
+const FRF = "Fraction or mixed number, e.g. 7/8 or 1 1/4";
+const QC = (topic, expr, ans, o = {}) => Q(topic, `${expr} = ?`, o.kind || "num", ans, o.show || (ans instanceof Fr ? smixed(ans) : String(ans)), o);
+const sstep = (q, type, start, value, v) => { q.step = { type, start, value: toFr(value), v: v || null, mixed: true }; return q; };
+// --- Year 1–2: number facts
+G.a1_add10 = () => { const a = R(0, 10), b = R(0, 10 - a); return QC("Adding within 10", `${a} + ${b}`, a + b); };
+G.a1_sub10 = () => { const a = R(1, 10), b = R(0, a); return QC("Subtracting within 10", `${a} − ${b}`, a - b); };
+G.a1_add20 = () => { const a = R(6, 9), b = R(11 - a, 9); return QC("Adding across 10", `${a} + ${b}`, a + b, { hint: `Make 10 first: ${a} + ${10 - a} = 10.` }); };
+G.a2_add21 = () => { const a = R(12, 88), b = R(3, 9); return rnd() < 0.5 ? QC("Adding 2-digit and 1-digit", `${a} + ${b}`, a + b) : QC("Subtracting 1-digit", `${a + b} − ${b}`, a); };
+G.a2_tens = () => { const a = R(11, 69), b = R(1, 3) * 10; return rnd() < 0.5 ? QC("Adding tens", `${a} + ${b}`, a + b) : QC("Subtracting tens", `${a + b} − ${b}`, a); };
+G.a2_div = () => { const d = choice([2, 5, 10]), q = R(1, 12); return QC("Division facts (2, 5, 10)", `${d * q} ÷ ${d}`, q); };
+// --- Year 3–4: written methods
+G.a3_coladd = () => { const a = R(120, 879), b = R(105, 999 - a); return QC("Column addition", `${a} + ${b}`, a + b, { hint: "Line up ones, tens, hundreds; carry when a column makes 10 or more." }); };
+G.a3_colsub = () => { const a = R(300, 999), b = R(101, a - 50); return QC("Column subtraction", `${a} − ${b}`, a - b, { hint: "Exchange from the next column when the top digit is smaller." }); };
+G.a3_mul21 = () => { const a = R(12, 49), b = choice([3, 4, 8]); return QC("2-digit × 1-digit", `${a} × ${b}`, a * b, { hint: `${a} × ${b} = ${Math.floor(a / 10) * 10} × ${b} + ${a % 10} × ${b}` }); };
+G.a3_divfacts = () => { const d = choice([3, 4, 8]), q = R(2, 12); return QC("Division facts (3, 4, 8)", `${d * q} ÷ ${d}`, q); };
+G.a3_missing = () => { const k = R(0, 2); if (k === 0) { const a = R(2, 9), b = R(2, 10); return Q("Missing numbers", `? × ${a} = ${a * b}`, "num", b, String(b)); } if (k === 1) { const a = R(30, 99), b = R(11, a - 5); return Q("Missing numbers", `${a} − ? = ${a - b}`, "num", b, String(b)); } const a = R(15, 80), b = R(11, 90); return Q("Missing numbers", `? + ${a} = ${a + b}`, "num", b, String(b)); };
+G.a4_coladd4 = () => { const a = R(1200, 6800), b = R(1050, 9999 - a); return rnd() < 0.5 ? QC("4-digit column addition", `${cm(a)} + ${cm(b)}`, a + b) : QC("4-digit column subtraction", `${cm(a + b)} − ${cm(b)}`, a, { hint: "Exchange across zeros one column at a time." }); };
+G.a4_mul31 = () => { const a = R(102, 989), b = R(3, 9); return QC("3-digit × 1-digit (short multiplication)", `${a} × ${b}`, a * b); };
+G.a4_mul10 = () => { const a = R(3, 99), p = choice([10, 100]); return rnd() < 0.5 ? QC("× and ÷ by 10, 100", `${a} × ${p}`, a * p) : QC("× and ÷ by 10, 100", `${cm(a * p)} ÷ ${p}`, a); };
+G.a4_shortdiv = () => { const d = R(3, 9), q = R(21, 199); return QC("Short division", `${d * q} ÷ ${d}`, q, { hint: "Divide each digit from the left; carry the remainder." }); };
+G.a4_dec1 = () => { const a = R(11, 99), b = R(11, 99); return rnd() < 0.5 ? QC("Adding decimals (1 d.p.)", `${fdec(F(a, 10))} + ${fdec(F(b, 10))}`, F(a + b, 10), { show: fdec(F(a + b, 10)) }) : QC("Subtracting decimals (1 d.p.)", `${fdec(F(a + b, 10))} − ${fdec(F(b, 10))}`, F(a, 10), { show: fdec(F(a, 10)) }); };
+// --- Year 5–6: KS2 Paper 1
+G.a5_longmul = () => { const a = R(102, 2999), b = R(12, 39); return QC("Long multiplication", `${cm(a)} × ${b}`, a * b, { hint: `${cm(a)} × ${b % 10} + ${cm(a)} × ${b - (b % 10)}` }); };
+G.a5_shortdiv4 = () => { const d = R(3, 9), q = R(112, 1110); return QC("Short division (4-digit)", `${cm(d * q)} ÷ ${d}`, q); };
+G.a5_decadd = () => { const a = F(R(101, 2999), 100), b = F(R(11, 999), 10); const k = rnd(); if (k < 0.4) return QC("Adding decimals", `${fdec(a)} + ${fdec(b)}`, a.add(b), { show: fdec(a.add(b)), hint: "Line up the decimal points." }); if (k < 0.7) { const w = R(3, 20), c = F(R(11, w * 100 - 1), 100); return QC("Subtracting decimals", `${w} − ${fdec(c)}`, F(w).sub(c), { show: fdec(F(w).sub(c)), hint: `Write ${w} as ${w}.00.` }); } const s = a.add(b); return QC("Subtracting decimals", `${fdec(s)} − ${fdec(a)}`, b, { show: fdec(b) }); };
+G.a5_pow10dec = () => { const a = F(R(11, 9999), choice([10, 100])), p = choice([10, 100, 1000]); return rnd() < 0.5 ? QC("× by 10, 100, 1000 (decimals)", `${fdec(a)} × ${cm(p)}`, a.mul(p), { show: fdec(a.mul(p)) }) : QC("÷ by 10, 100, 1000 (decimals)", `${fdec(a)} ÷ ${cm(p)}`, a.div(p), { show: fdec(a.div(p)), hint: "Digits move right when you divide." }); };
+G.a5_fracsame = () => { const d = choice([5, 6, 7, 8, 9, 10, 12]); const a = R(1, d - 1), b = R(1, d - 1); return rnd() < 0.5 ? QC("Adding fractions (same denominator)", `${a}/${d} + ${b}/${d}`, F(a + b, d), { kind: "frac", fmt: FRF }) : (a === b ? QC("Adding fractions (same denominator)", `${a}/${d} + ${b}/${d}`, F(a + b, d), { kind: "frac", fmt: FRF }) : QC("Subtracting fractions (same denominator)", `${Math.max(a, b)}/${d} − ${Math.min(a, b)}/${d}`, F(Math.abs(a - b), d), { kind: "frac", fmt: FRF })); };
+G.a5_mixed = () => { const d = choice([3, 4, 5, 6, 8]); const x = F(R(1, 4) * d + R(1, d - 1), d), y = F(R(0, 2) * d + R(1, d - 1), d); return rnd() < 0.5 ? QC("Adding mixed numbers", `${mixs(x)} + ${mixs(y)}`, x.add(y), { kind: "frac", fmt: FRF }) : (x.cmp(y) > 0 ? QC("Subtracting mixed numbers", `${mixs(x)} − ${mixs(y)}`, x.sub(y), { kind: "frac", fmt: FRF }) : QC("Adding mixed numbers", `${mixs(x)} + ${mixs(y)}`, x.add(y), { kind: "frac", fmt: FRF })); };
+G.a5_sqcalc = () => { const a = R(2, 12), b = R(2, 5); return QC("Squares and cubes", `${a}² + ${b}³`, a * a + b ** 3); };
+G.a6_longdiv = () => { const d = R(12, 49), q = R(21, 299); return QC("Long division", `${cm(d * q)} ÷ ${d}`, q, { hint: "Divide, multiply, subtract, bring down." }); };
+G.a6_longmul4 = () => { const a = R(1002, 4999), b = R(21, 89); return QC("Long multiplication (4-digit × 2-digit)", `${cm(a)} × ${b}`, a * b); };
+G.a6_decmul = () => { const a = F(R(101, 999), 100), b = R(3, 9); return rnd() < 0.5 ? QC("Decimal × whole number", `${fdec(a)} × ${b}`, a.mul(b), { show: fdec(a.mul(b)) }) : QC("Decimal ÷ whole number", `${fdec(a.mul(b))} ÷ ${b}`, a, { show: fdec(a) }); };
+G.a6_fracunlike = () => { const [d1, d2] = sample([2, 3, 4, 5, 6, 8, 10, 12], 2); const a = F(R(1, d1 - 1), d1), b = F(R(1, d2 - 1), d2); return rnd() < 0.55 || a.cmp(b) <= 0 ? QC("Adding fractions (different denominators)", `${sfrac(a)} + ${sfrac(b)}`, a.add(b), { kind: "frac", fmt: FRF, hint: "Use a common denominator." }) : QC("Subtracting fractions (different denominators)", `${sfrac(a)} − ${sfrac(b)}`, a.sub(b), { kind: "frac", fmt: FRF, hint: "Use a common denominator." }); };
+G.a6_fracwhole = () => { const d = choice([3, 4, 5, 6, 8]), n = coprime(d), f = F(n, d); if (rnd() < 0.5) { const w = d * R(2, 12); return QC("Fraction × whole number", `${n}/${d} × ${w}`, f.mul(w), { kind: "frac", fmt: FRF }); } const w = R(2, 6); return QC("Fraction ÷ whole number", `${n}/${d} ÷ ${w}`, f.div(w), { kind: "frac", fmt: FRF, hint: `÷ ${w} is the same as × 1/${w}.` }); };
+G.a6_pctof = () => { const p = choice([1, 5, 10, 15, 20, 25, 30, 35, 40, 45, 60, 75, 90]), a = choice([40, 60, 80, 120, 160, 200, 240, 300, 360, 480, 520, 640, 800]); const v = F(p * a, 100); return Q("Percentage of an amount", `${p}% of ${a} = ?`, "num", v, fdec(v), { hint: "Find 10% (or 1%) first, then build up." }); };
+// --- Year 7–8: rational numbers, calculating cleverly, powers
+G.a7_negall = () => { const a = nz(-15, 15), b = nz(-12, 12), c = nz(-9, 9), k = R(0, 2); if (k === 0) return QC("Adding and subtracting negatives", `${sg(a)} + ${ng(b)} − ${ng(c)}`, a + b - c, { hint: "Subtracting a negative is adding." }); if (k === 1) return QC("Multiplying negatives", `${ng(a)} × ${ng(b)} × ${ng(c)}`, a * b * c); const q = nz(-9, 9), d = nz(-9, 9); return QC("Dividing negatives", `${ng(q * d)} ÷ ${ng(d)}`, q); };
+G.a7_clever = () => { const k = R(0, 5); let e, v, h;
+  if (k === 0) { const m = R(12, 88); e = `25 × ${4 * m}`; v = 100 * m; h = "25 × 4 = 100"; }
+  else if (k === 1) { const m = R(12, 98), n = choice([99, 101, 98, 999]); e = `${m} × ${n}`; v = m * n; h = n === 99 ? `${m} × 100 − ${m}` : n === 101 ? `${m} × 100 + ${m}` : n === 98 ? `${m} × 100 − ${m} × 2` : `${m} × 1000 − ${m}`; }
+  else if (k === 2) { const m = R(3, 19); e = `125 × ${m} × 8`; v = 1000 * m; h = "125 × 8 = 1000"; }
+  else if (k === 3) { const a = F(R(11, 99), 10), b = R(2, 9) * 10, c = 100 - b; e = `${fdec(a)} × ${b} + ${fdec(a)} × ${c}`; v = a.mul(100); h = `${fdec(a)} × (${b} + ${c})`; }
+  else if (k === 4) { const a = R(21, 79), b = R(2, 9); e = `${a} × ${b} + ${a} × ${10 - b}`; v = a * 10; h = `${a} × (${b} + ${10 - b})`; }
+  else { const a = R(102, 498), b = choice([197, 198, 199, 298, 299, 397, 398, 399]); e = `${a} + ${b}`; v = a + b; h = `${a} + ${Math.ceil(b / 100) * 100} − ${Math.ceil(b / 100) * 100 - b}`; }
+  return QC("Calculating cleverly", e, v, { show: v instanceof Fr ? fdec(v) : String(v), hint: h }); };
+G.a7_decdec = () => { const k = rnd(); if (k < 0.5) { const a = F(R(2, 9), 10), b = F(R(2, 9), choice([10, 100])); return QC("Multiplying decimals", `${fdec(a)} × ${fdec(b)}`, a.mul(b), { show: fdec(a.mul(b)), hint: "Multiply as whole numbers, then count the decimal places." }); } const b = F(R(2, 9), choice([10, 100])), q = R(2, 60); return QC("Dividing by a decimal", `${fdec(b.mul(q))} ÷ ${fdec(b)}`, q, { hint: "Multiply both numbers by 10 or 100 so you divide by a whole number." }); };
+G.a7_mixedmul = () => { const d = choice([2, 3, 4, 5]), x = F(R(1, 3) * d + R(1, d - 1), d), e = choice([2, 3, 4, 5]), y = F(R(1, 2) * e + R(1, e - 1), e); return rnd() < 0.5 ? QC("Multiplying mixed numbers", `${mixs(x)} × ${mixs(y)}`, x.mul(y), { kind: "frac", fmt: FRF, hint: "Change to improper fractions first." }) : QC("Dividing mixed numbers", `${mixs(x)} ÷ ${mixs(y)}`, x.div(y), { kind: "frac", fmt: FRF, hint: "Improper fractions, then multiply by the reciprocal." }); };
+G.a8_powers = () => { const a = nz(-5, 5), b = R(2, 3), c = R(2, 6), d = R(2, 5); return QC("Powers and order of operations", `(${sg(a)})² − ${b}³ + ${c} × ${d}`, a * a - b ** 3 + c * d); };
+G.a8_idxnum = () => { const b = choice([2, 3, 5, 10]), p = R(2, 9), q = R(2, 9), r = R(1, p + q - 1); return Q("Index laws (numbers)", `${b}^${p} × ${b}^${q} ÷ ${b}^${r} = ${b}^?`, "num", p + q - r, String(p + q - r), { hint: "× add the powers, ÷ subtract them." }); };
+G.a8_ratneg = () => { const [d1, d2] = sample([2, 3, 4, 5, 6, 8], 2), a = F(nz(-d1 + 1, d1 - 1), d1), b = F(nz(-d2 + 1, d2 - 1), d2); const k = R(0, 2); const sa = a.n < 0 ? `(${fs(a)})` : sfrac(a), sb = b.n < 0 ? `(${fs(b)})` : sfrac(b); if (k === 0) return QC("Negative fractions", `${fs(a)} + ${sb}`, a.add(b), { kind: "frac", fmt: "e.g. -1/12", show: fs(a.add(b)) }); if (k === 1) return QC("Negative fractions", `${sa} × ${sb}`, a.mul(b), { kind: "frac", fmt: "e.g. -3/8", show: fs(a.mul(b)) }); return QC("Negative fractions", `${sa} ÷ ${sb}`, a.div(b), { kind: "frac", fmt: "e.g. -4/3", show: fs(a.div(b)) }); };
+G.a8_expand1 = () => { const a = nz(-6, 7), b = R(1, 5), c = nz(-9, 9); const p = P({ 1: a * b, 0: a * c }); return Q("Expanding a bracket", `Expand ${a === -1 ? "−" : sg(a)}(${lin(b, c)})`, "poly", p, ppoly(p), { fmt: "e.g. 6x - 15", hint: "Multiply each term inside by the number outside." }); };
+G.a8_collect = () => { const a = nz(-7, 9), b = nz(-9, 9), c = nz(-7, 7), d = nz(-9, 9); const p = P({ 1: a + c, 0: b + d }); return Q("Collecting like terms", `Simplify ${lin(a, b)} ${c > 0 ? "+" : "−"} ${lin(Math.abs(c), 0)} ${d > 0 ? "+" : "−"} ${Math.abs(d)}`, "poly", p, ppoly(p), { fmt: "e.g. 3x + 4", hint: "Add the x terms, then the numbers." }); };
+// --- Year 9–11: algebraic manipulation and powers
+G.a9_idxalg = () => { const p = R(2, 9), q = R(2, 9), k = R(0, 2); if (k === 0) return Q("Index laws (algebra)", `Simplify x^${p} × x^${q}`, "poly", P({ [p + q]: 1 }), `x^${p + q}`, { fmt: "e.g. x^7" }); if (k === 1) { const r = R(1, p + q - 1); return Q("Index laws (algebra)", `Simplify x^${p + q} ÷ x^${r}`, "poly", P({ [p + q - r]: 1 }), `x^${p + q - r}`, { fmt: "e.g. x^7" }); } const r = R(2, 4); return Q("Index laws (algebra)", `Simplify (x^${p})^${r}`, "poly", P({ [p * r]: 1 }), `x^${p * r}`, { fmt: "e.g. x^12" }); };
+G.a9_sqrt = () => { const a = R(2, 15), b = R(2, 12), c = R(2, 5); return QC("Square roots and order of operations", `√${a * a} + √${b * b} × ${c}`, a + b * c); };
+G.a9_expandsq = () => { const a = R(1, 3), b = nz(-9, 9); const p = P({ 2: a * a, 1: 2 * a * b, 0: b * b }); return Q("Squaring a bracket", `Expand (${lin(a, b)})²`, "poly", p, ppoly(p), { fmt: "e.g. x^2 + 10x + 25", hint: "(a + b)² = a² + 2ab + b²" }); };
+G.a10_fracidx = () => { const k = R(0, 2); if (k === 0) { const b = choice([2, 3, 4, 5]), n = choice([2, 3]), m = R(1, 3); const base = b ** n; return QC("Fractional indices", `${base}^(${m}/${n})`, b ** m, { hint: `Take the ${n === 2 ? "square" : "cube"} root first, then the power.` }); } if (k === 1) { const b = choice([2, 3, 4, 5, 10]), n = choice([2, 3]); return QC("Negative and fractional indices", `${b ** n}^(−1/${n})`, F(1, b), { kind: "frac", fmt: "e.g. 1/4" }); } const b = choice([2, 3, 4, 5]), p = R(1, 3); return QC("Negative indices", `${b}^(−${p})`, F(1, b ** p), { kind: "frac", fmt: "e.g. 1/8" }); };
+G.a10_expand2 = () => { const a = R(1, 4), b = nz(-9, 9), c = R(1, 3), d = nz(-9, 9); const p = P({ 2: a * c, 1: a * d + b * c, 0: b * d }); return Q("Expanding two brackets", `Expand (${lin(a, b)})(${lin(c, d)})`, "poly", p, ppoly(p), { fmt: "e.g. 2x^2 + 5x - 12" }); };
+// --- step-by-step types (also playable as one-answer questions)
+const fmtE = e => e.replace(/-/g, "−");
+G.s5_order = () => { const a = R(10, 60), b = R(2, 9), c = R(2, 9), d = R(1, 9); let e, v; if (rnd() < 0.5) { e = `${a} + ${b} × ${c} − ${d}`; v = a + b * c - d; } else { e = `${a + b * c} − ${b} × ${c} + ${d}`; v = a + d; } return sstep(QC("Order of operations (step by step)", e, v, { hint: "× and ÷ before + and −." }), "calc", e, v); };
+G.s6_order = () => { const a = R(2, 9), b = R(3, 12), c = R(1, b - 1), d = R(2, 9), q = R(2, 9); const e = `${a * (b - c) + 10} − ${a} × (${b} − ${c}) + ${d * q} ÷ ${d}`; const v = 10 + q; return sstep(QC("Brackets and order of operations (step by step)", e, v, { hint: "Brackets first, then × and ÷, then + and −." }), "calc", e, v); };
+G.s7_order = () => { const a = nz(-9, 9), b = R(2, 6), c = nz(-6, 6), d = nz(-5, 5), q = nz(-6, 6); const e = `${sg(a)} + ${b} × ${ng(c)} − ${ng(d * q)} ÷ ${ng(d)}`; const v = a + b * c - q; return sstep(QC("Negatives and order of operations (step by step)", e, v), "calc", e, v); };
+G.s8_powers = () => { const a = R(2, 4), b = R(1, 5), c = R(2, 4), d = R(2, 6); const e = `${a}³ − ${b} × (${c + d} − ${d})² + ${d * 3} ÷ 3`; const v = a ** 3 - b * c * c + d; return sstep(QC("Powers and brackets (step by step)", e, v, { hint: "Brackets, then powers, then × ÷, then + −." }), "calc", e, v); };
+G.s8_fracorder = () => { const [d1, d2, d3] = [choice([2, 3, 4, 5, 6]), choice([2, 3, 4, 5]), choice([2, 3, 4, 5])]; const x = F(R(1, d1 - 1), d1), y = F(R(1, d2 - 1), d2), z = F(R(1, d3 - 1), d3); const e = `${sfrac(x)} + ${sfrac(y)} × ${sfrac(z)}`; const v = x.add(y.mul(z)); return sstep(QC("Fractions and order of operations (step by step)", e, v, { kind: "frac", fmt: FRF }), "calc", e, v); };
+const SOLVE = "e.g. x = 4  (or x = 5/3)";
+const eqq = (topic, eqs, x) => sstep(Q(topic, `Solve ${fmtE(eqs)}`, "frac", F(x), `x = ${x}`, { fmt: SOLVE, hint: "Do the same to both sides." }), "eq", fmtE(eqs), x, "x");
+G.e7_two = () => { const a = R(2, 9), x = R(-6, 12), b = nz(-15, 15); return eqq("Two-step equations (step by step)", `${lin(a, b)} = ${a * x + b}`, x); };
+G.e8_both = () => { const x = R(-8, 10), a = R(3, 9), c = choice(range(1, a - 1)), b = nz(-12, 12), d = a * x + b - c * x; return eqq("Unknown on both sides (step by step)", `${lin(a, b)} = ${lin(c, d)}`, x); };
+G.e8_brk = () => { const x = R(-5, 10), a = R(2, 5), b = nz(-6, 6), c = nz(-9, 9), d = R(1, a + 3), e = a * (x + b) + c - d * x; if (d === a) return G.e8_brk(); return eqq("Equations with brackets (step by step)", `${a}(${lin(1, b)}) ${c > 0 ? "+" : "-"} ${Math.abs(c)} = ${lin(d, e)}`, x); };
+G.e9_frac = () => { const x = R(-6, 15), a = R(2, 6); if (rnd() < 0.5) { const b = nz(-9, 9), c = R(-5, 10); const xx = a * c - b; return eqq("Equations with fractions (step by step)", `(${lin(1, b)})/${a} = ${c}`, xx); } const b = nz(-9, 9), k = R(-4, 8); return eqq("Equations with fractions (step by step)", `x/${a} ${b > 0 ? "+" : "-"} ${Math.abs(b)} = ${k + b}`, a * k); };
+G.e9_neg = () => { const x = R(-8, 8), a = R(2, 7), b = R(1, 20); return eqq("Negative x term (step by step)", `${b} - ${a}x = ${b - a * x}`, x); };
+G.e10_fracboth = () => { const x = R(-6, 8), a = R(1, 4), m = choice([2, 3, 4, 5]), c = R(1, 4), n = choice([2, 3, 4, 5].filter(v => v !== m)), k = R(-4, 6); const b = m * k - a * x, d = n * k - c * x; if (a * n === c * m) return G.e10_fracboth(); return eqq("Fractions on both sides (step by step)", `(${lin(a, b)})/${m} = (${lin(c, d)})/${n}`, x); };
+const STEP_GENS = ["s5_order", "s6_order", "s7_order", "s8_powers", "s8_fracorder", "e7_two", "e8_both", "e8_brk", "e9_frac", "e9_neg", "e10_fracboth"];
+
 // ================================================================ REGISTRY
 const STRANDS = [["N", "Number & place value"], ["C", "Calculation"], ["F", "Fractions, decimals & %"], ["M", "Measurement"], ["G", "Geometry"], ["A", "Algebra & ratio"], ["S", "Statistics & probability"]];
 const STRAND_NAME = Object.fromEntries(STRANDS);
@@ -578,7 +661,23 @@ const REG = `1N y1_count y1_compare y1_skip|1C y1_addsub20 y1_bonds y1_double|1F
 |9C y9_stdcalc|9F y9_compound|9M y9_cyl|9G y9_pyth|9A y9_expand2 y9_ineq y9_gradient y9_factor1|9S y9_prob2
 |10C g_stdform|10F g_percent|10M g_volume|10G g_pyth g_trig g_circle|10A g_linear g_expand g_factorise g_ratio g_line g_seq|10S g_stats
 |11N g_indices g_surds|11F g_recurring|11M g_bounds|11A g_quad_solve g_quad_formula g_simul g_proportion|11S g_prob`;
-for (const part of REG.replace(/\n/g, "").split("|")) { const m = part.trim().match(/^(\d+)([A-Z]) (.+)$/); reg(+m[1], m[2], m[3].trim()); }
+const REG2 = `1C a1_add10 a1_sub10 a1_add20|2C a2_add21 a2_tens a2_div|3C a3_coladd a3_colsub a3_mul21 a3_divfacts a3_missing
+|4C a4_coladd4 a4_mul31 a4_mul10 a4_shortdiv|4F a4_dec1|5C a5_longmul a5_shortdiv4 a5_sqcalc s5_order|5F a5_decadd a5_pow10dec a5_fracsame a5_mixed
+|6C a6_longdiv a6_longmul4 s6_order|6F a6_decmul a6_fracunlike a6_fracwhole a6_pctof|7C a7_negall a7_clever s7_order|7F a7_decdec a7_mixedmul|7A e7_two
+|8C a8_powers s8_powers|8N a8_idxnum|8F a8_ratneg s8_fracorder|8A a8_expand1 a8_collect e8_both e8_brk|9C a9_sqrt|9A a9_idxalg a9_expandsq e9_frac e9_neg
+|10N a10_fracidx|10A a10_expand2 e10_fracboth`;
+for (const part of (REG + "|" + REG2).replace(/\n/g, "").split("|")) { const m = part.trim().match(/^(\d+)([A-Z]) (.+)$/); reg(+m[1], m[2], m[3].trim()); }
+// Pure calculation (no words): new types plus older ones that are bare calculations. Target share in Practice: PURE_SHARE.
+const PURE = new Set(Object.keys(G).filter(g => /^(a\d|s\d|e\d)/.test(g) && YEAR_OF[g]).concat(("y1_bonds y1_double y2_times y3_times y3_frac y4_addsub y4_tables y4_dec y5_sqcube y5_frac_times y5_percent " +
+  "y6_bidmas y6_longdiv y6_fracmul y6_fracadd y6_decmul y6_negcalc y7_neg y7_fracdiv y7_eq y7_simplify y8_indices y8_stdform y8_brackets y9_expand2 y9_factor1 " +
+  "g_surds g_linear g_expand g_factorise g_quad_solve g_simul").split(" ")));
+const PURE_SHARE = 0.68;
+const isPure = g => PURE.has(g);
+function purify(pool) { const p = pool.filter(isPure), o = pool.filter(g => !isPure(g)); if (!p.length || !o.length) return pool; return Math.random() < PURE_SHARE ? p : o; }
+// Arithmetic sets: pure types from the learner's year (60%), the year below (25%), two below (15%).
+function purePool(year) { const r = Math.random(), y = r < 0.6 ? year : r < 0.85 ? year - 1 : year - 2; let p = gensFor(Math.max(1, Math.min(11, y))).filter(isPure); if (!p.length) p = gensFor(year).filter(isPure); if (!p.length) for (let k = year; k >= 1 && !p.length; k--) p = gensFor(k).filter(isPure); return p; }
+// Step-by-step: step types up to the learner's year (at least the first one), newest more often.
+function stepPool(year) { const ok = STEP_GENS.filter(g => YEAR_OF[g] <= Math.max(year, 5)); return ok.length ? ok : [STEP_GENS[0]]; }
 
 const strandYears = s => range(1, 11).filter(y => YEARS[y].some(g => STRAND[g] === s));
 const gensFor = (y, s) => YEARS[y].filter(g => !s || STRAND[g] === s);
@@ -625,10 +724,12 @@ function pick(st, school, mode, yearSel) {
     const tried = Object.keys(st.topics).filter(g => G[g]);
     return [weightedChoice(st, tried.length ? tried : gensFor(school), true), "mistakes"];
   }
-  if (due.length && Math.random() < 0.8) { const r = due[0]; st.review.splice(st.review.indexOf(r), 1); return [r.gen, "review"]; }
-  if (yearSel) return [weightedChoice(st, gensFor(yearSel)), "year"];
+  if (due.length && Math.random() < 0.8 && mode !== "steps" && (mode !== "pure" || isPure(due[0].gen))) { const r = due[0]; st.review.splice(st.review.indexOf(r), 1); return [r.gen, "review"]; }
+  if (mode === "pure") return [weightedChoice(st, purePool(yearSel || school)), "set"];
+  if (mode === "steps") return [weightedChoice(st, stepPool(yearSel || school)), "steps"];
+  if (yearSel) return [weightedChoice(st, purify(gensFor(yearSel))), "year"];
   const [pool, why] = planPool(st, school);
-  return [weightedChoice(st, pool), why];
+  return [weightedChoice(st, purify(pool)), why];
 }
 function stars(s) { if (!s || !s.a) return 0; const last = (s.last || []).slice(-5); if (s.a >= 5 && sum(last) >= 4) return 3; return s.c / s.a >= 0.6 ? 2 : 1; }
 function overall(levels) { const v = CORE.filter(s => s in levels).map(s => levels[s]).sort((a, b) => a - b); return v.length ? v[Math.floor(v.length / 2)] : null; }
@@ -703,6 +804,6 @@ function progress(L, st, goal) {
   return { topics: rows, wrong: st.wrong.slice(-40).reverse(), summary: summary(L, st, goal), strands: strandRows(st) };
 }
 
-const API = { makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
+const API = { isPure, PURE_SHARE, STEP_GENS, makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
 if (typeof module !== "undefined" && module.exports) module.exports = API; else root.MQ = API;
 })(typeof window !== "undefined" ? window : globalThis);
