@@ -31,12 +31,12 @@ const ROOT = path.join(__dirname, '..', '..'), PORT = 8700 + Math.floor(Date.now
       if (a2 && !a2.disabled) { a2.value = String(T.cur.ans); document.getElementById('ok2').click(); return 'ans2'; }
       if (a1 && !a1.disabled) { a1.value = String(window.__lastQ.correct); document.getElementById('ok').click(); return 'ans'; } return null; });
     const next = () => pg.evaluate(() => { const b = document.getElementById('nx3') || document.getElementById('nx') || document.getElementById('open'); if (b) { b.click(); return b.id; } return null; });
-    await pg.evaluate(() => { ST.gap = 99; ST.since = 0; T.trips = 9; });   // 本测试只查画面，先不让导演插节拍（节拍画面在下面单独查）
+    await pg.evaluate(() => { ST.gap = 99; ST.since = 0; T.trips = 9; if (T.plan) T.plan.slots = []; });   // 本测试只查画面，先不让导演插节拍（节拍画面在下面单独查）
     for (let k = 0; k < 6 && (await pg.evaluate(() => T.phase === 'morning')); k++) {
       const st = await pg.evaluate(() => T.am ? T.am.stage : '?'); await check('早上 ' + st + ' 答题前');
       const how = await answer(); if (how === 'ans2') await check('早上 ' + st + ' 答题后'); if (!(await next())) break;
     }
-    await pg.evaluate(() => { ST.gap = 99; ST.since = 0; ST.stock = 999; MQShop.fruitsToday().forEach(f => MQShop.add(f, 999)); ['flour', 'egg', 'cream'].forEach(f => MQShop.add(f, 99)); T.trips = 9; if (T.phase !== 'open') serveNext(); else MQShop.serve(); });
+    await pg.evaluate(() => { ST.gap = 99; ST.since = 0; ST.stock = 999; MQShop.fruitsToday().forEach(f => MQShop.add(f, 999)); ['flour', 'egg', 'cream'].forEach(f => MQShop.add(f, 99)); T.trips = 9; if (T.plan) T.plan.slots = []; if (T.phase !== 'open') serveNext(); else MQShop.serve(); });
     for (const st of ['make', 'drill']) {
       if (!(await pg.evaluate(() => document.getElementById('ans2')))) { log.push('跳过订单 ' + st); continue; }
       await check('订单 ' + st + ' 答题前'); await answer(); await check('订单 ' + st + ' 答题后'); await next();

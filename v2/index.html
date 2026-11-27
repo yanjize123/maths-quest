@@ -46,19 +46,19 @@
  </div>
 </div>
 
-<script src="rng.js?b=010a"></script>
-<script src="config.js?b=010a"></script>
-<script src="rules.js?b=010a"></script>
-<script src="mq_engine.js?b=010a"></script>
-<script src="mq_store.js?b=010a"></script>
-<script src="mq_art.js?b=010a"></script>
-<script src="../engine.js?b=010a"></script>
-<script src="mq_gen.js?b=010a"></script>
-<script src="mq_play.js?b=010a"></script>
-<script src="mq_scene.js?b=010a"></script>
-<script src="mq_cake.js?b=010a"></script>
-<script src="mq_events.js?b=010a"></script>
-<script src="mq_shop.js?b=010a"></script>
+<script src="rng.js?b=010b"></script>
+<script src="config.js?b=010b"></script>
+<script src="rules.js?b=010b"></script>
+<script src="mq_engine.js?b=010b"></script>
+<script src="mq_store.js?b=010b"></script>
+<script src="mq_art.js?b=010b"></script>
+<script src="../engine.js?b=010b"></script>
+<script src="mq_gen.js?b=010b"></script>
+<script src="mq_play.js?b=010b"></script>
+<script src="mq_scene.js?b=010b"></script>
+<script src="mq_cake.js?b=010b"></script>
+<script src="mq_events.js?b=010b"></script>
+<script src="mq_shop.js?b=010b"></script>
 <script>
 const PAGE_VERSION = 7, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
 const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
@@ -138,7 +138,7 @@ $('lang2').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); hud(); if ($(
 renderLogin();
 $('ll').onclick = () => { S = { name: 'guest', local: true }; ST = fixShop(MQStore.loadProgress('guest') || newShop()); boot(); };
 
-const BUILD = '010a';   // 与 content/build.json 一致；不一致说明浏览器用了旧缓存
+const BUILD = '010b';   // 与 content/build.json 一致；不一致说明浏览器用了旧缓存
 async function boot() {
   try { const b = JSON.parse(await read('content/build.json')).build; if (b !== BUILD) document.body.insertAdjacentHTML('afterbegin', `<div style="background:#ffd23f;padding:8px;text-align:center">${LANG === 'zh' ? '有新版本，请按 Ctrl+F5（手机下拉）刷新' : 'New version available — please refresh (Ctrl+F5)'}（${BUILD} → ${b}）</div>`); } catch (e) {}
   C = await E.loadContent(read, [1, 'level01biz']); SHOP = JSON.parse(await read('content/shop_A.json')).items;
@@ -201,7 +201,7 @@ function newDay() {
   if (ev && ev.steal) ev.lost = Math.min(ST.stock, ev.steal), ST.stock -= ev.lost;
   if (ev && ev.cost) ST.cash -= ev.cost;
   T = { day: ST.day, phase: 'morning', ev, orders, idx: 0, price, cakePrice: 2 + (ev && ev.cake || 0), income: 0, spent: 0, punnets: 0, lost: 0, served: 0 };
-  playDay();
+  playDay(); MQEv.planDay();   // 全天节拍表（订单定了再排）
 }
 function showMorning() { MQShop.morning(); }   // v010a：订单板 + 进货链在 mq_shop.js
 

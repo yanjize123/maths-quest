@@ -2,7 +2,7 @@
 const path = require('path'), { spawn } = require('child_process');
 let pp; try { pp = require('puppeteer-core'); } catch (e) { pp = require('/home/claude/tools/node_modules/puppeteer-core'); }
 const ROOT = path.join(__dirname, '..', '..'), PORT = 8500 + Math.floor(Date.now() % 200), EVS = JSON.parse(require('fs').readFileSync(path.join(__dirname, '..', 'content', 'events.json'), 'utf8')).events.map(e => e.id);
-const PAGES = process.env.QUICK ? ['pacing_harness.html'] : [...EVS.map(id => 'event_harness.html?ev=' + id), 'pacing_harness.html', 'monkey_harness.html'];
+const PAGES = process.env.QUICK ? ['pacing_harness.html', 'monkey_harness.html'] : [...EVS.map(id => 'event_harness.html?ev=' + id), 'pacing_harness.html', 'monkey_harness.html'];
 (async () => {
   const srv = spawn('python3', ['-m', 'http.server', String(PORT)], { cwd: ROOT, stdio: 'ignore' }); await new Promise(r => setTimeout(r, 800));
   const br = await pp.launch({ executablePath: process.env.CHROME || '/usr/bin/google-chrome', args: ['--no-sandbox', '--headless=new'] }); let fail = 0;

@@ -32,6 +32,7 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
     const dc = ctx.MQEv.tick(); let nCust = Math.max(2, 5 + dc), day = { q: 0, pure: 0, trips: 0, events: 0, monsters: 0 };
     if (roll(P('helper')) && rnd() < 1 / GD.helpers.length) nCust++;   // 帮手 extra（6 种之一）
     T.orders = Array(nCust).fill(0); T.idx = 0;   // 导演的每天保底要看剩几单
+    ctx.MQEv.planDay();   // v010b：全天节拍表
     const rush = roll(P('rush'));
     const word = (n = 1) => { for (let i = 0; i < n; i++) { while (beat()); day.q++; ctx.MQEv.count(); sinceBeatQ++; } };
     const pureQ = (n, share) => { day.q += n; day.pure += n * share; };   // 节拍内的题不计导演
@@ -57,7 +58,7 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
     const shopQ = (n, share) => { for (let i = 0; i < n; i++) { while (beat()); day.q++; day.pure += share; ctx.MQEv.count(); sinceBeatQ++; } };   // 店内题：每题前问导演（页面每小步都问，v010a），计导演
     shopQ(rnd() < 0.8 ? 3 : 1, 1); word(1);          // 早上（v010a）：总数、差几个、几盒（纯算式；够了只 1 道）+ 付钱（文字题）
     for (let i = 0; i < nCust; i++) { T.idx = i; while (beat()); shopQ(1, 1); shopQ(drill, mixPure); word(1); }   // 每单：备料（纯算式）+ 打包连练 + 收钱（文字题）
-    T.idx = nCust;
+    T.idx = nCust; T.phase = 'open';
     while (beat());
     if (rush) pureQ(10, rushPure);                   // 60 秒高峰约 10 题
     word(1);                                         // 晚上结账

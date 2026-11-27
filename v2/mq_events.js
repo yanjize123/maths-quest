@@ -2,7 +2,7 @@
 // 读 content/events.json、scenes.json、tuning.json（节奏与保底只在 tuning.json）；一个事件 = 前因(needs 标记) → 场景 → 几道题 → 结果动作 → 回店。
 // 新事件只写 JSON。动作词表（固定，加新词才改本文件）：cash 表达式 | stock 表达式 | flag 名 天数 [概率%] | state 名 天数 | cust 增减 天数 | item 名 | use 名（用掉一件）
 // 依赖 index.html / mq_play.js 的全局：ST、T、LANG、panel、actors、hud、save、askMQ、serveNext、PG、R、read、MQGen、bookSpec、pickMonster；MQ_E = MQEngine.evalExpr。
-const EVENTS_VERSION = 8;   // v8：参数改读 tuning.json（pacing、floors）；每天换场景保底 floors.tripPerDay（剩下的订单不够时提前出）；换场景到期时前因事件让路；v7：随机统一走 MQRng（rng.js）；每步的题进入时冻结在 T.sev.bound、答完的结果存 T.sev.res，画面只读 → 切换语言只重画、内容不变；地名/钱名/蛋糕名按当前语言在画面时算（lv）；v6：事件类别 cat + pacing.mix 比例与保底（换场景最多隔 3 拍必来、不连续同类）、奇幻水果篮 pantry（fruit/usefruit、needsPantry、$pantry 蛋糕）、蛋糕图鉴；v5： v5：事件随机蛋糕（MQCake，变量 cakeName/nFruit/tiers）；v4： v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
+const EVENTS_VERSION = 9;   // v9：每天开始导演排好全天节拍表 T.plan（planDay：按预计题数定拍点，怪兽/事件、换场景均匀分布且保底、其余类别按欠账轮转），due 按表出；关门前换场景不足补出；无 T.plan（旧存档当天）用旧逻辑；v8：参数改读 tuning.json（pacing、floors）；每天换场景保底 floors.tripPerDay（剩下的订单不够时提前出）；换场景到期时前因事件让路；v7：随机统一走 MQRng（rng.js）；每步的题进入时冻结在 T.sev.bound、答完的结果存 T.sev.res，画面只读 → 切换语言只重画、内容不变；地名/钱名/蛋糕名按当前语言在画面时算（lv）；v6：事件类别 cat + pacing.mix 比例与保底（换场景最多隔 3 拍必来、不连续同类）、奇幻水果篮 pantry（fruit/usefruit、needsPantry、$pantry 蛋糕）、蛋糕图鉴；v5： v5：事件随机蛋糕（MQCake，变量 cakeName/nFruit/tiers）；v4： v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
 const MQEv = (() => {
   let ED = null, PD = null, MD = null, TU = null, FL = {};
   const ev = (x, v) => MQEngine.evalExpr(x, v);
@@ -64,15 +64,15 @@ const MQEv = (() => {
   // ---- 导演（v3）：何时出事，只在这里决定；参数在 content/tuning.json pacing / floors ----
   // 按答题数计：每答 gap 道题来一次节拍；节拍 = 怪兽或场景事件（按 beats 权重，怪兽最多隔 monsterMaxGap 拍必来）；前因成立的事件优先；最近 3 个不重复。
   const rint = ([lo, hi]) => MQRng.int(lo, hi);
-  function count() { if (!PD || (T && T.inBeat)) return; ST.since = (ST.since || 0) + 1; }
+  function count() { if (!PD || (T && T.inBeat)) return; ST.since = (ST.since || 0) + 1; if (T) T.qn = (T.qn || 0) + 1; }   // T.qn = 今天店内答了几题（节拍表按它走）
   // 选事件（v6）：前因成立的先出；否则先按 pacing.mix 选类别（不连续同类；换场景 trip 最多隔 tripMaxGap 拍必来），再在类别里按 p 选，最近 3 个不重复
   const has = e => (!e.needsItem || (ST.items[e.needsItem] || 0) > 0) && (!e.needsPantry || Object.values(ST.pantry || {}).some(n => n >= 2));
-  function chooseEvent(forceCat) {
+  function chooseEvent(forceCat, allowCaused) {
     const recent = ST.recentEv || [], free = ED.events.filter(x => !x.needs && has(x) && !recent.includes(x.id)), cats = {};
     free.forEach(x => (cats[x.cat || 'story'] = cats[x.cat || 'story'] || []).push(x));
-    const tripDue = (ST.sinceTrip || 0) >= (PD.tripMaxGap || 99) && cats.trip;   // 换场景到期：前因事件让路
+    const tripDue = !forceCat && (ST.sinceTrip || 0) >= (PD.tripMaxGap || 99) && cats.trip;   // 换场景到期：前因事件让路
     const caused = ED.events.filter(e => e.needs && e.needs in ST.flags && has(e));
-    let e = !forceCat && !tripDue ? caused[0] : null;
+    let e = (allowCaused || !forceCat) && !tripDue ? caused[0] : null;   // 前因事件（任务链）可占非换场景的拍
     if (e) delete ST.flags[e.needs];
     else {
       const mix = PD.mix || { story: 1 }; let names = Object.keys(cats).filter(c => mix[c]);
@@ -89,8 +89,35 @@ const MQEv = (() => {
     const seed = MQRng.int(0, 1e9), v = vars(e), sev = { e, v, seed, done: false };
     cakeVars(sev); return sev;
   }
+  // ---- 全天节拍表（迁移第 5 步，script_framework_v2 §B）：每天开始排一次，存 T.plan；出什么事件在拍到时再选（前因可能当天才出现） ----
+  function planDay() {
+    if (!PD || !T) return; const ML = TU.mainline || {}, n = (T.orders || []).length, Q = 4 + n * (2 + (ML.drillPerOrder || 0)) + 1;
+    const slots = []; for (let q = PD.first || 1; q <= Q; q += rint(PD.gap)) slots.push({ q });
+    let noMon = ST.beatsNoMon || 0; const w = PD.beats;
+    slots.forEach(x => { const mon = noMon >= PD.monsterMaxGap || MQRng.r() * (w.event + w.monster) < w.monster; x.kind = mon ? 'monster' : 'event'; noMon = mon ? 0 : noMon + 1; });
+    const floor = FL.tripPerDay || 0, mix = PD.mix, tot = Object.values(mix).reduce((a, b) => a + b, 0);
+    for (let k = slots.length - 1; slots.filter(x => x.kind === 'event').length < 2 * floor - 1 && k >= 0; k--) if (slots[k].kind === 'monster') slots[k].kind = 'event';   // 事件拍不够放保底：怪兽让位
+    const ev = slots.filter(x => x.kind === 'event'); let nTrip = Math.min(Math.ceil(ev.length / 2), Math.max(floor, Math.round(ev.length * (mix.trip || 0) / tot)));
+    for (let k = 0; k < nTrip; k++) ev[Math.min(ev.length - 1, Math.floor((k + 0.5) * ev.length / nTrip))].cat = 'trip';   // 换场景均匀分布在一天里
+    const others = Object.keys(mix).filter(c => c !== 'trip'), sub = others.reduce((a, c) => a + mix[c], 0), d = ST.catDebt || {}; let prev = ST.lastCat;
+    for (const x of ev) { if (x.cat) { prev = x.cat; continue; } others.forEach(c => d[c] = (d[c] || 0) + mix[c] / sub); const c = others.filter(c => c !== prev).sort((a, b) => d[b] - d[a])[0]; d[c] -= 1; x.cat = prev = c; }   // 其余类别按欠账轮转、不连续同类
+    ST.catDebt = d; T.plan = { slots, i: 0 }; T.qn = 0;
+  }
   function due() {
     if (!PD || !T || T.inBeat) return null;
+    if (T.plan) {
+      const P = T.plan, closing = T.phase !== 'morning' && (T.idx || 0) >= (T.orders || []).length;
+      let fire = P.i < P.slots.length && (T.qn || 0) >= P.slots[P.i].q;
+      if (!fire && closing && (T.trips || 0) < (FL.tripPerDay || 0)) {   // 关门前换场景还不够：跳到下一个换场景拍，没有就补一拍
+        const k = P.slots.findIndex((x, j) => j >= P.i && x.cat === 'trip'); if (k < 0) P.slots.push({ q: T.qn || 0, kind: 'event', cat: 'trip' }); P.i = k < 0 ? P.slots.length - 1 : k; fire = true;
+      }
+      if (!fire) return null;
+      const x = P.slots[P.i++]; T.inBeat = true; ST.since = 0;
+      if (x.kind === 'monster') { ST.beatsNoMon = 0; T.monster = { idx: pickMonster() }; T.monsterDone = false; return 'monster'; }
+      let cat = x.cat;
+      if (cat === ST.lastCat) { if (cat === 'trip') { const nx = P.slots.slice(P.i).find(y => y.kind === 'event' && y.cat !== 'trip'); if (nx) nx.cat = 'trip'; } cat = null; }   // 前因事件改变了上一个类别：这拍换别类（换场景挪到下一拍），不连续同类
+      ST.beatsNoMon = (ST.beatsNoMon || 0) + 1; T.sev = chooseEvent(cat, cat !== 'trip'); return 'event';
+    }
     if (ST.gap == null) ST.gap = PD.first;
     // 每天换场景保底：今天还差 need 次、剩下的订单少于 2×need 时，不等题数，现在就出换场景
     const need = Math.max(0, (FL.tripPerDay || 0) - (T.trips || 0)), left = Math.max(0, (T.orders || []).length - (T.idx || 0)), force = need > 0 && left < (ST.lastCat === 'trip' ? need : 2 * need);   // 刚出过换场景就再等一单，避免连着两次
@@ -211,5 +238,5 @@ const MQEv = (() => {
     if (e.market) return market(sev);
     finish(sev);
   }
-  return { load, tick, count, due, chooseEvent, cakeVars, noteCake, cakeBook, pantryCount, on, run, pacing: () => PD, tuning: () => TU, backdrop, vars, lv, act, data: () => ED, EVENTS_VERSION };
+  return { load, tick, count, due, chooseEvent, cakeVars, noteCake, cakeBook, pantryCount, on, run, planDay, pacing: () => PD, tuning: () => TU, backdrop, vars, lv, act, data: () => ED, EVENTS_VERSION };
 })();
