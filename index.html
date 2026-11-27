@@ -25,7 +25,12 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
 .w{background:#141b44;border-radius:10px;padding:10px;margin:8px 0;font-size:15px;white-space:pre-line}
 .lvbar{position:relative;height:22px;background:#141b44;border-radius:8px;overflow:hidden}.lvbar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#5aa9ff,#3ddc97)}
 .lvbar b{position:absolute;top:0;bottom:0;width:3px;background:var(--acc)}.foot{margin-top:18px;font-size:13px;color:var(--mut);text-align:center}
-.foot a{color:var(--mut)}.prow{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}.prow input{flex:1;min-width:140px}
+.foot a{color:var(--mut)}
+.cgrid{display:inline-block;margin:10px 0 4px;padding:10px 14px;background:#10163a;border-radius:14px}.crow{display:flex;align-items:center;height:46px}
+.cc{width:40px;height:42px;display:flex;align-items:center;justify-content:center;font-size:24px;font-family:ui-monospace,Consolas,monospace;box-sizing:border-box}
+.cc input{width:36px;height:38px;padding:0;text-align:center;font-size:24px;border-radius:8px;border:2px solid #3a4590;background:#18205a;color:var(--ink);font-family:inherit}
+.cc input.opt{border-style:dashed}.cc input.scr{width:26px;height:24px;font-size:14px;border-width:1px;background:#141b44}.cc input.bad{border-color:var(--bad);background:#47161e}.cc input.good{border-color:var(--ok)}
+.cline{border-top:3px solid var(--ink)}.bk{border-top:3px solid var(--ink)}.bkl{border-left:3px solid var(--ink);border-top-left-radius:10px}.sgn{color:var(--mut)}.prow{display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap}.prow input{flex:1;min-width:140px}
 @media(max-width:600px){.cards{grid-template-columns:1fr}.qt{font-size:19px}}
 </style></head><body><div class="wrap">
 <div id="home"><h1>Maths <span>Quest</span> 🧭</h1><p class="mut">Choose your player:</p><div class="cards" id="cards"></div></div>
@@ -38,7 +43,7 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
 <div id="play" class="hide">
  <div class="bar"><b id="nm"></b><span class="pill" id="yr"></span><span class="pill" id="lv"></span><div class="xp"><i id="xpb"></i></div><span class="pill" id="stk"></span><span class="pill" id="tdy"></span>
  <button class="ghost" id="backbtn" onclick="backBtn()">⇦</button></div>
- <div class="tabs"><button id="t1" onclick="tab(1)">⚔️ Practice</button><button id="t5" onclick="tab(5)">🧮 Sets of 10</button><button id="t6" onclick="tab(6)">✍️ Step by step</button><button id="t2" onclick="tab(2)">🧭 Placement test</button><button id="t3" onclick="tab(3)">🎯 Fix my mistakes</button><button id="t4" onclick="tab(4)">📒 Progress</button></div>
+ <div class="tabs"><button id="t1" onclick="tab(1)">⚔️ Practice</button><button id="t5" onclick="tab(5)">🧮 Sets of 10</button><button id="t6" onclick="tab(6)">✍️ Step by step</button><button id="t7" onclick="tab(7)">🔢 Column</button><button id="t2" onclick="tab(2)">🧭 Placement test</button><button id="t3" onclick="tab(3)">🎯 Fix my mistakes</button><button id="t4" onclick="tab(4)">📒 Progress</button></div>
  <div id="ysel" class="row hide" style="margin:0 0 12px"><span class="mut">Question bank:</span><select id="year" onchange="nextQ()"></select></div>
  <div id="qbox" class="q hide"><span class="emo" id="emo"></span><span class="tag" id="tp"></span><span class="tag rev hide" id="rv"></span>
   <div class="qt" id="qt"></div><div class="fmt" id="fmt"></div>
@@ -57,6 +62,13 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
   <button class="ghost" id="shn" onclick="stepHint()">💡 Next step</button><button class="ghost" id="sgu" onclick="stepGiveUp()">Show me</button></div>
   <div id="smsg" class="fb hide"></div>
   <div class="row hide" id="snx"><button class="go" onclick="nextQ()">Next ➜</button></div></div>
+ <div id="cbox" class="q hide"><span class="emo">🔢</span><span class="tag" id="ctp"></span>
+  <div class="qt" id="cqt"></div><div class="fmt" id="cfmt"></div>
+  <div id="cgrid" class="cgrid"></div>
+  <div class="row"><button class="go" id="cck" onclick="colCheck(true)">Check ✔</button><button class="ghost" onclick="colClear()">Clear</button>
+  <button class="ghost" onclick="colHint()">💡 Hint</button><button class="ghost" onclick="colShow()">Show me</button></div>
+  <div id="cmsg" class="fb hide"></div>
+  <div class="row hide" id="cnx"><button class="go" onclick="nextQ()">Next ➜</button></div></div>
  <div id="pbox" class="q hide"></div>
  <div id="bookbox" class="q hide"></div>
 </div>
@@ -64,6 +76,7 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
 <script src="config.js"></script>
 <script src="engine.js"></script>
 <script src="steps.js"></script>
+<script src="column.js"></script>
 <script>
 const KEY='mathsquest_v1';
 const YL=MQ.YEAR_LABEL;
@@ -103,8 +116,9 @@ function start(i){L=DB.players[i];ST=stOf(L);show0('play');const s=MQ.summary(L,
  $('year').innerHTML='<option value="">My plan (Year '+L.year+' + gaps)</option>'+Object.keys(YL).map(y=>`<option value="${y}">${YL[y]}</option>`).join('');
  tab(s.overall==null&&!s.count?2:1)}
 function bar(s){SUM=s;$('nm').textContent=s.name;$('yr').textContent=s.year_label;$('lv').textContent=`Lv ${s.level} ${s.title}`;$('xpb').style.width=s.xp_in_level+'%';$('stk').textContent=`🔥 ${s.streak}`;$('tdy').textContent=`Today ${s.today}/${s.goal}`}
-function show(id){['qbox','pbox','bookbox','sbox'].forEach(k=>$(k).classList.toggle('hide',k!=id))}
-function tab(n){[1,2,3,4,5,6].forEach(k=>$('t'+k).classList.toggle('on',k==n));$('ysel').classList.toggle('hide',![1,5,6].includes(n));
+function show(id){['qbox','pbox','bookbox','sbox','cbox'].forEach(k=>$(k).classList.toggle('hide',k!=id))}
+function tab(n){[1,2,3,4,5,6,7].forEach(k=>$('t'+k).classList.toggle('on',k==n));$('ysel').classList.toggle('hide',![1,5,6,7].includes(n));
+ if(n==7){mode='column';nextQ();return}
  if(n==5){mode='pure';SET={n:0,ok:0,t0:Date.now()};nextQ();return}
  if(n==6){mode='steps';nextQ();return}
  if(n==4){show('bookbox');book();return}
@@ -119,9 +133,10 @@ const KEYS=['/','√','^2','^','(',')','x','n','−',',',':','.'];
 $('keys').innerHTML=KEYS.map(k=>`<button type="button" onclick="ins('${k}')">${k=='^2'?'x²':k}</button>`).join('');
 function ins(k){const a=$('ans');if(a.disabled)return;const v=k=='−'?'-':k;const p=a.selectionStart??a.value.length;a.value=a.value.slice(0,p)+v+a.value.slice(a.selectionEnd??p);a.focus();a.selectionStart=a.selectionEnd=p+v.length}
 function nextQ(){if(mode=='pure'&&SET&&SET.n>=10){setDone();return}
- const ys=$('year').value;Q=MQ.nextQuestion(L,ST,DB.goal,mode,['mixed','pure','steps'].includes(mode)&&ys?+ys:null);save();
+ const ys=$('year').value;Q=MQ.nextQuestion(L,ST,DB.goal,mode,['mixed','pure','steps','column'].includes(mode)&&ys?+ys:null);save();
  if(Q.placement_done){placementResult(Q);return}
  if(mode=='steps'&&Q.step){stepShow();return}
+ if(mode=='column'&&Q.column){colShowQ();return}
  show('qbox');done=false;$('tp').textContent=Q.why=='placement'?Q.strand:`Y${Q.year} · ${Q.topic}`;$('emo').textContent=Q.emoji;
  const lab={set:`🧮 Set · ${SET?SET.n+1:1}/10`,review:'🎯 Bonus mission',gap:'🧩 Gap filler',challenge:'⚡ Challenge',placement:'🧭 Placement'+(Q.progress?` · ${Q.progress.strands_done}/${Q.progress.strands} areas done · Q${Q.progress.asked+1}`:'')}[Q.why];
  $('rv').textContent=lab||'';$('rv').classList.toggle('hide',!lab);
@@ -130,12 +145,12 @@ function nextQ(){if(mode=='pure'&&SET&&SET.n>=10){setDone();return}
 function hint(){$('hn').classList.remove('hide');if(Q)Q.hintUsed=true}
 function submit(skip){if(done||!Q)return;const a=$('ans').value;if(!a.trim()&&!skip)return;done=true;
  const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10;
- const r=MQ.answerQuestion(L,ST,DB.goal,Q,a,!!skip);save();record(Q,a,!!skip,r.correct,secs);
+ const r=MQ.answerQuestion(L,ST,DB.goal,Q,a,!!skip);logEvent(Q,{ok:r.correct,secs,hint:!!Q.hintUsed,skip:!!skip,ans:a});save();record(Q,a,!!skip,r.correct,secs);
  if(mode=='pure'&&SET){SET.n++;if(r.correct)SET.ok++}
  const f=$('fb');f.className='fb '+(r.correct?'ok':'bad');
  f.innerHTML=`<b>${esc(r.msg)}</b>${r.gained?`  +${r.gained} XP`:''}\n${r.correct?'':'Answer: <b>'+esc(r.show)+'</b>\n'}<span class="mut">${esc(r.sol)}</span>`+(r.badges.length?'\n'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):'');
  $('nx').classList.remove('hide');$('sub').disabled=true;$('sk').disabled=true;$('ans').disabled=true;bar(r.summary)}
-document.addEventListener('keydown',e=>{if(e.key=='Enter'&&!$('sbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!SDONE)stepCheck();else nextQ();return}if(e.key=='Enter'&&!$('login').classList.contains('hide')){e.preventDefault();doLogin();return}if(e.key=='Enter'&&!$('qbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!done)submit();else if(!$('nx').classList.contains('hide'))nextQ()}});
+document.addEventListener('keydown',e=>{if(e.key=='Enter'&&!$('cbox').classList.contains('hide')&&!$('play').classList.contains('hide')){if(CDONE){e.preventDefault();nextQ()}return}if(e.key=='Enter'&&!$('sbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!SDONE)stepCheck();else nextQ();return}if(e.key=='Enter'&&!$('login').classList.contains('hide')){e.preventDefault();doLogin();return}if(e.key=='Enter'&&!$('qbox').classList.contains('hide')&&!$('play').classList.contains('hide')){e.preventDefault();if(!done)submit();else if(!$('nx').classList.contains('hide'))nextQ()}});
 function levelRows(strands,year){return '<table><tr><th>Area</th><th style="width:45%">Secure up to</th><th></th></tr>'+strands.map(s=>{const lv=s.level;
  const w=lv==null?0:Math.max(0,lv)/11*100,mk=year/11*100;
  const txt=lv==null?'<span class=mut>not tested</span>':(lv<s.min?`not yet Year ${s.min}`:'Year '+lv);
@@ -155,7 +170,7 @@ const BACKEND=(window.MQ_BACKEND||'').trim();
 const CKEY='mathsquest_cred',QKEY='mathsquest_queue';
 let SESSION=null,flushing=false,saveMsg='';
 function backBtn(){if(BACKEND)logout();else home()}
-const PAGE_VERSION='classic page v2 · engine v2 · steps v1 (2026-11-27)';
+const PAGE_VERSION='classic page v3 · engine v3 · steps v1 · column v1 (2026-11-27)';
 function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device · <span title="version">'+PAGE_VERSION+'</span>'}
 function footBackend(){const n=queueGet().filter(e=>SESSION&&e.user===SESSION.name).length;
  $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'} · ${PAGE_VERSION}`:''}
@@ -188,9 +203,9 @@ function setDone(){const secs=Math.round((Date.now()-SET.t0)/1000),y=+($('year')
  <p class="mut">${better?'🏆 New personal best for this question bank!':`Personal best: ${b.ok}/10 in ${Math.floor(b.secs/60)}:${String(b.secs%60).padStart(2,'0')}`}</p><p class="mut">Accuracy first, then speed.</p>
  <div class="row"><button class="go" onclick="tab(5)">Another set ➜</button><button class="ghost" onclick="tab(6)">✍️ Step by step</button></div>`}
 // ------------------------------------------------------------ ✍️ step by step (each line checked, no AI)
-let SLINES=[],SDONE=false,SSLIPS=0;
+let SLINES=[],SDONE=false,SSLIPS=0,SSLIPC=[];
 const SKEYS=['(',')','×','÷','−','/','x','=','^2'];
-function stepShow(){show('sbox');SLINES=[];SDONE=false;SSLIPS=0;Q.hintUsed=false;Q.shownAt=Date.now();
+function stepShow(){show('sbox');SLINES=[];SDONE=false;SSLIPS=0;SSLIPC=[];Q.hintUsed=false;Q.shownAt=Date.now();
  $('stp').textContent=`Y${Q.year} · ${Q.topic}`;$('sqt').textContent=(Q.step.type=='eq'?'Solve, one step per line:\n':'Work out, one step per line:\n')+Q.step.start;
  $('sfmt').textContent=MQS.FORMAT[Q.step.type];$('skeys').innerHTML=SKEYS.filter(k=>Q.step.type=='eq'||k!='x'&&k!='=').map(k=>`<button type="button" onclick="sins('${k}')">${k=='^2'?'x²':k}</button>`).join('');
  $('smsg').className='fb hide';$('snx').classList.add('hide');$('sin').disabled=false;$('sin').value='';$('sck').disabled=false;stepDraw();$('sin').focus()}
@@ -198,7 +213,7 @@ function sins(k){const a=$('sin');if(a.disabled)return;const p=a.selectionStart?
 function stepDraw(){$('slines').innerHTML=`<div class="w" style="font-size:20px;white-space:normal">`+[`<span class="mut">${esc(Q.step.start)}</span>`].concat(SLINES.map(l=>`<div>✓ ${esc(l)}</div>`)).join('')+'</div>'}
 function stepMsg(cls,h){const m=$('smsg');m.className='fb '+cls;m.innerHTML=h}
 function stepCheck(){if(SDONE)return;const line=$('sin').value.trim();if(!line)return;const r=MQS.checkLine(Q.step,SLINES,line);
- if(!r.ok){if(!r.format)SSLIPS++;stepMsg('bad',(r.format?'✏️ ':'✘ ')+esc(r.msg)+(r.format?`<br><span class="mut">${esc(MQS.FORMAT[Q.step.type])}</span>`:''));return}
+ if(!r.ok){if(!r.format){SSLIPS++;SSLIPC.push(r.code||'step_err')}stepMsg('bad',(r.format?'✏️ ':'✘ ')+esc(r.msg)+(r.format?`<br><span class="mut">${esc(MQS.FORMAT[Q.step.type])}</span>`:''));return}
  SLINES.push(line);$('sin').value='';stepDraw();
  if(r.done)stepFinish(true);else stepMsg('ok',esc(r.msg)+(SLINES.length==1?' <span class="mut">Keep going — one step per line.</span>':''))}
 function stepUndo(){if(SDONE||!SLINES.length)return;$('sin').value=SLINES.pop();stepDraw();$('smsg').className='fb hide'}
@@ -207,9 +222,62 @@ function stepGiveUp(){if(SDONE)return;const lines=SLINES.slice();for(let i=0;i<1
  SLINES=lines;stepDraw();stepFinish(false)}
 function stepFinish(solved){SDONE=true;$('sin').disabled=true;$('sck').disabled=true;const segs=(SLINES[SLINES.length-1]||'').split('='),last=Q.step.type=='eq'&&/^\s*x\s*$/i.test(segs[segs.length-1])?segs[0]:segs[segs.length-1];
  const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10,ans=solved?last:'';
- const r=MQ.answerQuestion(L,ST,DB.goal,Q,ans,!solved);save();record(Q,SLINES.join(' | ')+(SSLIPS?` [${SSLIPS} slip${SSLIPS>1?'s':''}]`:''),!solved,r.correct,secs);
+ const r=MQ.answerQuestion(L,ST,DB.goal,Q,ans,!solved);logEvent(Q,{mode:'steps',ok:r.correct,secs,hint:!!Q.hintUsed,slips:SSLIPC.slice(),skip:!solved,ans:SLINES.join(' | ')});save();record(Q,SLINES.join(' | ')+(SSLIPS?` [${SSLIPS} slip${SSLIPS>1?'s':''}]`:''),!solved,r.correct,secs);
  stepMsg(r.correct?'ok':'bad',`<b>${esc(solved?(SSLIPS?`Solved! (${SSLIPS} line${SSLIPS>1?'s':''} needed fixing)`:'Solved with every line right! 🎉'):'Here is one way to do it.')}</b>${r.gained?`  +${r.gained} XP`:''}`+(r.badges.length?'<br>'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):''));
  $('snx').classList.remove('hide');bar(r.summary)}
+// ------------------------------------------------------------ 🔢 column methods (竖式), digit by digit
+let CL=null,CV={},CDONE=false,CSLIPS=[],CFLOW=[];
+function colShowQ(){show('cbox');CL=MQC.layout(Q.column);CV={};CDONE=false;CSLIPS=[];Q.hintUsed=false;Q.shownAt=Date.now();
+ for(const r of CL.rows)if(!r.given)CV[r.id]=r.cells.map(()=>'');
+ $('ctp').textContent=`Y${Q.year} · ${Q.topic}`;$('cqt').textContent=Q.text.replace(' = ?','');
+ $('cfmt').textContent=CL.op=='div'?(CL.short?'Short division: write each answer digit on top; carry what is left as a small number in your head or on paper. Write the remainder after r.':'Write each answer digit on top (Chinese 竖式 or English long division — same layout). Under it: the product, then what is left with the next digit brought down. Dashed boxes may stay empty.'):CL.op=='mul'&&CL.rows.some(r=>r.kind=='partial')?'One row for each digit of the bottom number, then add. The dashed 0 is optional (English methods write it, Chinese 竖式 leaves it out).':'Work from the right. Small boxes are for carried digits (not marked).';
+ $('cmsg').className='fb hide';$('cnx').classList.add('hide');$('cck').disabled=false;colDraw();colFocus(0)}
+function colFlow(){const out=[];for(const w of MQC.workOrder(CL)){const r=CL.rows.find(x=>x.id==w.row);let ks=w.cell!=null?[w.cell]:r.cells.map((_,k)=>k);if(w.part)continue;ks=ks.filter(k=>!r.cells[k].lead&&!r.cells[k].scratch);if(r.dir=='rtl')ks=ks.slice().reverse();for(const k of ks)out.push([r.id,k])}return out}
+function colDraw(){const W=CL.W,isDiv=CL.op=='div',bw=isDiv?String(CL.b).length:0;let h='';
+ const cellHtml=(r,k,cell)=>{const cls=(cell.scratch?'scr':'')+(cell.opt&&!cell.scratch?' opt':'');return `<input class="${cls}" inputmode="numeric" maxlength="1" data-r="${r.id}" data-k="${k}" value="${esc(CV[r.id][k]||'')}" ${CDONE?'disabled':''}>`};
+ const line=(r,content,extraCls='')=>`<div class="crow ${extraCls}">${content}</div>`;
+ const pre=(sign,n)=>{let x=`<div class="cc sgn">${sign||''}</div>`;for(let i=0;i<n;i++)x+='<div class="cc"></div>';return x};
+ for(const r of CL.rows){
+  const at={};r.cells.forEach((c,k)=>at[c.c]=[c,k]);
+  if(isDiv&&r.id=='q'){let x=pre('',bw);for(let c=0;c<W;c++)x+=`<div class="cc">${at[c]?cellHtml(r,at[c][1],at[c][0]):''}</div>`;h+=line(r,x);
+   x=`<div class="cc sgn"></div>`;for(const d of String(CL.b))x+=`<div class="cc">${d}</div>`;String(CL.a).split('').forEach((d,c)=>x+=`<div class="cc bk${c==0?' bkl':''}">${d}</div>`);h+=line(r,x);continue}
+  if(isDiv&&r.id=='rem'){let x=pre('r',bw);r.cells.forEach((c,k)=>x+=`<div class="cc">${cellHtml(r,k,c)}</div>`);h+=line(r,x);continue}
+  let x=pre(r.sign||'',bw);
+  for(let c=0;c<W;c++){const top=r.line&&(isDiv?at[c]:true)?' cline':'';x+=`<div class="cc${top}">${at[c]?(r.given?at[c][0].e:cellHtml(r,at[c][1],at[c][0])):''}</div>`}
+  h+=line(r,x)}
+ $('cgrid').innerHTML=h;CFLOW=colFlow();
+ $('cgrid').querySelectorAll('input').forEach(inp=>{inp.addEventListener('keydown',colKey);inp.addEventListener('input',colInput);inp.addEventListener('focus',()=>inp.select())})}
+function colIdx(inp){return CFLOW.findIndex(([r,k])=>r==inp.dataset.r&&k==+inp.dataset.k)}
+function colFocus(i){if(i<0||i>=CFLOW.length)return;const [r,k]=CFLOW[i];const el=$('cgrid').querySelector(`input[data-r="${r}"][data-k="${k}"]`);if(el)el.focus()}
+function colKey(e){const inp=e.target,i=colIdx(inp);
+ if(e.key=='Backspace'&&!inp.value){e.preventDefault();colFocus(i-1);return}
+ if(e.key=='ArrowLeft'||e.key=='ArrowRight'||e.key=='ArrowUp'||e.key=='ArrowDown'){e.preventDefault();const all=[...$('cgrid').querySelectorAll('input')],rc=inp.getBoundingClientRect();
+  const dx=e.key=='ArrowLeft'?-1:e.key=='ArrowRight'?1:0,dy=e.key=='ArrowUp'?-1:e.key=='ArrowDown'?1:0;let best=null,bd=1e9;
+  for(const o of all){if(o===inp)continue;const r=o.getBoundingClientRect(),vx=r.left-rc.left,vy=r.top-rc.top;if(dx&&Math.sign(vx)!=dx||dy&&Math.sign(vy)!=dy)continue;if(dx&&Math.abs(vy)>20||dy&&Math.abs(vx)>40&&!dx){}const d=Math.abs(vx)*(dy?2:1)+Math.abs(vy)*(dx?3:1);if(d<bd){bd=d;best=o}}
+  if(best)best.focus();return}
+ if(e.key=='Enter'){e.preventDefault();colCheck(true)}}
+function colInput(e){const inp=e.target;let v=inp.value.replace(/[^0-9]/g,'').slice(-1);inp.value=v;CV[inp.dataset.r][+inp.dataset.k]=v;inp.classList.remove('bad','good');
+ if(v&&!inp.classList.contains('scr')){const i=colIdx(inp);colCheck(false);if(!CDONE)colFocus(i+1)}}
+function colCheck(full){if(CDONE)return;const r=MQC.check(CL,CV,!full);
+ $('cgrid').querySelectorAll('input').forEach(el=>el.classList.remove('bad'));
+ if(r.first){for(const k of r.first.cells){const el=$('cgrid').querySelector(`input[data-r="${r.first.row}"][data-k="${k}"]`);if(el)el.classList.add('bad')}
+  const code=r.first.reason.code;if(!CSLIPS.length||CSLIPS[CSLIPS.length-1]!=code)CSLIPS.push(code);
+  const m=$('cmsg');m.className='fb bad';m.textContent='✘ '+r.first.reason.text;return}
+ if(r.done){colFinish(true);return}
+ if(full){const m=$('cmsg');m.className='fb ok';m.textContent='✓ So far so good — keep going.'}else $('cmsg').className='fb hide'}
+function colClear(){if(CDONE)return;for(const id in CV)CV[id]=CV[id].map(()=>'');colDraw();colFocus(0);$('cmsg').className='fb hide'}
+function colHint(){if(CDONE)return;Q.hintUsed=true;const fl=CFLOW.find(([r,k])=>!(CV[r][k]||'').trim()&&!CL.rows.find(x=>x.id==r).cells[k].opt)||CFLOW[0];const row=CL.rows.find(x=>x.id==fl[0]);let t='Start with the right-hand column.';
+ if(CL.op=='div'){if(row.id=='q'){const c=row.cells[fl[1]];const st=c.step!=null?CL.steps[c.step]:null;t=st?`How many ${CL.b}s go into ${st.cur}? Write that digit on top.`:'Does the divisor go into this part? If not, leave it.'}else if(row.kind=='product'){const st=CL.steps[row.step];t=`Multiply: ${st.qi} × ${CL.b}.`}else if(row.kind=='remainder'){const st=CL.steps[row.step];t=`Subtract ${st.cur} − ${st.prod}${row.bring?', then bring down the next digit':''}.`}else t=`What is left at the end?`}
+ else if(row.kind=='partial')t=`Multiply ${CL.a} by ${row.digit}${row.place?', one place to the left':''}.`;
+ const m=$('cmsg');m.className='fb ok';m.textContent='💡 '+t;colFocus(CFLOW.indexOf(fl))}
+function colShow(){if(CDONE)return;CV=MQC.solution(CL);colFinish(false)}
+function colFinish(solved){CDONE=true;colDraw();$('cck').disabled=true;const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10;
+ const ans=solved?(Q.kind=='rem'?`${CL.value} r ${CL.rem}`:String(CL.value)):'';
+ const r=MQ.answerQuestion(L,ST,DB.goal,Q,ans,!solved);logEvent(Q,{mode:'column',ok:r.correct,secs,slips:CSLIPS.slice(),hint:!!Q.hintUsed});save();record(Q,(solved?ans:'(shown)')+(CSLIPS.length?` [${CSLIPS.join(', ')}]`:''),!solved,r.correct,secs);
+ const m=$('cmsg');m.className='fb '+(r.correct?'ok':'bad');m.innerHTML=`<b>${solved?(CSLIPS.length?`Done! (${CSLIPS.length} fix${CSLIPS.length>1?'es':''} on the way)`:'Perfect — every digit right first time! 🎉'):'Here is the full working.'}</b>${r.gained?`  +${r.gained} XP`:''}`+(r.badges.length?'<br>'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):'');
+ $('cnx').classList.remove('hide');bar(r.summary)}
+// ------------------------------------------------------------ detailed event log (every question, every mode)
+function logEvent(q,o){ST.events=(ST.events||[]).concat([{t:new Date().toISOString(),gen:q.gen,topic:q.topic,year:q.year,strand:q.strand,pure:MQ.isPure(q.gen),mode:o.mode||mode,why:q.why,ok:!!o.ok,secs:o.secs,hint:!!o.hint,slips:o.slips||[],skip:!!o.skip,ans:o.ans==null?undefined:String(o.ans).slice(0,60)}]).slice(-5000)}
 function record(q,ans,skip,ok,secs){if(!BACKEND||!SESSION)return;
  const q2=queueGet();q2.push({id:Math.random().toString(36).slice(2),user:SESSION.name,session:SESSION.session,time:new Date().toISOString(),mode:q.why,year:q.year,area:q.strand,topic:q.topic,
   question:q.text,answer:skip?'(skipped)':ans,correct_answer:q.show,correct:ok?1:0,seconds:secs,hint:q.hintUsed?1:0,type:q.gen});

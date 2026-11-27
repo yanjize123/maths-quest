@@ -192,6 +192,11 @@ function check(q, ans) {
       return vals.every((v, i) => close(v, exp[i], tol != null ? tol : null));
     }
     if (k === "text") { const n = ans.replace(/\s+/g, "").toUpperCase(); return (Array.isArray(exp) ? exp : [exp]).some(e => e.toUpperCase() === n); }
+    if (k === "rem") {                                   // quotient and remainder: "72 r 5", "72 remainder 5", "72 余 5", "72 ... 5"
+      const m = clean(ans).replace(/\s+/g, " ").match(/^(\d+)\s*(?:r|rem|remainder|余|\.{2,}|…+|，|,)\s*(\d+)$/);
+      if (m) return +m[1] === exp[0] && +m[2] === exp[1];
+      const v = parseNum(ans); return exp[1] === 0 && !!v && v.eq(F(exp[0]));
+    }
     if (k === "surd") { const r = parseSurd(ans); return !!r && r[0] === exp[0] && r[1] === exp[1]; }
     if (k === "poly") return peq(parsePoly(ans, q.v), exp);
     if (k === "factor") return peq(parseFactor(ans, q.v), exp);
@@ -640,6 +645,23 @@ G.e8_brk = () => { const x = R(-5, 10), a = R(2, 5), b = nz(-6, 6), c = nz(-9, 9
 G.e9_frac = () => { const x = R(-6, 15), a = R(2, 6); if (rnd() < 0.5) { const b = nz(-9, 9), c = R(-5, 10); const xx = a * c - b; return eqq("Equations with fractions (step by step)", `(${lin(1, b)})/${a} = ${c}`, xx); } const b = nz(-9, 9), k = R(-4, 8); return eqq("Equations with fractions (step by step)", `x/${a} ${b > 0 ? "+" : "-"} ${Math.abs(b)} = ${k + b}`, a * k); };
 G.e9_neg = () => { const x = R(-8, 8), a = R(2, 7), b = R(1, 20); return eqq("Negative x term (step by step)", `${b} - ${a}x = ${b - a * x}`, x); };
 G.e10_fracboth = () => { const x = R(-6, 8), a = R(1, 4), m = choice([2, 3, 4, 5]), c = R(1, 4), n = choice([2, 3, 4, 5].filter(v => v !== m)), k = R(-4, 6); const b = m * k - a * x, d = n * k - c * x; if (a * n === c * m) return G.e10_fracboth(); return eqq("Fractions on both sides (step by step)", `(${lin(a, b)})/${m} = (${lin(c, d)})/${n}`, x); };
+// --- written column methods (竖式): q.column drives the digit-by-digit layout in column.js
+const REMF = "e.g. 72 r 5";
+const colq = (topic, op, a, b, o = {}) => { let q;
+  if (op === "div") { const qq = Math.floor(a / b), r = a % b; q = r || o.rem ? Q(topic, `${cm(a)} ÷ ${b} = ?`, "rem", [qq, r], r ? `${qq} r ${r}` : String(qq), { fmt: r ? REMF : "", hint: "Divide, multiply, subtract, bring down." }) : Q(topic, `${cm(a)} ÷ ${b} = ?`, "num", qq, String(qq), { hint: "Divide, multiply, subtract, bring down." }); }
+  else { const v = op === "add" ? a + b : op === "sub" ? a - b : a * b; q = Q(topic, `${cm(a)} ${{ add: "+", sub: "−", mul: "×" }[op]} ${b} = ?`, "num", v, String(v)); }
+  q.column = { op, a, b, short: !!o.short }; return q; };
+G.c3_add = () => { const a = R(105, 899), b = R(105, 999 - a + 400); return colq("Column addition (written)", "add", a, b); };
+G.c3_sub = () => { const a = R(300, 999), b = R(105, a - 20); return colq("Column subtraction (written)", "sub", a, b); };
+G.c4_mul1 = () => colq("Short multiplication (written)", "mul", R(102, 4999), R(3, 9));
+G.c4_div1 = () => { const d = R(2, 9), q = R(12, 299); return colq("Division by 1 digit (written)", "div", d * q, d); };
+G.c5_div1r = () => { const d = R(3, 9), q = R(21, 999), r = R(1, d - 1); return colq("Division with remainder (written)", "div", d * q + r, d, { rem: true }); };
+G.c5_short = () => { const d = R(3, 9), q = R(102, 1999); return colq("Short division (bus stop)", "div", d * q, d, { short: true }); };
+G.c5_mul2 = () => colq("Long multiplication (written)", "mul", R(102, 2999), R(12, 89));
+G.c6_div2 = () => { const d = R(12, 49), q = R(21, 299); return colq("Long division by 2 digits (written)", "div", d * q, d); };
+G.c6_div2r = () => { const d = R(12, 49), q = R(21, 199), r = R(1, d - 1); return colq("Long division with remainder (written)", "div", d * q + r, d, { rem: true }); };
+G.a4_divrem = () => { const d = R(3, 9), q = R(4, 30), r = R(1, d - 1); return Q("Division with remainder", `${d * q + r} ÷ ${d} = ?`, "rem", [q, r], `${q} r ${r}`, { fmt: REMF, hint: `How many ${d}s fit? What is left?` }); };
+const COLUMN_GENS = ["c3_add", "c3_sub", "c4_mul1", "c4_div1", "c5_div1r", "c5_short", "c5_mul2", "c6_div2", "c6_div2r"];
 const STEP_GENS = ["s5_order", "s6_order", "s7_order", "s8_powers", "s8_fracorder", "e7_two", "e8_both", "e8_brk", "e9_frac", "e9_neg", "e10_fracboth"];
 
 // ================================================================ REGISTRY
@@ -665,10 +687,11 @@ const REG2 = `1C a1_add10 a1_sub10 a1_add20|2C a2_add21 a2_tens a2_div|3C a3_col
 |4C a4_coladd4 a4_mul31 a4_mul10 a4_shortdiv|4F a4_dec1|5C a5_longmul a5_shortdiv4 a5_sqcalc s5_order|5F a5_decadd a5_pow10dec a5_fracsame a5_mixed
 |6C a6_longdiv a6_longmul4 s6_order|6F a6_decmul a6_fracunlike a6_fracwhole a6_pctof|7C a7_negall a7_clever s7_order|7F a7_decdec a7_mixedmul|7A e7_two
 |8C a8_powers s8_powers|8N a8_idxnum|8F a8_ratneg s8_fracorder|8A a8_expand1 a8_collect e8_both e8_brk|9C a9_sqrt|9A a9_idxalg a9_expandsq e9_frac e9_neg
+|3C c3_add c3_sub|4C c4_mul1 c4_div1 a4_divrem|5C c5_div1r c5_short c5_mul2|6C c6_div2 c6_div2r
 |10N a10_fracidx|10A a10_expand2 e10_fracboth`;
 for (const part of (REG + "|" + REG2).replace(/\n/g, "").split("|")) { const m = part.trim().match(/^(\d+)([A-Z]) (.+)$/); reg(+m[1], m[2], m[3].trim()); }
 // Pure calculation (no words): new types plus older ones that are bare calculations. Target share in Practice: PURE_SHARE.
-const PURE = new Set(Object.keys(G).filter(g => /^(a\d|s\d|e\d)/.test(g) && YEAR_OF[g]).concat(("y1_bonds y1_double y2_times y3_times y3_frac y4_addsub y4_tables y4_dec y5_sqcube y5_frac_times y5_percent " +
+const PURE = new Set(Object.keys(G).filter(g => /^(a\d|s\d|e\d|c\d)/.test(g) && YEAR_OF[g]).concat(("y1_bonds y1_double y2_times y3_times y3_frac y4_addsub y4_tables y4_dec y5_sqcube y5_frac_times y5_percent " +
   "y6_bidmas y6_longdiv y6_fracmul y6_fracadd y6_decmul y6_negcalc y7_neg y7_fracdiv y7_eq y7_simplify y8_indices y8_stdform y8_brackets y9_expand2 y9_factor1 " +
   "g_surds g_linear g_expand g_factorise g_quad_solve g_simul").split(" ")));
 const PURE_SHARE = 0.68;
@@ -677,6 +700,8 @@ function purify(pool) { const p = pool.filter(isPure), o = pool.filter(g => !isP
 // Arithmetic sets: pure types from the learner's year (60%), the year below (25%), two below (15%).
 function purePool(year) { const r = Math.random(), y = r < 0.6 ? year : r < 0.85 ? year - 1 : year - 2; let p = gensFor(Math.max(1, Math.min(11, y))).filter(isPure); if (!p.length) p = gensFor(year).filter(isPure); if (!p.length) for (let k = year; k >= 1 && !p.length; k--) p = gensFor(k).filter(isPure); return p; }
 // Step-by-step: step types up to the learner's year (at least the first one), newest more often.
+// Column methods: types up to the learner's year (at least Year 4); division twice as often (the weakest area).
+function columnPool(year) { const ok = COLUMN_GENS.filter(g => YEAR_OF[g] <= Math.max(year, 4)); return ok.concat(ok.filter(g => /div/.test(g))); }
 function stepPool(year) { const ok = STEP_GENS.filter(g => YEAR_OF[g] <= Math.max(year, 5)); return ok.length ? ok : [STEP_GENS[0]]; }
 
 const strandYears = s => range(1, 11).filter(y => YEARS[y].some(g => STRAND[g] === s));
@@ -724,8 +749,9 @@ function pick(st, school, mode, yearSel) {
     const tried = Object.keys(st.topics).filter(g => G[g]);
     return [weightedChoice(st, tried.length ? tried : gensFor(school), true), "mistakes"];
   }
-  if (due.length && Math.random() < 0.8 && mode !== "steps" && (mode !== "pure" || isPure(due[0].gen))) { const r = due[0]; st.review.splice(st.review.indexOf(r), 1); return [r.gen, "review"]; }
+  if (due.length && Math.random() < 0.8 && mode !== "steps" && mode !== "column" && (mode !== "pure" || isPure(due[0].gen))) { const r = due[0]; st.review.splice(st.review.indexOf(r), 1); return [r.gen, "review"]; }
   if (mode === "pure") return [weightedChoice(st, purePool(yearSel || school)), "set"];
+  if (mode === "column") return [weightedChoice(st, columnPool(yearSel || school)), "column"];
   if (mode === "steps") return [weightedChoice(st, stepPool(yearSel || school)), "steps"];
   if (yearSel) return [weightedChoice(st, purify(gensFor(yearSel))), "year"];
   const [pool, why] = planPool(st, school);
@@ -804,6 +830,6 @@ function progress(L, st, goal) {
   return { topics: rows, wrong: st.wrong.slice(-40).reverse(), summary: summary(L, st, goal), strands: strandRows(st) };
 }
 
-const API = { isPure, PURE_SHARE, STEP_GENS, makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
+const API = { isPure, PURE_SHARE, STEP_GENS, COLUMN_GENS, makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
 if (typeof module !== "undefined" && module.exports) module.exports = API; else root.MQ = API;
 })(typeof window !== "undefined" ? window : globalThis);

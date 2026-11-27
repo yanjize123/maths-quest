@@ -187,11 +187,11 @@ function checkCalcLine(task, prev, line) {
     let ast; try { ast = parse(part, null); } catch (e) { if (e.learner) return { ok: false, msg: e.message, format: true }; throw e; }
     const val = valueOf(ast);
     if (!val.eq(target)) {
-      let msg = "This line isn't equal to the line before.";
-      if ((l2r(prevAst).eq(val) && !l2r(prevAst).eq(target)) || earlyAddSub(prev).some(x => x.eq(val))) msg += " Remember the order: brackets, then powers, then × and ÷, then + and −. You worked left to right.";
-      else if (val.mul(-1).eq(target)) msg += " Check a minus sign.";
+      let msg = "This line isn't equal to the line before.", code = "calc_err";
+      if ((l2r(prevAst).eq(val) && !l2r(prevAst).eq(target)) || earlyAddSub(prev).some(x => x.eq(val))) { msg += " Remember the order: brackets, then powers, then × and ÷, then + and −. You worked left to right."; code = "order_ops"; }
+      else if (val.mul(-1).eq(target)) { msg += " Check a minus sign."; code = "sign"; }
       else { const nx = reduceOnce(prevAst); if (nx) msg += ` Do the next operation first: look at ${firstOp(prevAst)}.`; }
-      return { ok: false, msg };
+      return { ok: false, msg, code };
     }
   }
   const last = parts[parts.length - 1];
@@ -257,13 +257,13 @@ function topTerms(n, sign = 1, out = [], root = true) {
 // Typical wrong moves from the previous line; each gives the solution it would lead to.
 function slips(L, R) {
   const out = [], first = [], Lp = toPoly(L), Rp = toPoly(R);
-  const add = (x, msg) => { if (x) (/bracket/.test(msg) ? first : out).push({ x, msg }); };
+  const add = (x, msg, code) => { if (x) (/bracket/.test(msg) ? first : out).push({ x, msg, code }); };
   for (const [side, other, which] of [[L, Rp, "L"], [R, Lp, "R"]]) {
     for (const t of topTerms(side)) {
       const tp = pscale(toPoly(t.n), F(t.s)); if (!Object.keys(tp).length) continue;
       const sideP = which === "L" ? Lp : Rp;
       const wrong = which === "L" ? solPoly(psub(sideP, tp), padd(other, tp)) : solPoly(padd(other, tp), psub(sideP, tp));
-      add(wrong, "When a term moves to the other side, its sign changes (+ becomes −, − becomes +). Or: do the same thing to both sides.");
+      add(wrong, "When a term moves to the other side, its sign changes (+ becomes −, − becomes +). Or: do the same thing to both sides.", "move_sign");
     }
     for (const t of topTerms(side)) {
       const n = t.n;
@@ -277,7 +277,7 @@ function slips(L, R) {
           const good = pscale(pscale(toPoly(br), k), F(t.s));
           const bad = pscale(padd(first, rest), F(t.s));
           const sideP = which === "L" ? Lp : Rp, newSide = padd(psub(sideP, good), bad);
-          add(which === "L" ? solPoly(newSide, other) : solPoly(other, newSide), `Multiply every term inside the bracket by ${sfr(k)}.`);
+          add(which === "L" ? solPoly(newSide, other) : solPoly(other, newSide), `Multiply every term inside the bracket by ${sfr(k)}.`, "bracket_first_only");
         }
       }
       const negBr = n.k === "neg" ? strip(n.a) : (t.s < 0 && n.k === "par" ? strip(n) : null);
@@ -287,17 +287,18 @@ function slips(L, R) {
           for (const q of tt.slice(1)) bad = padd(bad, pscale(toPoly(q.n), F(q.s)));
           const sg = n.k === "neg" ? F(t.s) : F(1), cur = pscale(toPoly(n), F(t.s));
           const newSide = padd(psub(sideP, cur), pscale(bad, sg));
-          add(which === "L" ? solPoly(newSide, other) : solPoly(other, newSide), "A minus in front of a bracket changes the sign of every term inside.");
+          add(which === "L" ? solPoly(newSide, other) : solPoly(other, newSide), "A minus in front of a bracket changes the sign of every term inside.", "neg_bracket");
         }
       }
     }
   }
   // a·x = c  ->  x = c − a, x = c·a, x = a/c
   const d = psub(Lp, Rp), a = pco(d, 1), c = pco(d, 0).mul(-1);
-  if (a.n !== 0 && !a.eq(ONE)) {
-    add(c.sub(a), `To undo × ${sfr(a)}, divide both sides by ${sfr(a)} (don't subtract).`);
-    add(c.mul(a), `To undo × ${sfr(a)}, divide both sides by ${sfr(a)} (don't multiply).`);
-    if (c.n !== 0) add(a.div(c), "Divide the number side by the number in front of x, not the other way round.");
+  const simple = (pdeg(Lp) === 1 && pco(Lp, 0).n === 0 && isConst(Rp)) || (pdeg(Rp) === 1 && pco(Rp, 0).n === 0 && isConst(Lp));
+  if (simple && a.n !== 0 && !a.eq(ONE)) {
+    add(c.sub(a), `To undo × ${sfr(a)}, divide both sides by ${sfr(a)} (don't subtract).`, "subtract_not_divide");
+    add(c.mul(a), `To undo × ${sfr(a)}, divide both sides by ${sfr(a)} (don't multiply).`, "multiply_not_divide");
+    if (c.n !== 0) add(a.div(c), "Divide the number side by the number in front of x, not the other way round.", "divide_upside_down");
   }
   return first.concat(out);
 }
@@ -312,7 +313,7 @@ function checkEqLine(task, prev, line) {
   if (!s.x.eq(task.value)) {
     const [Lp, Rp] = sides(prev, v);
     const hit = slips(Lp, Rp).find(c => c.x.eq(s.x));
-    return { ok: false, msg: "This line doesn't balance with the line before. " + (hit ? hit.msg : "Whatever you do to one side, do the same to the other side.") };
+    return { ok: false, code: hit ? hit.code : "unbalanced", msg: "This line doesn't balance with the line before. " + (hit ? hit.msg : "Whatever you do to one side, do the same to the other side.") };
   }
   const done = isSolved(l, r, v);
   if (done) {
