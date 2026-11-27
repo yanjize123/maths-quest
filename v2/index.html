@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Penguin Cupcakes · Maths Quest v2</title>
-<!-- 甜品店 第 1 关 页面 v004（2026-11-27 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
+<!-- 甜品店 第 1 关 页面 v005（2026-11-27 金币写法统一、草莓不够可去补货、每 3 件一次随机大变化；v004 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
      规则：business_loop.md（yanjize123/claude 条目 P-20261126-maths-game）。奖惩不对称：对方吃亏的错误被拒绝要重算，对方占便宜的错误被接受、店里亏。 -->
 <style>
  :root{--pink:#ff7eb6;--ink:#3a2a3a}
@@ -52,7 +52,7 @@
 <script src="mq_store.js"></script>
 <script src="mq_art.js"></script>
 <script>
-const PAGE_VERSION = 4, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
+const PAGE_VERSION = 5, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
 const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
 const PUNNET = 10;                 // 每盒草莓 10 颗
 const UPGRADES = [
@@ -67,31 +67,35 @@ const TX = {
  en: { title:'Penguin Cupcakes', welcome:'🐧 Welcome to <b>Penguin Cupcakes</b>! Log in with your Maths Quest v2 name and password.', name:'name', pass:'password', open:'Open the shop', guest:'Play without saving', needpw:'Type your name and password.', unlocking:'Unlocking the shop door…', noserver:'Cannot reach the server. Check the internet and try again.', loginfail:'Could not log in',
   loan:' (bank loan)', day:'Day', hint:'💡 Hint', penguin:'Penguin', farmer:'Farmer Fox', owl:'Owl the accountant',
   morning:"Good morning! Here are today's orders:", lots:'some cupcakes with lots of strawberries', ord:(n,k)=>`${n} cupcakes, ${k} strawberries on each`,
-  have:(s,P,p)=>`You have <b>🍓 ${s}</b> strawberries. The market sells punnets of <b>${P}</b> strawberries for <b>🪙${p}</b> each.`, howmany:'How many punnets?', market:'Go to the market', noshop:'No shopping today', tip:'Tip: work out how many strawberries the orders need before you buy!',
-  pay:'Pay', notenough:'🦊 "That\'s not enough money!" Try again.', kept:d=>`🦊 "Thank you!" The farmer kept the extra <b>🪙${d}</b>. Oops — you paid too much.`, exact:'🦊 "Exactly right, thank you!"', opennow:'Open the shop 🔔',
+  have:(s,P,p)=>`You have <b>🍓 ${s}</b> strawberries. The market sells punnets of <b>${P}</b> strawberries for <b>${p} coins</b> each.`, howmany:'How many punnets?', market:'Go to the market', noshop:'No shopping today', tip:'Tip: work out how many strawberries the orders need before you buy!',
+  pay:'Pay', notenough:'🦊 "That\'s not enough money!" Try again.', kept:d=>`🦊 "Thank you!" The farmer kept the extra <b>${d} coins</b>. Oops — you paid too much.`, exact:'🦊 "Exactly right, thank you!"', opennow:'Open the shop 🔔',
   wants:(n,k)=>`I'd like ${n} cupcakes with ${k} strawberries on each, please!`, nostock:(s,w)=>`🐧 Oh no — we only have 🍓 ${s}. Not enough strawberries! ${w} goes home sad.`, nextc:'Next customer',
   tap:'Tap a cupcake to add a strawberry, then type how many you used.', again:'🔄 start again', bake:'Bake!', toofew:w=>`🫠 Not enough strawberries — that's not what ${w} ordered! Bake it again.`, toomany:(w,d)=>`${w} is happy, but you used <b>${d}</b> strawberries too many.`,
-  perfect:w=>`🌈 Perfect! ${w} does the big rainbow dance!`, yum:w=>`Yum! ${w} does a little dance.`, takemoney:'Take the money 💷', charge:'Charge', toomuch:w=>`${w}: "That's too much! I'm not paying that." Check again.`, toolittle:(w,d)=>`${w} pays happily… but you charged <b>🪙${d}</b> too little!`, kaching:v=>`💷 Ka-ching! +🪙${v}`, close:'Close the shop 🌙',
-  check:'Check', profitq:(a,b)=>`Today you took 🪙${a} and spent 🪙${b} on strawberries. How much profit did you make?`, lossq:(a,b)=>`Today you spent 🪙${b} on strawberries but only took 🪙${a}. How much money did you lose?`, owlagain:'🦉 "Hoo! Let\'s check that again."',
-  owlok:(p,v)=>`🦉 "Correct! ${p ? 'You made 🪙' + v : 'You lost 🪙' + v} today."`, served:'Customers served', left:'Customers who left', till:'Money in the till', stockleft:'Strawberries left', loannote:'Your money is below zero, so Penguin Bank lent you some. Make a profit to pay it back!', pickchest:'🎁 Pick a chest', upg:'🛠 Shop upgrades',
+  perfect:w=>`🌈 Perfect! ${w} does the big rainbow dance!`, yum:w=>`Yum! ${w} does a little dance.`, takemoney:'Take the money 💷', charge:'Charge', toomuch:w=>`${w}: "That's too much! I'm not paying that." Check again.`, toolittle:(w,d)=>`${w} pays happily… but you charged <b>${d} coins</b> too little!`, kaching:v=>`Ka-ching! +${v} coins`, close:'Close the shop 🌙',
+  check:'Check', profitq:(a,b)=>`Today you took ${a} coins and spent ${b} coins on strawberries. How much profit did you make?`, lossq:(a,b)=>`Today you spent ${b} coins on strawberries but only took ${a} coins. How much money did you lose?`, owlagain:'🦉 "Hoo! Let\'s check that again."',
+  owlok:(p,v)=>`🦉 "Correct! ${p ? 'You made ' + v : 'You lost ' + v} today."`, served:'Customers served', left:'Customers who left', till:'Money in the till', stockleft:'Strawberries left', loannote:'Your money is below zero, so Penguin Bank lent you some. Make a profit to pay it back!', pickchest:'🎁 Pick a chest', upg:'🛠 Shop upgrades',
   whatbuy:c=>`What shall we buy for the shop? You have ${c}.`, use:'Use', buy:'Buy', normal:'Normal shop', chestq:'Pick a chest! Better chests have harder questions.', bronze:'🥉 Bronze', silver:'🥈 Silver', gold:'🥇 Gold', openq:'Open!', locked:'The chest is still locked. Try again!',
-  opened:(t,v)=>`🎉 The ${t} chest opens: +🪙${v}!`, became:t=>`(It became a ${t} chest because it took more than one try.)`, sleep:'Sleep 😴 → next day', waiting:n=>`⏳ ${n} waiting to upload`, saved:'✓ saved', other:'中文',
-  berry:b=>`🍓 +${b} strawberr${b > 1 ? 'ies' : 'y'} for getting it right first time!`, spoiled:n=>`Overnight ${n} strawberries went bad.`, window:'🛍️ Shop window', bear:'Bear the shopkeeper', wintro:(c,n)=>`Welcome! You have ${c}. Pick one thing for your shop (you have ${n}).`, saveup:'Save my money today', wnote:'Every 5 things you buy, the shop changes!', allbought:'You have bought everything in the window for now!', bearshort:'🐻 "That is not enough coins!" Try again.', bearkept:d=>`🐻 "Thank you!" Bear kept the extra 🪙${d}.`, beartoomuch:'🐻 "That is too much change!" Check again.', bearless:d=>`🐻 gives you the change you asked for… but you should have got 🪙${d} more!`, levelup:(n,x)=>`⭐ Level ${n}! ${x} is now in your shop.`, bigchange:n=>n === 5 ? '🎨 Big change: the shop is painted mint green!' : n === 10 ? '🐧 Big change: a helper penguin joins the shop!' : n === 15 ? '🏖️ Big change: the shop moves to the seaside!' : '✨ Big change!', newapron:'👕 Surprise! Penguin gets a new apron colour!',
-  U:{ sign:['🌈 Rainbow sign','Cupcakes sell for 🪙1 more.'], oven:['🔥 Bigger oven','One more customer every day.'], space:['🚀 Space shop','Move the shop to outer space!'], sea:['🐠 Seaside shop','A shop by the sea.'] } },
+  opened:(t,v)=>`🎉 The ${t} chest opens: +${v} coins!`, became:t=>`(It became a ${t} chest because it took more than one try.)`, sleep:'Sleep 😴 → next day', waiting:n=>`⏳ ${n} waiting to upload`, saved:'✓ saved', other:'中文',
+  short:(s,n)=>`🐧 We only have 🍓 ${s}, but this order needs ${n}! Go to the market for more, or let the customer go.`, restock:'🛒 Restock', letgo:'Let them go',
+  chPaint:'🎨 Big change: the shop gets a brand-new colour!', chHelper:'🐧 Big change: a helper penguin joins the shop!', chSea:'🏖️ Big change: the shop moves to the seaside!', chSpace:'🚀 Surprise: the shop blasts off to outer space!', chGift:g=>`🎁 Surprise: the dragons bring a basket of ${g} strawberries!`, chHelperNew:'🐧 Surprise: the helper penguin has a new apron!',
+  berry:b=>`🍓 +${b} strawberr${b > 1 ? 'ies' : 'y'} for getting it right first time!`, spoiled:n=>`Overnight ${n} strawberries went bad.`, window:'🛍️ Shop window', bear:'Bear the shopkeeper', wintro:(c,n)=>`Welcome! You have ${c}. Pick one thing for your shop (you have ${n}).`, saveup:'Save my money today', wnote:'Every 3 things you buy, something big (and surprising) happens!', allbought:'You have bought everything in the window for now!', bearshort:'🐻 "That is not enough coins!" Try again.', bearkept:d=>`🐻 "Thank you!" Bear kept the extra ${d} coins.`, beartoomuch:'🐻 "That is too much change!" Check again.', bearless:d=>`🐻 gives you the change you asked for… but you should have got ${d} coins more!`, levelup:(n,x)=>`⭐ Level ${n}! ${x} is now in your shop.`, bigchange:n=>n === 5 ? '🎨 Big change: the shop is painted mint green!' : n === 10 ? '🐧 Big change: a helper penguin joins the shop!' : n === 15 ? '🏖️ Big change: the shop moves to the seaside!' : '✨ Big change!', newapron:'👕 Surprise! Penguin gets a new apron colour!',
+  U:{ sign:['🌈 Rainbow sign','Cupcakes sell for 1 more.'], oven:['🔥 Bigger oven','One more customer every day.'], space:['🚀 Space shop','Move the shop to outer space!'], sea:['🐠 Seaside shop','A shop by the sea.'] } },
  zh: { title:'企鹅纸杯蛋糕店', welcome:'🐧 欢迎来到<b>企鹅纸杯蛋糕店</b>！用你的 Maths Quest v2 名字和密码登录。', name:'名字', pass:'密码', open:'开店', guest:'不保存，直接玩', needpw:'请输入名字和密码。', unlocking:'正在打开店门……', noserver:'连不上服务器，请检查网络后再试。', loginfail:'登录失败',
   loan:'（向银行借的）', day:'第', hint:'💡 提示', penguin:'企鹅', farmer:'狐狸农夫', owl:'猫头鹰会计',
   morning:'早上好！今天的订单是：', lots:'一些蛋糕，要放很多草莓', ord:(n,k)=>`${n} 个蛋糕，每个放 ${k} 颗草莓`,
-  have:(s,P,p)=>`你现在有 <b>🍓 ${s}</b> 颗草莓。市场上的草莓每盒 <b>${P}</b> 颗，每盒 <b>🪙${p}</b>。`, howmany:'买几盒？', market:'去市场', noshop:'今天不进货', tip:'小窍门：先算算这些订单一共要多少颗草莓，再决定买几盒！',
-  pay:'付钱', notenough:'🦊“钱不够哦！”再算一算。', kept:d=>`🦊“谢谢！”农夫把多给的 <b>🪙${d}</b> 收下了。哎呀，你多付了。`, exact:'🦊“刚刚好，谢谢！”', opennow:'开门营业 🔔',
+  have:(s,P,p)=>`你现在有 <b>🍓 ${s}</b> 颗草莓。市场上的草莓每盒 <b>${P}</b> 颗，每盒 <b>${p} 金币</b>。`, howmany:'买几盒？', market:'去市场', noshop:'今天不进货', tip:'小窍门：先算算这些订单一共要多少颗草莓，再决定买几盒！',
+  pay:'付钱', notenough:'🦊“钱不够哦！”再算一算。', kept:d=>`🦊“谢谢！”农夫把多给的 <b>${d} 金币</b> 收下了。哎呀，你多付了。`, exact:'🦊“刚刚好，谢谢！”', opennow:'开门营业 🔔',
   wants:(n,k)=>`我要 ${n} 个蛋糕，每个放 ${k} 颗草莓！`, nostock:(s,w)=>`🐧 糟糕，我们只有 🍓 ${s} 颗，草莓不够！${w} 只好伤心地回家了。`, nextc:'下一位顾客',
   tap:'点蛋糕可以放一颗草莓，放好后填一共用了几颗。', again:'🔄 重新放', bake:'做蛋糕！', toofew:w=>`🫠 草莓放少了，不是 ${w} 要的蛋糕！重新做。`, toomany:(w,d)=>`${w} 很高兴，可是你多用了 <b>${d}</b> 颗草莓。`,
-  perfect:w=>`🌈 太棒了！${w} 跳起了大彩虹舞！`, yum:w=>`真好吃！${w} 跳了一小段舞。`, takemoney:'收钱 💷', charge:'收钱', toomuch:w=>`${w}：“太贵了！我不付这么多。”再算一算。`, toolittle:(w,d)=>`${w} 高高兴兴地付了钱……可是你少收了 <b>🪙${d}</b>！`, kaching:v=>`💷 叮！+🪙${v}`, close:'关门 🌙',
-  check:'核对', profitq:(a,b)=>`今天收入 🪙${a}，进草莓花了 🪙${b}。今天赚了多少镑？`, lossq:(a,b)=>`今天进草莓花了 🪙${b}，只收入 🪙${a}。今天亏了多少镑？`, owlagain:'🦉“咕咕！我们再核对一遍。”',
-  owlok:(p,v)=>`🦉“对了！今天${p ? '赚了' : '亏了'} 🪙${v}。”`, served:'服务的顾客', left:'没买到走掉的顾客', till:'钱箱里的钱', stockleft:'剩下的草莓', loannote:'钱变成负数了，企鹅银行借给你一些。多赚点钱把它还上吧！', pickchest:'🎁 选一个宝箱', upg:'🛠 装修店铺',
+  perfect:w=>`🌈 太棒了！${w} 跳起了大彩虹舞！`, yum:w=>`真好吃！${w} 跳了一小段舞。`, takemoney:'收钱 💷', charge:'收钱', toomuch:w=>`${w}：“太贵了！我不付这么多。”再算一算。`, toolittle:(w,d)=>`${w} 高高兴兴地付了钱……可是你少收了 <b>${d} 金币</b>！`, kaching:v=>`叮！+${v} 金币`, close:'关门 🌙',
+  check:'核对', profitq:(a,b)=>`今天收入 ${a} 金币，进草莓花了 ${b} 金币。今天赚了多少镑？`, lossq:(a,b)=>`今天进草莓花了 ${b} 金币，只收入 ${a} 金币。今天亏了多少镑？`, owlagain:'🦉“咕咕！我们再核对一遍。”',
+  owlok:(p,v)=>`🦉“对了！今天${p ? '赚了' : '亏了'} ${v} 金币。”`, served:'服务的顾客', left:'没买到走掉的顾客', till:'钱箱里的钱', stockleft:'剩下的草莓', loannote:'钱变成负数了，企鹅银行借给你一些。多赚点钱把它还上吧！', pickchest:'🎁 选一个宝箱', upg:'🛠 装修店铺',
   whatbuy:c=>`给店里买点什么呢？你有 ${c}。`, use:'使用', buy:'买', normal:'普通店面', chestq:'选一个宝箱！越好的宝箱，题目越难。', bronze:'🥉 铜宝箱', silver:'🥈 银宝箱', gold:'🥇 金宝箱', openq:'打开！', locked:'宝箱还锁着，再试一次！',
-  opened:(t,v)=>`🎉 ${{bronze:'铜',silver:'银',gold:'金'}[t]}宝箱打开了：+🪙${v}！`, became:t=>`（试了不止一次，所以变成了${{bronze:'铜',silver:'银',gold:'金'}[t]}宝箱。）`, sleep:'睡觉 😴 → 第二天', waiting:n=>`⏳ ${n} 条等待上传`, saved:'✓ 已保存', other:'English',
-  berry:b=>`🍓 一次答对，奖励 ${b} 颗草莓！`, spoiled:n=>`昨晚有 ${n} 颗草莓坏掉了。`, window:'🛍️ 逛橱窗', bear:'熊老板', wintro:(c,n)=>`欢迎！你有 ${c}。给店里挑一件东西吧（已经有 ${n} 件）。`, saveup:'今天先攒钱', wnote:'每买满 5 件，店铺就会大变样！', allbought:'橱窗里的东西暂时都买齐了！', bearshort:'🐻“金币不够哦！”再算一算。', bearkept:d=>`🐻“谢谢！”熊老板把多给的 🪙${d} 收下了。`, beartoomuch:'🐻“找零太多啦！”再算一算。', bearless:d=>`🐻 按你说的找了零……可是本来应该多找你 🪙${d}！`, levelup:(n,x)=>`⭐ 升到第 ${n} 级！${x} 放进店里了。`, bigchange:n=>n === 5 ? '🎨 大变样：店铺刷成了薄荷绿！' : n === 10 ? '🐧 大变样：来了一位企鹅帮手！' : n === 15 ? '🏖️ 大变样：店搬到了海边！' : '✨ 大变样！', newapron:'👕 惊喜！企鹅得到一条新颜色的围裙！',
-  U:{ sign:['🌈 彩虹招牌','每个蛋糕多卖 🪙1。'], oven:['🔥 大烤箱','每天多来一位顾客。'], space:['🚀 太空店','把店搬到太空去！'], sea:['🐠 海边店','开在海边的店。'] } } };
+  opened:(t,v)=>`🎉 ${{bronze:'铜',silver:'银',gold:'金'}[t]}宝箱打开了：+${v} 金币！`, became:t=>`（试了不止一次，所以变成了${{bronze:'铜',silver:'银',gold:'金'}[t]}宝箱。）`, sleep:'睡觉 😴 → 第二天', waiting:n=>`⏳ ${n} 条等待上传`, saved:'✓ 已保存', other:'English',
+  short:(s,n)=>`🐧 我们只有 🍓 ${s} 颗，这一单要 ${n} 颗！去市场补货，还是让顾客走？`, restock:'🛒 去补货', letgo:'让顾客走',
+  chPaint:'🎨 大变样：店铺换了新颜色！', chHelper:'🐧 大变样：来了一位企鹅帮手！', chSea:'🏖️ 大变样：店搬到了海边！', chSpace:'🚀 惊喜：店铺飞到太空去了！', chGift:g=>`🎁 惊喜：小龙们送来一篮 ${g} 颗草莓！`, chHelperNew:'🐧 惊喜：企鹅帮手换了新围裙！',
+  berry:b=>`🍓 一次答对，奖励 ${b} 颗草莓！`, spoiled:n=>`昨晚有 ${n} 颗草莓坏掉了。`, window:'🛍️ 逛橱窗', bear:'熊老板', wintro:(c,n)=>`欢迎！你有 ${c}。给店里挑一件东西吧（已经有 ${n} 件）。`, saveup:'今天先攒钱', wnote:'每买满 3 件，店里就会有大变化（还有惊喜）！', allbought:'橱窗里的东西暂时都买齐了！', bearshort:'🐻“金币不够哦！”再算一算。', bearkept:d=>`🐻“谢谢！”熊老板把多给的 ${d} 金币 收下了。`, beartoomuch:'🐻“找零太多啦！”再算一算。', bearless:d=>`🐻 按你说的找了零……可是本来应该多找你 ${d} 金币！`, levelup:(n,x)=>`⭐ 升到第 ${n} 级！${x} 放进店里了。`, bigchange:n=>n === 5 ? '🎨 大变样：店铺刷成了薄荷绿！' : n === 10 ? '🐧 大变样：来了一位企鹅帮手！' : n === 15 ? '🏖️ 大变样：店搬到了海边！' : '✨ 大变样！', newapron:'👕 惊喜！企鹅得到一条新颜色的围裙！',
+  U:{ sign:['🌈 彩虹招牌','每个蛋糕多卖 1。'], oven:['🔥 大烤箱','每天多来一位顾客。'], space:['🚀 太空店','把店搬到太空去！'], sea:['🐠 海边店','开在海边的店。'] } } };
 const t = k => TX[LANG][k];
 function setLang(l) { LANG = l; try { localStorage.setItem('mq_v2_lang', l); } catch (e) {} document.documentElement.lang = l === 'zh' ? 'zh-Hans' : 'en'; document.title = t('title') + ' · Maths Quest v2'; }   // C 内容、S 会话、ST 存档、T 今天的临时状态
 
@@ -100,7 +104,7 @@ async function post(b) { const r = await fetch(BACKEND_V2, { method: 'POST', hea
 const qGet = () => { try { return JSON.parse(localStorage.getItem(QKEY)) || []; } catch (e) { return []; } };
 const qSet = q => { try { localStorage.setItem(QKEY, JSON.stringify(q)); } catch (e) {} };
 const R = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
-const money = v => (v < 0 ? '−' : '') + '🪙' + Math.abs(v);
+const money = v => (v < 0 ? '−' : '') + Math.abs(v) + (LANG === 'zh' ? ' 金币' : ' coins');
 function newShop() { return { v: 2, cash: 20, day: 1, stock: 0, mastery: {}, evidence: [], upgrades: [], owned: [], aprons: ['#ff8fc0'], apron: '#ff8fc0', chests: [], history: [], streak: 0 }; }
 const fixShop = st => Object.assign({ owned: [], aprons: ['#ff8fc0'], apron: '#ff8fc0', streak: 0 }, st);
 const APRONS = ['#7fc8ff', '#ffd23f', '#b98cff', '#7fe0b0', '#ff9f6b', '#ff5fa2'];
@@ -131,13 +135,13 @@ async function boot() {
 
 // ---------------- 画面 ----------------
 function hud() {
-  $('cash').textContent = money(ST.cash) + (ST.cash < 0 ? t('loan') : ''); $('cash').className = 'pill' + (ST.cash < 0 ? ' neg' : '');
+  $('cash').textContent = '🪙 ' + money(ST.cash) + (ST.cash < 0 ? t('loan') : ''); $('cash').className = 'pill' + (ST.cash < 0 ? ' neg' : '');
   $('stock').textContent = '🍓 ' + ST.stock; $('day').textContent = LANG === 'zh' ? `📅 第 ${ST.day} 天` : '📅 Day ' + ST.day; $('btitle').textContent = '🧁 ' + t('title'); $('lang2').textContent = t('other');
-  const n = ST.owned.length, theme = n >= 15 ? 'sea' : 'shop';
-  const palette = n >= 10 ? { awning: '#f0a35a', wall: '#fff6ea' } : n >= 5 ? { awning: '#6fd3a8', wall: '#ecfff6' } : {};
+  const n = ST.owned.length, theme = ST.theme || (n >= 10 ? 'sea' : 'shop');
+  const palette = ST.palette || {};
   $('bg').innerHTML = A.scene(theme, palette, ST.owned.map(id => (SHOP.find(x => x.id === id) || {}).emoji || ''));
 }
-function PG(m = 'happy') { const one = A.penguin(m, ST.apron, true); return ST.owned.length >= 10 ? `<span style="display:inline-flex;align-items:flex-end">${one}${A.penguin('happy', '#7fc8ff', false).replace('art-penguin', 'art-penguin helper')}</span>` : one; }
+function PG(m = 'happy') { const one = A.penguin(m, ST.apron, true); return ST.owned.length >= 6 ? `<span style="display:inline-flex;align-items:flex-end">${one}${A.penguin('happy', ST.helper || '#7fc8ff', false).replace('art-penguin', 'art-penguin helper')}</span>` : one; }
 function actors(left, mid, right) { $('left').innerHTML = left || ''; $('mid').innerHTML = mid || ''; $('right').innerHTML = right || ''; }
 function panel(html) { $('panel').innerHTML = html; }
 function dance(el, big) { el.firstElementChild?.classList.add('dance'); $('stage').classList.toggle('big', !!big); }
@@ -151,7 +155,7 @@ function ask(itemId, params, opts) {
   const st = { attempt: 1, hint: 0, t0: Date.now(), first: null };
   panel(`<div class="say">${opts.speaker ? `<span class="who">${opts.speaker}:</span> ` : ''}${q.story}</div>
     ${opts.extra || ''}
-    <div class="row"><input id="ans" inputmode="numeric" placeholder="${opts.placeholder || '🪙?'}"><button id="ok">${opts.button || 'OK'}</button><button class="alt" id="hb">${t('hint')}</button></div>
+    <div class="row"><input id="ans" inputmode="numeric" placeholder="${opts.placeholder || '?'}"><button id="ok">${opts.button || 'OK'}</button><button class="alt" id="hb">${t('hint')}</button></div>
     <div id="hints"></div><div class="say" id="msg"></div>`);
   const go = () => {
     const raw = $('ans').value.trim(); if (raw === '') return;
@@ -225,8 +229,10 @@ function serveNext() {
   actors(PG(), A.cupcake(0), A.dragon(o.who));
   if (need > ST.stock) {
     panel(`<div class="say"><span class="who">${o.who}:</span> ${t('wants')(o.p.n, o.p.k)}</div>
-      <div class="say bad">${t('nostock')(ST.stock, o.who)}</div><div class="row"><button id="nx">${t('nextc')}</button></div>`);
-    actors(PG('oops'), A.cupcake(0), A.dragon(o.who, 'sad')); T.lost++; T.idx++; $('nx').onclick = serveNext; return;
+      <div class="say bad">${t('short')(ST.stock, need)}</div><div class="row">${t('howmany')} <button class="alt" id="minus">−</button><b id="pn" style="font-size:24px">${Math.ceil((need - ST.stock) / PUNNET)}</b><button class="alt" id="plus">+</button><button id="restock">${t('restock')}</button><button class="alt" id="nx">${t('letgo')}</button></div>`);
+    actors(PG('oops'), A.cupcake(0), A.dragon(o.who, 'sad'));
+    let n = Math.ceil((need - ST.stock) / PUNNET); $('minus').onclick = () => { n = Math.max(1, n - 1); $('pn').textContent = n; }; $('plus').onclick = () => { n = Math.min(12, n + 1); $('pn').textContent = n; };
+    $('restock').onclick = () => pay(n); $('nx').onclick = () => { T.lost++; T.idx++; serveNext(); }; return;
   }
   const extra = item.action === 'drag' ? `<div class="note">${t('tap')}</div><div class="cakes" id="cakes"></div><button class="alt" id="reset">${t('again')}</button>` : '';
   let placed = Array(o.p.n).fill(0);
@@ -295,7 +301,7 @@ function showcase() {
   const c = candidates();
   if (!c.length) { panel(`<div class="say">${t('allbought')}</div><div class="row"><button id="nx">${t('pickchest')}</button></div>`); $('nx').onclick = chest; return; }
   panel(`<div class="say"><span class="who">${t('bear')}:</span> ${t('wintro')(money(ST.cash), ST.owned.length)}</div>
-    ${c.map(x => `<div class="shopitem"><span style="font-size:20px">${x.emoji} ${LANG === 'zh' ? x.zh : x.en} — 🪙${x.price}</span><button data-id="${x.id}" ${ST.cash < +x.price ? 'disabled' : ''}>${t('buy')}</button></div>`).join('')}
+    ${c.map(x => `<div class="shopitem"><span style="font-size:20px">${x.emoji} ${LANG === 'zh' ? x.zh : x.en} — ${money(+x.price)}</span><button data-id="${x.id}" ${ST.cash < +x.price ? 'disabled' : ''}>${t('buy')}</button></div>`).join('')}
     <div class="row"><button class="alt" id="save">${t('saveup')}</button></div><div class="note">${t('wnote')}</div>`);
   $('panel').querySelectorAll('[data-id]').forEach(b => b.onclick = () => buyItem(+b.dataset.id));
   $('save').onclick = chest;
@@ -319,9 +325,9 @@ function buyItem(id) {
     },
     onDone: () => {
       ST.cash -= price; ST.owned.push(id); if (id === 8) ST.apron = '#ff5fa2'; T.buySeed = null; hud(); CUR = showcase;
-      const n = ST.owned.length, big = n % 5 === 0;
+      const n = ST.owned.length, big = n % 3 === 0; const ch = big ? bigChange(n) : '';
       actors(PG(), `<div style="font-size:80px">${x.emoji}</div>`, A.dragon(DRAGONS[n % 3])); dance($('right'), big);
-      $('msg').innerHTML += `<div class="say good">${t('levelup')(n, x.emoji + ' ' + name)}</div>${big ? `<div class="say good">${t('bigchange')(n)}</div>` : ''}<div class="row"><button id="nx">${t('pickchest')}</button><button class="alt" id="more">${t('window')}</button></div>`;
+      $('msg').innerHTML += `<div class="say good">${t('levelup')(n, x.emoji + ' ' + name)}</div>${big ? `<div class="say good">${ch}</div>` : ''}<div class="row"><button id="nx">${t('pickchest')}</button><button class="alt" id="more">${t('window')}</button></div>`;
       $('nx').onclick = chest; $('more').onclick = showcase; save();
     } });
 }
@@ -330,7 +336,7 @@ function buyItem(id) {
 function chest() {
   CUR = chest;
   actors(PG(), '<div style="font-size:80px">🎁</div>', A.dragon(DRAGONS[ST.day % 3]));
-  panel(`<div class="say">${t('chestq')}</div><div class="row"><button data-t="bronze">${t('bronze')} (🪙2)</button><button data-t="silver">${t('silver')} (🪙5)</button><button data-t="gold">${t('gold')} (🪙10)</button></div>`);
+  panel(`<div class="say">${t('chestq')}</div><div class="row"><button data-t="bronze">${t('bronze')} (2)</button><button data-t="silver">${t('silver')} (5)</button><button data-t="gold">${t('gold')} (10)</button></div>`);
   $('panel').querySelectorAll('[data-t]').forEach(b => b.onclick = () => openChest(b.dataset.t));
 }
 function openChest(tier) {
@@ -357,6 +363,16 @@ function openChest(tier) {
 
 function showSleep() { CUR = showSleep; actors(PG(), '', A.dragon(DRAGONS[ST.day % 3])); panel(`<div class="row"><button id="nx">${t('sleep')}</button></div>`); $('nx').onclick = () => { ST.spoiled = Math.floor(ST.stock * 0.25); ST.stock -= ST.spoiled; ST.day++; save(); morning(); }; }
 
+const PALETTES = [{ awning: '#6fd3a8', wall: '#ecfff6' }, { awning: '#f0a35a', wall: '#fff6ea' }, { awning: '#8fb6ff', wall: '#eef4ff' }, { awning: '#c79bff', wall: '#f6efff' }, { awning: '#ff7b7b', wall: '#fff0ee' }, { awning: '#ffd23f', wall: '#fffbe6' }];
+// 大变化：第 3/6/10 件固定内容（颜色随机），之后每 3 件从惊喜池随机挑一个（Jize 00:37：经常有变化、带随机性）
+function bigChange(n) {
+  const pick = a => a[R(0, a.length - 1)];
+  if (n === 3) { ST.palette = pick(PALETTES); return t('chPaint'); }
+  if (n === 6) { ST.helper = pick(APRONS); return t('chHelper'); }
+  if (n === 9 || n === 10) { ST.theme = 'sea'; return t('chSea'); }
+  const pool = [() => { ST.palette = pick(PALETTES); return t('chPaint'); }, () => { ST.theme = ST.theme === 'space' ? 'shop' : 'space'; return t('chSpace'); }, () => { const c = pick(APRONS); ST.apron = c; if (!ST.aprons.includes(c)) ST.aprons.push(c); return t('newapron'); }, () => { const g = R(4, 8); ST.stock += g; return t('chGift')(g); }, () => { ST.helper = pick(APRONS); return t('chHelperNew'); }];
+  return pick(pool)();
+}
 const EVENTS = [
   { id: 'drizzle', p: 6, bad: 1, icon: '🌧️', orders: -1, en: 'Drizzle! One customer stays home today.', zh: '下小雨了！今天少来一位顾客。' },
   { id: 'rainbow', p: 5, icon: '🌈', orders: 1, en: 'A rainbow brings an extra customer!', zh: '彩虹出来了，多来一位顾客！' },
