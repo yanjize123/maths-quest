@@ -1,8 +1,8 @@
 // mq_gen.js — 程序化原创 SVG 小库：由“参数 + 随机种子”生成怪兽、动物店员、蛋糕、武器、元素特效，带状态与动画。
 // 同一个种子永远画出同一个形象（卡片可复现）；状态（idle/angry/hit/attack/defeated、happy）只改表情与动作。
-// 版本写在文件内（组件库文件名不变）。v1 2026-11-27，P-20261126-maths-game。只用原创形象。
+// 版本写在文件内（组件库文件名不变）。v2 2026-11-27 覆盖参数；v1 2026-11-27，P-20261126-maths-game。只用原创形象。
 (function (root) {
-  const GEN_VERSION = 1;
+  const GEN_VERSION = 2;   // v2：monsterSpec 接受数据表覆盖参数
 
   // ---------------- 随机数（mulberry32，可复现） ----------------
   function rng(seed) {
@@ -28,6 +28,11 @@
     leaf:   { hue: [90, 125],  en: 'Leaf',   zh: '叶', icon: '🍃', fx: '#7ccf5a', fx2: '#d9f7c8' },
   };
   const ELEMENT_IDS = Object.keys(ELEMENTS);
+  function shade(hex, k) {   // k<0 变暗，k>0 变亮
+    const n = parseInt(hex.slice(1), 16); let r = n >> 16, g = (n >> 8) & 255, b = n & 255;
+    const f = c => Math.round(k < 0 ? c * (1 + k) : c + (255 - c) * k);
+    return `rgb(${f(r)},${f(g)},${f(b)})`;
+  }
 
   // ---------------- 动画（只注入一次） ----------------
   const CSS = `
@@ -115,6 +120,12 @@
     s.name = { en: r.pick(NAME_A) + r.pick(NAME_B) + ' the ' + E.en + ' ' + { round: 'Ball', blob: 'Blob', pear: 'Pear', tall: 'Tower', box: 'Block', cloud: 'Cloud', star: 'Star', bean: 'Bean' }[body],
                zh: E.zh + za + ZH_BODY[body] };
     s.weak = WEAK[element];
+    // 覆盖参数（数据表里的固定怪兽：颜色、形状、眼睛、名字等）
+    const o = opts;
+    if (o.main) { s.main = o.main; s.dark = shade(o.main, -0.35); s.belly = shade(o.main, 0.55); }
+    if (o.accent) s.accent = o.accent;
+    for (const k of ['eyes', 'horns', 'wings', 'tail', 'spikes', 'hp', 'steals']) if (o[k] != null) s[k] = o[k];
+    if (o.en) s.name = { en: o.en, zh: o.zh || o.en };
     return s;
   }
   const WEAK = { fire: 'water', water: 'bolt', wind: 'leaf', ice: 'fire', bolt: 'leaf', bubble: 'wind', sugar: 'ice', leaf: 'fire' };

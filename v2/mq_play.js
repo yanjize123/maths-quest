@@ -1,27 +1,27 @@
 // mq_play.js — 甜品店随机事件层 v1（2026-11-27，P-20261126-maths-game）：怪兽来抢（选武器打怪、怪兽卡图鉴）、换店员（动物加成）、顾客高峰（限时）、多层蛋糕订单。
 // 依赖 index.html 里的全局（ST、T、C、LANG、panel、actors、hud、record、save、serveNext、evening、PG、R、money、$），以及 MQ（../engine.js 题目生成）、MQGen（mq_gen.js 画图）。
 // 数据在 content/game_data.json（武器、题型族、店员、事件概率）。版本写在文件内。
-const PLAY_VERSION = 1;
+const PLAY_VERSION = 2;   // v2：怪兽 30、武器 40 来自数据表；克制按题型族
 let GD = null;
 const TX2 = {
   en: { book: '🃏 Monster cards', back: '← Back', bookIntro: (n, m) => `You have caught <b>${n}</b> of ${m} monsters. Defeat monsters with maths to collect their cards!`, unknown: '???',
-    raid: n => `😱 Oh no! <b>${n}</b> is sneaking into the shop to steal things!`, fight: '⚔️ Fight!', weak: e => `Tip: it is weak against ${e}!`, pickW: 'Pick a weapon:', pickT: 'How hard should your attacks be? Harder questions hit harder!',
+    raid: n => `😱 Oh no! <b>${n}</b> is sneaking into the shop to steal things!`, fight: '⚔️ Fight!', weak: e => `Tip: it is weak against <b>${e}</b> weapons — double damage!`, pickW: 'Pick a weapon:', pickT: 'How hard should your attacks be? Harder questions hit harder!',
     year: 'Which school year are you in? (This picks the right questions.)', yearN: y => `Year ${y}`, hit: d => `💥 Hit! −${d}`, super: '✨ Super effective! Double damage!', miss: '😝 Missed!', stole: (n, what) => `The monster grabbed ${n} ${what}!`, guard: '🐸 Frog blocked the monster — nothing stolen!',
     ans: a => `The answer was <b>${a}</b>.`, won: n => `🎉 You beat <b>${n}</b>! It drops its monster card.`, newCard: '🆕 New card!', dupe: k => `You already had this card — now ×${k}. ${k % 3 === 0 ? '⭐ Shiny upgrade!' : ''}`, run: 'It ran away… try next time!',
     reopen: 'Back to the shop 🔔', next: 'Next', ok: 'Attack!', check: 'Check', qEN: '',
     rushT: '🏃 Rush hour! Answer as many as you can in 60 seconds. Each right answer = 1 coin.', go: 'Go!', rushEnd: (n, c) => `⏱️ Time's up! ${n} right — +${c} coins.`, toEvening: 'Close the shop 🌙',
     layer: (w, n, k, f) => `${w}: "A ${n}-tier ${f} cake please, with ${k} strawberries on each tier!" How many strawberries do you need?`, layerPrice: (n, p) => `The cake has ${n} tiers. Each tier costs ${p} coins. How much is the cake?`,
     helperT: 'New helper today', weaponNew: w => `🗡️ New weapon: ${w}!`,
-    steal: { strawberry: 'strawberries', coin: 'coins', flour: 'strawberries', egg: 'strawberries', cake: 'strawberries' }, el: e => MQGen.ELEMENTS[e].icon + ' ' + MQGen.ELEMENTS[e].en },
+    steal: { coin: 'coins' }, el: e => MQGen.ELEMENTS[e].icon + ' ' + MQGen.ELEMENTS[e].en },
   zh: { book: '🃏 怪兽卡', back: '← 返回', bookIntro: (n, m) => `你已经收集了 <b>${n}</b> / ${m} 只怪兽。用数学打败怪兽，就能得到它的卡！`, unknown: '？？？',
-    raid: n => `😱 糟糕！<b>${n}</b> 偷偷溜进店里要偷东西！`, fight: '⚔️ 开打！', weak: e => `小窍门：它怕${e}！`, pickW: '选一件武器：', pickT: '攻击要多难？题越难，打得越疼！',
+    raid: n => `😱 糟糕！<b>${n}</b> 偷偷溜进店里要偷东西！`, fight: '⚔️ 开打！', weak: e => `小窍门：它怕<b>${e}</b>类武器，打它伤害翻倍！`, pickW: '选一件武器：', pickT: '攻击要多难？题越难，打得越疼！',
     year: '你上几年级？（用来挑合适的题）', yearN: y => `Year ${y}`, hit: d => `💥 打中了！−${d}`, super: '✨ 克制！伤害翻倍！', miss: '😝 没打中！', stole: (n, what) => `怪兽抢走了 ${n} ${what}！`, guard: '🐸 青蛙挡住了怪兽，什么也没被偷！',
     ans: a => `正确答案是 <b>${a}</b>。`, won: n => `🎉 你打败了 <b>${n}</b>！它掉下一张怪兽卡。`, newCard: '🆕 新卡！', dupe: k => `这张卡你已经有了，现在 ×${k}。${k % 3 === 0 ? '⭐ 闪卡升级！' : ''}`, run: '它跑掉了……下次再来！',
     reopen: '回到店里 🔔', next: '下一题', ok: '攻击！', check: '核对', qEN: '（题目暂为英文）',
     rushT: '🏃 顾客高峰！60 秒内答对越多越好，每答对一题 = 1 金币。', go: '开始！', rushEnd: (n, c) => `⏱️ 时间到！答对 ${n} 题，+${c} 金币。`, toEvening: '关门 🌙',
     layer: (w, n, k, f) => `${w}：“我要一个 ${n} 层的${f}蛋糕，每层放 ${k} 颗草莓！”一共要多少颗草莓？`, layerPrice: (n, p) => `这个蛋糕有 ${n} 层，每层 ${p} 金币。一共多少钱？`,
     helperT: '今天的新店员', weaponNew: w => `🗡️ 新武器：${w}！`,
-    steal: { strawberry: '颗草莓', coin: '金币', flour: '颗草莓', egg: '颗草莓', cake: '颗草莓' }, el: e => MQGen.ELEMENTS[e].icon + MQGen.ELEMENTS[e].zh } };
+    steal: { coin: '金币' }, el: e => MQGen.ELEMENTS[e].icon + MQGen.ELEMENTS[e].zh } };
 const t2 = k => TX2[LANG][k];
 const nm = x => LANG === 'zh' ? x.zh : x.en;
 
@@ -35,15 +35,16 @@ async function playBoot() {
 
 // ---------------- 图鉴：固定 24 只（种子固定，所以每个孩子看到的同一编号怪兽一样） ----------------
 function bookSpec(i) {
-  const b = GD.book, rarity = i >= b.legend_from ? 'legend' : i >= b.rare_from ? 'rare' : 'common';
-  return MQGen.monsterSpec(MQGen.hashStr(b.seed_prefix + i), { element: MQGen.ELEMENT_IDS[i % 8], rarity });
+  const m = GD.monsters[i], s = MQGen.monsterSpec(MQGen.hashStr(m.id), { ...m });
+  s.weakFam = m.weak; s.move = m.move; return s;
 }
-function pickMonster() {   // 普通 60%、稀有 30%、传说 10%
-  const r = Math.random(), b = GD.book, lo = r < 0.6 ? 0 : r < 0.9 ? b.rare_from : b.legend_from, hi = r < 0.6 ? b.rare_from : r < 0.9 ? b.legend_from : b.size;
-  return R(lo, hi - 1);
+function pickMonster() {   // 普通 60%、稀有 30%、传说 10%（Codex #196 规则 1）；没收集过的优先一点
+  const r = Math.random(), want = r < 0.6 ? 'common' : r < 0.9 ? 'rare' : 'legend';
+  const ids = GD.monsters.map((m, i) => i).filter(i => GD.monsters[i].rarity === want), fresh = ids.filter(i => !ST.cards[i]);
+  const pool = fresh.length && Math.random() < 0.6 ? fresh : ids; return pool[R(0, pool.length - 1)];
 }
 function openBook() {
-  const back = CUR; const n = GD.book.size, got = Object.keys(ST.cards).length;
+  const back = CUR; const n = GD.monsters.length, got = Object.keys(ST.cards).length;
   const cards = Array.from({ length: n }, (_, i) => {
     const s = bookSpec(i), k = ST.cards[i] || 0;
     const art = MQGen.monster(s, 'idle'), frame = { common: '#e9dff0', rare: '#9fd0ff', legend: '#ffd23f' }[s.rarity];
@@ -112,14 +113,14 @@ function gensFor(family, tierKey) {
 // ---------------- 怪兽来抢 ----------------
 function battleIntro() {
   CUR = battleIntro; const B = T.monster, s = bookSpec(B.idx);
-  if (B.hp == null) B.hp = B.max = s.hp;
+  if (B.hp == null) B.hp = B.max = s.hp * 2;
   actors(PG('oops'), helperArt(), MQGen.monster(s, 'angry'));
   if (!ST.year) {
     panel(`<div class="say">${t2('raid')(nm(s.name))}</div><div class="say">${t2('year')}</div><div class="row">${[2, 3, 4, 5, 6, 7, 8, 9].map(y => `<button class="alt" data-y="${y}">${t2('yearN')(y)}</button>`).join('')}</div>`);
     $('panel').querySelectorAll('[data-y]').forEach(b => b.onclick = () => { ST.year = +b.dataset.y; save(); battleIntro(); }); return;
   }
   const mine = GD.weapons.filter(w => ST.weapons.includes(w.id));
-  panel(`<div class="say">${t2('raid')(nm(s.name))} ${MQGen.hpBar(B.hp, B.max)}</div><div class="note">${t2('weak')(t2('el')(s.weak))}</div>
+  panel(`<div class="say">${t2('raid')(nm(s.name))} ${MQGen.hpBar(B.hp, B.max)}</div><div class="note">${t2('weak')(nm(GD.families[s.weakFam]))}</div>
     <div class="say">${t2('pickW')}</div><div class="row" id="wl">${mine.map(w => `<button class="alt" data-w="${w.id}" style="display:flex;align-items:center;gap:4px">${MQGen.weapon(w).replace('<svg', '<svg width="34" height="34"')}<span style="text-align:left;font-size:15px">${nm(w)}<br><span class="note">${MQGen.ELEMENTS[w.element].icon} ${nm(GD.families[w.family])}</span></span></button>`).join('')}</div>
     <div class="say">${t2('pickT')}</div><div class="row" id="tl">${Object.entries(GD.tiers).map(([k, v]) => `<button class="alt" data-t="${k}">${nm(v)} (−${v.dmg}❤️)</button>`).join('')}</div>
     <div class="row"><button id="fg" disabled>${t2('fight')}</button></div>`);
@@ -138,7 +139,7 @@ function battleTurn() {
   B.turns = (B.turns || 0) + 1;
   askMQ({ gen, family: w.family, reward: 'battle-' + B.tier, scene: 'monster', chosen: true, onResult: (ok, q, attempt) => {
     if (ok) {
-      const sup = w.element === s.weak, dmg = tier.dmg * (sup ? 2 : 1); B.hp = Math.max(0, B.hp - dmg);
+      const sup = w.family === s.weakFam, dmg = tier.dmg * (sup ? 2 : 1); B.hp = Math.max(0, B.hp - dmg);
       $('wpn').innerHTML = MQGen.weapon(w, 'swing').replace('<svg', '<svg width="60" height="60"');
       $('mid').innerHTML = MQGen.burst(w.element, sup).replace('<svg', '<svg style="height:90px;width:90px"');
       $('right').innerHTML = MQGen.monster(s, B.hp ? 'hit' : 'defeated');
@@ -149,17 +150,20 @@ function battleTurn() {
     $('right').innerHTML = MQGen.monster(s, 'attack');
     let line = '';
     if (T.helper && T.helper.bonus === 'guard') line = t2('guard');
-    else { const n = R(1, 3); if (s.steals === 'coin') { ST.cash -= n; } else { const m = Math.min(n, ST.stock); ST.stock -= m; } line = t2('stole')(n, t2('steal')[s.steals] || ''); hud(); }
+    else { const n = R(1, 3); if (s.steals === 'coin') { ST.cash -= n; } else { const m = Math.min(n, ST.stock); ST.stock -= m; } line = t2('stole')(n, t2('steal')[s.steals] || (LANG === 'zh' ? '颗草莓' : 'strawberries')); hud(); }
     if (attempt < 2) { $('msg2').innerHTML = `<span class="bad">${t2('miss')} ${line}</span>`; return 'retry'; }
     $('msg2').innerHTML = `<span class="bad">${t2('miss')} ${line}</span><div>${t2('ans')(q.show)}</div><div class="row"><button id="nx2">${t2('next')}</button></div>`;
-    $('nx2').onclick = () => B.turns >= 8 ? battleFlee() : battleTurn(); return 'done';
+    $('nx2').onclick = () => B.turns >= 12 ? battleFlee() : battleTurn(); return 'done';
   } });
 }
 function battleWon() {
-  const B = T.monster, s = bookSpec(B.idx); ST.cards[B.idx] = (ST.cards[B.idx] || 0) + 1; const k = ST.cards[B.idx]; T.monsterDone = true; save();
+  const B = T.monster, s = bookSpec(B.idx); ST.cards[B.idx] = (ST.cards[B.idx] || 0) + 1; const k = ST.cards[B.idx]; T.monsterDone = true;
+  let drop = ''; const left = GD.weapons.filter(x => !ST.weapons.includes(x.id) && (x.rarity !== 'legend' || s.rarity === 'legend'));
+  if (left.length && Math.random() < (s.rarity === 'common' ? 0.35 : 0.6)) { const x = left[R(0, left.length - 1)]; ST.weapons.push(x.id); drop = `<div class="say good" style="display:flex;align-items:center;gap:6px">${MQGen.weapon(x).replace('<svg', '<svg width="48" height="48"')}${t2('weaponNew')(nm(x))} <span class="note">${MQGen.ELEMENTS[x.element].icon} ${nm(GD.families[x.family])}</span></div>`; }
+  save();
   CUR = () => { T.idx = 0; serveNext(); };
   actors(PG(), `<div class="mqg-pop" style="background:#fff;border:4px solid ${{ common: '#e9dff0', rare: '#9fd0ff', legend: '#ffd23f' }[s.rarity]};border-radius:14px;padding:6px">${MQGen.monster(s, 'idle').replace('<svg', '<svg width="110" height="110"')}</div>`, helperArt());
-  panel(`<div class="say good">${t2('won')(nm(s.name))}</div><div class="say">${k === 1 ? t2('newCard') : t2('dupe')(k)}</div><div class="row"><button id="nx">${t2('reopen')}</button><button class="alt" id="bk2">${t2('book')}</button></div>`);
+  panel(`<div class="say good">${t2('won')(nm(s.name))}</div><div class="say">${k === 1 ? t2('newCard') : t2('dupe')(k)}</div>${drop}<div class="row"><button id="nx">${t2('reopen')}</button><button class="alt" id="bk2">${t2('book')}</button></div>`);
   $('nx').onclick = CUR; $('bk2').onclick = openBook;
 }
 function battleFlee() { T.monsterDone = true; CUR = () => serveNext(); panel(`<div class="say">${t2('run')}</div><div class="row"><button id="nx">${t2('reopen')}</button></div>`); $('nx').onclick = CUR; }
