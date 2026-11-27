@@ -7,7 +7,9 @@ const P = new URLSearchParams(location.search), id = P.get('ev'), at = P.get('at
 const sleep = ms => new Promise(r => setTimeout(r, ms)), f = document.getElementById('f');
 f.onload = async () => {
   const w = f.contentWindow, d = w.document; w.onerror = (m, s, l) => errs.push(m + '@' + l);
+  let lastQ = null; const ansOf = q => typeof q.answer === 'number' ? String(q.answer) : w.MQ.sfrac(q.answer);
   try {
+    const mk = w.MQ.makeQuestion; w.MQ.makeQuestion = g => (lastQ = mk(g));
     try { w.localStorage.clear(); } catch (e) {}
     d.querySelector('#ll').click(); await sleep(900);
     w.eval(`T.monster = null; const e = MQEv.data().events.find(x => x.id === '${id}'); T.sev = { e, v: MQEv.vars(e), seed: 12345, done: false }; T.inBeat = true; MQEv.run()`);
@@ -15,9 +17,10 @@ f.onload = async () => {
     const e = w.eval('T.sev.e'), v = w.eval('T.sev.v');
     for (let i = 0; i < e.steps.length; i++) {
       if (at === 'q') break;
-      d.getElementById('ans2').value = String(w.MQEngine.evalExpr(e.steps[i].a, v)); d.getElementById('ok2').click(); await sleep(80);
+      d.getElementById('ans2').value = e.steps[i].gen ? ansOf(lastQ) : String(w.MQEngine.evalExpr(e.steps[i].a, v)); d.getElementById('ok2').click(); await sleep(80);
       d.getElementById('nx3').click(); await sleep(80);
     }
+    if (at === 'end' && e.market) { const b = d.querySelector('[data-g]'); if (!b) errs.push('集市没有货'); d.getElementById('nob').click(); await sleep(80); }
     if (at === 'end' && !w.eval('T.sev.done')) errs.push('未结束');
   } catch (x) { errs.push(String(x)); }
   document.title = errs.length ? 'FAIL ' + errs.join(' | ') : 'PASS';

@@ -2,7 +2,7 @@
 // 同一个种子永远画出同一个形象（卡片可复现）；状态（idle/angry/hit/attack/defeated、happy）只改表情与动作。
 // 版本写在文件内（组件库文件名不变）。v2 2026-11-27 覆盖参数；v1 2026-11-27，P-20261126-maths-game。只用原创形象。
 (function (root) {
-  const GEN_VERSION = 2;   // v2：monsterSpec 接受数据表覆盖参数
+  const GEN_VERSION = 3;   // v3：蛋糕新增 tart 挞、roll 瑞士卷、castle 城堡；v2：monsterSpec 接受数据表覆盖参数
 
   // ---------------- 随机数（mulberry32，可复现） ----------------
   function rng(seed) {
@@ -251,7 +251,7 @@
     star: (x, y, k = 1) => `<path d="M${x} ${y - 6 * k} l${1.8 * k} ${4 * k} l${4.2 * k} 0.4 l-${3.2 * k} ${2.8 * k} l1 ${4.2 * k} l-${3.8 * k} -${2.2 * k} l-${3.8 * k} ${2.2 * k} l1 -${4.2 * k} l-${3.2 * k} -${2.8 * k} l${4.2 * k} -0.4Z" fill="#ffd23f"/>`,
     sprinkle: (x, y, k = 1) => `<rect x="${x - 3 * k}" y="${y - 1 * k}" width="${6 * k}" height="${2.2 * k}" rx="1" fill="hsl(${(x * 37 + y * 13) % 360},80%,60%)" transform="rotate(${(x * 53) % 180} ${x} ${y})"/>`,
   };
-  // spec: { type:'cupcake'|'layer'|'donut'|'cookie', tiers:1–5, flavour, topping, per: 每层（或每个）装饰数, wrapper }
+  // spec: { type:'cupcake'|'layer'|'donut'|'cookie'|'tart'|'roll'|'castle', tiers:1–5, flavour, topping, per: 每层（或每个）装饰数, wrapper }
   function cake(spec = {}) {
     const type = spec.type || 'layer', fl = FLAVOURS[spec.flavour] || FLAVOURS.vanilla, top = TOPPINGS[spec.topping] || TOPPINGS.strawberry, per = spec.per ?? 3;
     if (type === 'cupcake') {
@@ -267,6 +267,19 @@
     if (type === 'cookie') {
       const r = rng(per * 31 + 7); let chips = ''; for (let i = 0; i < per; i++) chips += `<circle cx="${32 + r() * 56}" cy="${40 + r() * 46}" r="4.5" fill="#5e3622"/>`;
       return svg(120, 120, `<ellipse cx="60" cy="104" rx="38" ry="5" fill="#0002"/><circle cx="60" cy="62" r="40" fill="#e3b06d" stroke="#c48a45" stroke-width="3"/>${chips}`, 'art-cake');
+    }
+    if (type === 'tart') {   // 水果挞：一圈 per 个装饰
+      let tops = ''; for (let i = 0; i < per; i++) { const a = i / per * Math.PI * 2; tops += top(60 + Math.cos(a) * 30, 62 + Math.sin(a) * 10, 0.85); }
+      return svg(120, 100, `<ellipse cx="60" cy="88" rx="52" ry="6" fill="#0002"/><path d="M8 66 Q8 86 60 86 Q112 86 112 66Z" fill="#e0a45a"/><ellipse cx="60" cy="64" rx="52" ry="16" fill="#f0c070"/><ellipse cx="60" cy="63" rx="44" ry="12" fill="${fl.icing}"/>${tops}`, 'art-cake');
+    }
+    if (type === 'roll') {   // 瑞士卷：截面螺旋
+      let tops = ''; for (let i = 0; i < per; i++) tops += top(20 + (i + 0.5) * 80 / per, 38, 0.8);
+      return svg(120, 100, `<ellipse cx="60" cy="90" rx="52" ry="5" fill="#0002"/><rect x="12" y="40" width="80" height="46" rx="20" fill="${fl.sponge}"/><path d="M12 52 Q50 44 92 52" stroke="${fl.icing}" stroke-width="7" fill="none"/>${tops}<circle cx="92" cy="63" r="23" fill="${fl.sponge}" stroke="#0001"/><path d="M92 63 m0 -3 a3 3 0 1 1 -3 3 a7 7 0 1 1 7 7 a12 12 0 1 1 -12 -12 a17 17 0 1 1 17 17" stroke="${fl.icing}" stroke-width="3.5" fill="none"/>`, 'art-cake');
+    }
+    if (type === 'castle') {   // 城堡蛋糕：主体 + 两座塔，塔顶小旗，per 个装饰在主体上
+      let tops = ''; for (let j = 0; j < per; j++) tops += top(34 + (j + 0.5) * 52 / per, 78, 0.75);
+      const tower = x => `<rect x="${x}" y="34" width="22" height="70" rx="3" fill="${fl.sponge}" stroke="#0001"/><path d="M${x - 3} 36 L${x + 11} 12 L${x + 25} 36Z" fill="${fl.icing}"/><path d="M${x + 11} 12 V2 L${x + 21} 6 L${x + 11} 9" stroke="#999" fill="#ff5a8a"/>`;
+      return svg(120, 120, `<ellipse cx="60" cy="112" rx="56" ry="5" fill="#0002"/><rect x="4" y="104" width="112" height="6" rx="3" fill="#d9d2e0"/>${tower(8)}${tower(90)}<rect x="28" y="58" width="64" height="46" rx="4" fill="${fl.sponge}" stroke="#0001"/><path d="M28 64 Q44 74 60 64 T92 64 V58 H28Z" fill="${fl.icing}"/><path d="M52 104 V88 Q60 78 68 88 V104Z" fill="#7a4a2a"/>${tops}`, 'art-cake');
     }
     // 多层蛋糕：每层宽度递减，每层放 per 个装饰
     const n = Math.max(1, Math.min(5, spec.tiers || 1)), H = 20, W0 = 96, Wn = 40;

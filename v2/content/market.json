@@ -1,0 +1,151 @@
+{
+ "version": 1,
+ "note": "集市货品。kind=weapon 按稀有度从未拥有的武器里抽；其余是怪东西：item 进收集，do 用动作词表（同 events.json）。加货只加一行。",
+ "goods": [
+  {
+   "kind": "weapon",
+   "rarity": "common",
+   "price": 12
+  },
+  {
+   "kind": "weapon",
+   "rarity": "common",
+   "price": 12
+  },
+  {
+   "kind": "weapon",
+   "rarity": "rare",
+   "price": 25
+  },
+  {
+   "kind": "weapon",
+   "rarity": "legend",
+   "price": 60
+  },
+  {
+   "id": "berrybag",
+   "icon": "🍓",
+   "en": "bag of strawberries",
+   "zh": "一袋草莓",
+   "price": 10,
+   "do": [
+    [
+     "stock",
+     "8"
+    ]
+   ],
+   "note": {
+    "en": "+8 strawberries",
+    "zh": "+8 颗草莓"
+   }
+  },
+  {
+   "id": "balloonad",
+   "icon": "🎈",
+   "en": "advert balloon",
+   "zh": "广告气球",
+   "price": 12,
+   "do": [
+    [
+     "cust",
+     1,
+     3
+    ]
+   ],
+   "note": {
+    "en": "+1 customer a day for 3 days",
+    "zh": "3 天每天多 1 位顾客"
+   }
+  },
+  {
+   "id": "fairylights",
+   "icon": "✨",
+   "en": "fairy lights",
+   "zh": "彩灯串",
+   "price": 6,
+   "do": [
+    [
+     "state",
+     "sparkle",
+     3
+    ]
+   ],
+   "note": {
+    "en": "shop sparkles for 3 days",
+    "zh": "小店闪 3 天"
+   }
+  },
+  {
+   "id": "compass",
+   "icon": "🧭",
+   "en": "wormhole compass",
+   "zh": "虫洞罗盘",
+   "price": 15,
+   "item": "compass",
+   "note": {
+    "en": "opens a trip to the past",
+    "zh": "能打开去远古的通道"
+   }
+  },
+  {
+   "id": "coupon",
+   "icon": "🎟️",
+   "en": "portal coupon",
+   "zh": "传送券",
+   "price": 12,
+   "item": "coupon",
+   "note": {
+    "en": "one trip to Candy Land",
+    "zh": "去一次糖果国"
+   }
+  },
+  {
+   "id": "pepper",
+   "icon": "🌶️",
+   "en": "dragon pepper",
+   "zh": "喷火辣椒",
+   "price": 9,
+   "item": "pepper",
+   "note": {
+    "en": "for a fire cake",
+    "zh": "做火焰蛋糕用"
+   }
+  },
+  {
+   "id": "singspoon",
+   "icon": "🥄",
+   "en": "singing spoon",
+   "zh": "会唱歌的勺子",
+   "price": 7,
+   "item": "singspoon",
+   "note": {
+    "en": "it hums while you bake",
+    "zh": "烤蛋糕时会哼歌"
+   }
+  },
+  {
+   "id": "cloak",
+   "icon": "🧥",
+   "en": "invisibility cloak",
+   "zh": "隐身斗篷",
+   "price": 20,
+   "item": "cloak",
+   "note": {
+    "en": "monsters can't find your berries",
+    "zh": "怪兽找不到你的草莓"
+   }
+  },
+  {
+   "id": "magnifier",
+   "icon": "🔍",
+   "en": "treasure magnifier",
+   "zh": "寻宝放大镜",
+   "price": 10,
+   "item": "magnifier",
+   "note": {
+    "en": "spots buried treasure",
+    "zh": "能发现埋着的宝藏"
+   }
+  }
+ ]
+}

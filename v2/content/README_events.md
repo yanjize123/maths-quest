@@ -22,12 +22,21 @@
 | vars | `[lo, hi]` = 随机整数；字符串 = 算式（可用前面的变量）。用“先定答案再反推题面”保证整除 |
 | show | 可选：`{"grid": ["r","c"], "boss": true}` 画群怪 |
 | intro / steps[].q / win.text / lose.text | 中英文本，`{变量}` 自动填；`{place}` 场景名，`{money}` 场景货币 |
-| steps[].a, fam | 答案算式；题型族（记录用） |
+| steps[] 三种题 | 情境题 `{q, a, fam}`；纯算式 `{calc: "{a} × {b}", a}`（题面就是算式，可加 q 作引子）；按水平出题 `{gen: 题型族}`（族名见 game_data.json families，自动选纯算式题型并调难度） |
+| needsItem | 有这件物品才可能出（配合动作 use 用掉）；物品可由事件给或集市卖 |
+| show.cake | 画蛋糕：`{type: cupcake/layer/donut/cookie/tart/roll/castle, tiers, flavour, topping, per, candles}`，值可写变量名 |
+| market | 集市：抽 n 件 content/market.json 的货，买时算找零；steps 可为空 |
 | pass | 答对几题算赢（默认全对） |
 | win.do / lose.do | 动作列表，见下 |
 
-动作词表：`["cash", 算式]` `["stock", 算式]` `["flag", 名, 天数, 概率%?]` `["state", 名, 天数]` `["cust", 增减, 天数]` `["item", 物品名]`（物品在 events.json → items 登记）。
+动作词表：`["use", 物品名]`（用掉一件）`["cash", 算式]` `["stock", 算式]` `["flag", 名, 天数, 概率%?]` `["state", 名, 天数]` `["cust", 增减, 天数]` `["item", 物品名]`（物品在 events.json → items 登记）。
 钩子 `on`：游戏里固定时刻触发的动作（`battle` 打完怪、`oven` 烤箱事件），用来给后面的事件埋前因。
+
+## 任务链（蛋糕订单 → 去别处找材料 → 交货）
+三个事件串起来：下单事件 win/lose 都 `["flag","wantX",4]` → 取材事件 `needs: wantX`（换场景，给物品并 `["flag","xWait",4]`）→ 交货事件 `needs: xWait, needsItem: 物品`（`["use", 物品]`）。例子：princessOrder → starFetch → princessCake。
+
+## 集市货品（content/market.json）
+`{kind:"weapon", rarity, price}` 从未拥有的武器里抽；其余 `{id, icon, en, zh, price, item?, do?, note?}`。道具可开启事件（如 compass → compassTrip）。
 
 ## 何时出事：导演（content/pacing.json，只在这里调节奏）
 - `gap` [2,4]：每答 2–4 道题来一次节拍；`beats` 怪兽与场景事件的权重；`monsterMaxGap` 最多隔几拍必来怪兽；`first` 每天第几题后可来第一拍。

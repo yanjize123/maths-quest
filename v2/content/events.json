@@ -1,5 +1,5 @@
 {
- "version": 3,
+ "version": 4,
  "note": "场景事件全部写在这里；何时出由导演 content/pacing.json 决定；字段说明见 content/README_events.md。",
  "on": {
   "battle": [
@@ -79,6 +79,56 @@
    "icon": "🗺️",
    "en": "treasure map",
    "zh": "藏宝图"
+  },
+  "compass": {
+   "icon": "🧭",
+   "en": "wormhole compass",
+   "zh": "虫洞罗盘"
+  },
+  "pepper": {
+   "icon": "🌶️",
+   "en": "dragon pepper",
+   "zh": "喷火辣椒"
+  },
+  "singspoon": {
+   "icon": "🥄",
+   "en": "singing spoon",
+   "zh": "会唱歌的勺子"
+  },
+  "cloak": {
+   "icon": "🧥",
+   "en": "invisibility cloak",
+   "zh": "隐身斗篷"
+  },
+  "magnifier": {
+   "icon": "🔍",
+   "en": "treasure magnifier",
+   "zh": "寻宝放大镜"
+  },
+  "crown": {
+   "icon": "👑",
+   "en": "princess crown",
+   "zh": "公主王冠"
+  },
+  "pearl": {
+   "icon": "🦪",
+   "en": "magic pearl",
+   "zh": "魔法珍珠"
+  },
+  "cloudCream": {
+   "icon": "🍦",
+   "en": "cloud cream",
+   "zh": "云朵奶油"
+  },
+  "trident": {
+   "icon": "🔱",
+   "en": "mermaid trident charm",
+   "zh": "人鱼三叉戟挂件"
+  },
+  "fireBadge": {
+   "icon": "🔥",
+   "en": "fire chef badge",
+   "zh": "火焰厨师徽章"
   }
  },
  "events": [
@@ -305,6 +355,9 @@
      },
      "a": "gold",
      "fam": "div"
+    },
+    {
+     "gen": "divide"
     }
    ],
    "win": {
@@ -334,7 +387,8 @@
       "1"
      ]
     ]
-   }
+   },
+   "pass": 2
   },
   {
    "id": "dino",
@@ -556,6 +610,9 @@
      },
      "a": "m",
      "fam": "div"
+    },
+    {
+     "gen": "times"
     }
    ],
    "win": {
@@ -585,7 +642,8 @@
       "-k"
      ]
     ]
-   }
+   },
+   "pass": 2
   },
   {
    "id": "magician",
@@ -749,6 +807,9 @@
      },
      "a": "half",
      "fam": "div"
+    },
+    {
+     "gen": "divide"
     }
    ],
    "win": {
@@ -773,7 +834,8 @@
      "zh": "鼹鼠抱起宝箱挖洞跑了！"
     },
     "do": []
-   }
+   },
+   "pass": 2
   },
   {
    "id": "snowroad",
@@ -938,6 +1000,9 @@
      },
      "a": "tot2",
      "fam": "mul"
+    },
+    {
+     "gen": "divide"
     }
    ],
    "win": {
@@ -962,7 +1027,8 @@
      "zh": "糖吃太多，迷迷糊糊滑回了家。"
     },
     "do": []
-   }
+   },
+   "pass": 2
   },
   {
    "id": "giant",
@@ -992,6 +1058,9 @@
      },
      "a": "big",
      "fam": "mul"
+    },
+    {
+     "gen": "times"
     }
    ],
    "win": {
@@ -1019,7 +1088,8 @@
    },
    "states": [
     "giant"
-   ]
+   ],
+   "pass": 1
   },
   {
    "id": "ghost",
@@ -1061,6 +1131,9 @@
      },
      "a": "g*k",
      "fam": "mul"
+    },
+    {
+     "gen": "add"
     }
    ],
    "win": {
@@ -1088,7 +1161,8 @@
    },
    "states": [
     "night"
-   ]
+   ],
+   "pass": 2
   },
   {
    "id": "parade",
@@ -1128,6 +1202,9 @@
      },
      "a": "half",
      "fam": "div"
+    },
+    {
+     "gen": "times"
     }
    ],
    "win": {
@@ -1148,7 +1225,8 @@
      "zh": "你还没准备好，队伍就走远了。"
     },
     "do": []
-   }
+   },
+   "pass": 2
   },
   {
    "id": "robot",
@@ -1187,6 +1265,9 @@
      },
      "a": "cost",
      "fam": "mul"
+    },
+    {
+     "gen": "add"
     }
    ],
    "win": {
@@ -1211,7 +1292,8 @@
      "zh": "错误… 机器人滚回去重新计算了。"
     },
     "do": []
-   }
+   },
+   "pass": 2
   },
   {
    "id": "bosstrio",
@@ -1306,6 +1388,1402 @@
     ],
     "boss": true
    }
+  },
+  {
+   "id": "ovenwarm",
+   "p": 16,
+   "scene": "shop",
+   "icon": "🔥",
+   "vars": {},
+   "intro": {
+    "en": "🔥 The oven needs warming up! Every right answer adds 50 °C.",
+    "zh": "🔥 烤箱要预热！每答对一题升温 50 °C。"
+   },
+   "steps": [
+    {
+     "gen": "times"
+    },
+    {
+     "gen": "add"
+    },
+    {
+     "gen": "divide"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Ding! The oven is hot. +3 coins.",
+     "zh": "叮！烤箱热好了。+3 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "3"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The oven is only lukewarm…",
+     "zh": "烤箱只是温温的…"
+    },
+    "do": []
+   },
+   "pass": 2
+  },
+  {
+   "id": "safe",
+   "p": 12,
+   "scene": "shop",
+   "icon": "🔐",
+   "vars": {
+    "a": [
+     3,
+     9
+    ],
+    "b": [
+     3,
+     9
+    ],
+    "c": [
+     11,
+     49
+    ],
+    "d": [
+     2,
+     9
+    ],
+    "ab": "a*b",
+    "cd": "c+d"
+   },
+   "intro": {
+    "en": "🔐 Grandma's old recipe safe! Each number of the code is a sum.",
+    "zh": "🔐 奶奶的旧配方保险箱！密码的每一位都是一道算式。"
+   },
+   "steps": [
+    {
+     "calc": "{a} × {b}",
+     "a": "ab",
+     "fam": "calc"
+    },
+    {
+     "calc": "{c} + {d}",
+     "a": "cd",
+     "fam": "calc"
+    },
+    {
+     "gen": "times"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Click! Inside: a secret recipe and 5 coins.",
+     "zh": "咔嗒！里面有秘方和 5 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "5"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The safe stays shut.",
+     "zh": "保险箱没打开。"
+    },
+    "do": []
+   },
+   "pass": 2
+  },
+  {
+   "id": "shield",
+   "p": 12,
+   "scene": "shop",
+   "icon": "🛡️",
+   "vars": {},
+   "intro": {
+    "en": "🛡️ A monster hides behind a maths shield! Break it with sums.",
+    "zh": "🛡️ 一只怪兽躲在数学护盾后面！用算式打碎它。"
+   },
+   "steps": [
+    {
+     "gen": "times"
+    },
+    {
+     "gen": "divide"
+    },
+    {
+     "gen": "fraction"
+    },
+    {
+     "gen": "add"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "CRASH! The shield shatters and the monster flees. +4 coins.",
+     "zh": "哗啦！护盾碎了，怪兽逃跑。+4 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "4"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The shield holds. The monster sticks its tongue out and leaves.",
+     "zh": "护盾没破，怪兽吐吐舌头走了。"
+    },
+    "do": []
+   },
+   "pass": 3
+  },
+  {
+   "id": "till",
+   "p": 12,
+   "scene": "shop",
+   "icon": "🧾",
+   "vars": {},
+   "intro": {
+    "en": "🧾 End-of-rush till check! Count fast.",
+    "zh": "🧾 高峰后清点收银机！算快点。"
+   },
+   "steps": [
+    {
+     "gen": "money"
+    },
+    {
+     "gen": "decimal"
+    },
+    {
+     "gen": "add"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "The till is right to the penny! +3 coins.",
+     "zh": "账一分不差！+3 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "3"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "A few coins are missing…",
+     "zh": "少了几个金币…"
+    },
+    "do": [
+     [
+      "cash",
+      "-1"
+     ]
+    ]
+   },
+   "pass": 2
+  },
+  {
+   "id": "slice",
+   "p": 14,
+   "scene": "shop",
+   "icon": "🔪",
+   "vars": {
+    "k": [
+     2,
+     6
+    ],
+    "t": "3*k",
+    "m": [
+     2,
+     5
+    ],
+    "q4": "4*m",
+    "x": [
+     2,
+     5
+    ],
+    "h": "2*x"
+   },
+   "intro": {
+    "en": "🔪 Time to cut the swiss roll into fair slices!",
+    "zh": "🔪 该把瑞士卷公平地切开了！"
+   },
+   "steps": [
+    {
+     "calc": "1/3 × {t}",
+     "a": "k",
+     "fam": "calc"
+    },
+    {
+     "calc": "1/4 × {q4}",
+     "a": "m",
+     "fam": "calc"
+    },
+    {
+     "calc": "1/2 × {h}",
+     "a": "x",
+     "fam": "calc"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Perfect slices! Customers love it. +3 coins.",
+     "zh": "切得刚好！顾客很满意。+3 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "3"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Some slices are too big, some too small.",
+     "zh": "有的太大有的太小。"
+    },
+    "do": []
+   },
+   "show": {
+    "cake": {
+     "type": "roll",
+     "flavour": "strawberry",
+     "topping": "strawberry",
+     "per": 3
+    }
+   },
+   "pass": 2
+  },
+  {
+   "id": "potion",
+   "p": 12,
+   "scene": "shop",
+   "icon": "🧪",
+   "vars": {
+    "a": [
+     2,
+     9
+    ],
+    "x": [
+     2,
+     9
+    ],
+    "p": "a*x",
+    "b": [
+     1,
+     9
+    ],
+    "c": "a*x+b"
+   },
+   "intro": {
+    "en": "🧪 The potion book says: find the missing number to make the cake float!",
+    "zh": "🧪 药水书上说：算出缺的数，蛋糕就能飘起来！"
+   },
+   "steps": [
+    {
+     "calc": "□ × {a} = {p}，□",
+     "a": "x",
+     "fam": "calc"
+    },
+    {
+     "calc": "{a}x + {b} = {c}，x",
+     "a": "x",
+     "fam": "calc"
+    },
+    {
+     "gen": "algebra"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "The cake floats around the shop! +4 coins.",
+     "zh": "蛋糕在店里飘来飘去！+4 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "4"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Fizz… the cake stays on the table.",
+     "zh": "噗嗤… 蛋糕还在桌上。"
+    },
+    "do": []
+   },
+   "pass": 2
+  },
+  {
+   "id": "column",
+   "p": 12,
+   "scene": "shop",
+   "icon": "✏️",
+   "vars": {
+    "a": [
+     23,
+     98
+    ],
+    "b": [
+     3,
+     9
+    ],
+    "ab": "a*b",
+    "q": [
+     12,
+     39
+    ],
+    "d": [
+     3,
+     8
+    ],
+    "qd": "q*d"
+   },
+   "intro": {
+    "en": "✏️ The baking supply bill is long — work it out in columns!",
+    "zh": "✏️ 进货单很长，用竖式算！"
+   },
+   "steps": [
+    {
+     "calc": "{a} × {b}",
+     "a": "ab",
+     "fam": "calc"
+    },
+    {
+     "calc": "{qd} ÷ {d}",
+     "a": "q",
+     "fam": "calc"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Bill checked. The supplier gives you 4 strawberries.",
+     "zh": "账对了，供货商送你 4 颗草莓。"
+    },
+    "do": [
+     [
+      "stock",
+      "4"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "You pay a bit too much.",
+     "zh": "多付了一点钱。"
+    },
+    "do": [
+     [
+      "cash",
+      "-1"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "princessOrder",
+   "p": 9,
+   "scene": "shop",
+   "icon": "👑",
+   "vars": {
+    "t": [
+     2,
+     4
+    ],
+    "f": [
+     2,
+     5
+    ],
+    "tf": "t*f"
+   },
+   "intro": {
+    "en": "👑 A royal dragon letter: \"For my birthday I want a CASTLE cake, sprinkled with stardust sugar from space!\"",
+    "zh": "👑 龙公主来信：“我生日要一个城堡蛋糕，上面要撒太空里的星尘糖！”"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "The castle has {t} towers, each with {f} flags. How many flags?",
+      "zh": "城堡有 {t} 座塔，每座插 {f} 面小旗，一共几面？"
+     },
+     "a": "tf",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Order accepted! Now you need stardust sugar…",
+     "zh": "接单了！现在得去找星尘糖…"
+    },
+    "do": [
+     [
+      "flag",
+      "wantStar",
+      4
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "You accept anyway — but where is stardust sugar?",
+     "zh": "还是接了单——可星尘糖在哪？"
+    },
+    "do": [
+     [
+      "flag",
+      "wantStar",
+      4
+     ]
+    ]
+   },
+   "show": {
+    "cake": {
+     "type": "castle",
+     "flavour": "blueberry",
+     "topping": "star",
+     "per": 3
+    }
+   }
+  },
+  {
+   "id": "starFetch",
+   "p": 100,
+   "scene": "space",
+   "icon": "🌠",
+   "vars": {
+    "n": [
+     2,
+     5
+    ],
+    "k": [
+     3,
+     6
+    ],
+    "tot": "n*k"
+   },
+   "intro": {
+    "en": "🌠 You borrow a rocket and fly to {place} to collect stardust sugar.",
+    "zh": "🌠 你借了一艘火箭，飞到{place}去收集星尘糖。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "{n} comets each leave {k} spoons of stardust. How many spoons?",
+      "zh": "{n} 颗彗星，每颗留下 {k} 勺星尘，一共几勺？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "gen": "times"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "A jar full of stardust sugar!",
+     "zh": "装满一罐星尘糖！"
+    },
+    "do": [
+     [
+      "item",
+      "stardust"
+     ],
+     [
+      "flag",
+      "princessWait",
+      4
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "You catch just enough stardust.",
+     "zh": "勉强收集到一点星尘。"
+    },
+    "do": [
+     [
+      "item",
+      "stardust"
+     ],
+     [
+      "flag",
+      "princessWait",
+      4
+     ]
+    ]
+   },
+   "needs": "wantStar",
+   "pass": 1
+  },
+  {
+   "id": "princessCake",
+   "p": 100,
+   "scene": "shop",
+   "icon": "🏰",
+   "vars": {
+    "t": [
+     2,
+     4
+    ],
+    "h": [
+     3,
+     5
+    ],
+    "all": "t*h",
+    "p": [
+     5,
+     10
+    ],
+    "pp": "2*p"
+   },
+   "intro": {
+    "en": "🏰 Time to bake the castle cake with stardust sugar!",
+    "zh": "🏰 用星尘糖烤城堡蛋糕！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "{t} towers, each {h} sponge layers. How many layers to bake?",
+      "zh": "{t} 座塔，每座 {h} 层蛋糕胚，要烤几层？"
+     },
+     "a": "all",
+     "fam": "mul"
+    },
+    {
+     "gen": "fraction"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "The princess is thrilled! She pays {pp} coins and gives you her crown.",
+     "zh": "龙公主开心极了！付了 {pp} 金币，还送你王冠。"
+    },
+    "do": [
+     [
+      "use",
+      "stardust"
+     ],
+     [
+      "cash",
+      "pp"
+     ],
+     [
+      "item",
+      "crown"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "A tower wobbles, but the princess still pays {p}.",
+     "zh": "一座塔歪了，公主还是付了 {p} 金币。"
+    },
+    "do": [
+     [
+      "use",
+      "stardust"
+     ],
+     [
+      "cash",
+      "p"
+     ]
+    ]
+   },
+   "needs": "princessWait",
+   "needsItem": "stardust",
+   "show": {
+    "cake": {
+     "type": "castle",
+     "flavour": "blueberry",
+     "topping": "star",
+     "per": 4
+    }
+   },
+   "pass": 1
+  },
+  {
+   "id": "mermaidOrder",
+   "p": 8,
+   "scene": "shop",
+   "icon": "🧜",
+   "vars": {
+    "r": [
+     2,
+     4
+    ],
+    "c": [
+     3,
+     6
+    ],
+    "n": "r*c"
+   },
+   "intro": {
+    "en": "🧜 A mermaid in a bubble helmet orders a pearl tart: \"Only real sea pearls on top!\"",
+    "zh": "🧜 戴着泡泡头盔的人鱼订了一个珍珠挞：“上面只能放真正的海底珍珠！”"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "She wants {r} rings of {c} pearls. How many pearls?",
+      "zh": "她要 {r} 圈、每圈 {c} 颗珍珠，一共几颗？"
+     },
+     "a": "n",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Off to the sea!",
+     "zh": "出发去海底！"
+    },
+    "do": [
+     [
+      "flag",
+      "wantPearl",
+      4
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "You'll figure it out — off to the sea!",
+     "zh": "边走边想——去海底！"
+    },
+    "do": [
+     [
+      "flag",
+      "wantPearl",
+      4
+     ]
+    ]
+   },
+   "show": {
+    "cake": {
+     "type": "tart",
+     "flavour": "blueberry",
+     "topping": "blueberry",
+     "per": 8
+    }
+   }
+  },
+  {
+   "id": "pearlDive",
+   "p": 100,
+   "scene": "sea",
+   "icon": "🫧",
+   "vars": {
+    "o": [
+     2,
+     5
+    ],
+    "k": [
+     2,
+     4
+    ],
+    "tot": "o*k"
+   },
+   "intro": {
+    "en": "🫧 You dive into {place}. Giant oysters guard the pearls.",
+    "zh": "🫧 你潜入{place}，大牡蛎守着珍珠。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "{o} oysters each open for {k} pearls. How many pearls?",
+      "zh": "{o} 只牡蛎，每只开壳给 {k} 颗，一共几颗？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "gen": "divide"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "A shell full of magic pearls!",
+     "zh": "一壳魔法珍珠！"
+    },
+    "do": [
+     [
+      "item",
+      "pearl"
+     ],
+     [
+      "flag",
+      "mermaidWait",
+      4
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Just a few pearls, but enough.",
+     "zh": "珍珠不多，但够用。"
+    },
+    "do": [
+     [
+      "item",
+      "pearl"
+     ],
+     [
+      "flag",
+      "mermaidWait",
+      4
+     ]
+    ]
+   },
+   "needs": "wantPearl",
+   "pass": 1
+  },
+  {
+   "id": "pearlTart",
+   "p": 100,
+   "scene": "shop",
+   "icon": "🥧",
+   "vars": {
+    "p": [
+     8,
+     16
+    ],
+    "pl": "p-4"
+   },
+   "intro": {
+    "en": "🥧 Bake the pearl tart!",
+    "zh": "🥧 烤珍珠挞！"
+   },
+   "steps": [
+    {
+     "gen": "fraction"
+    },
+    {
+     "gen": "times"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "The mermaid sings with joy: {p} coins and a trident charm!",
+     "zh": "人鱼开心地唱起歌：{p} 金币和一个三叉戟挂件！"
+    },
+    "do": [
+     [
+      "use",
+      "pearl"
+     ],
+     [
+      "cash",
+      "p"
+     ],
+     [
+      "item",
+      "trident"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The tart is a bit soggy; she pays {pl} coins.",
+     "zh": "挞有点软，她付了 {pl} 金币。"
+    },
+    "do": [
+     [
+      "use",
+      "pearl"
+     ],
+     [
+      "cash",
+      "pl"
+     ]
+    ]
+   },
+   "needs": "mermaidWait",
+   "needsItem": "pearl",
+   "show": {
+    "cake": {
+     "type": "tart",
+     "flavour": "blueberry",
+     "topping": "blueberry",
+     "per": 8
+    }
+   },
+   "pass": 1
+  },
+  {
+   "id": "giantRoll",
+   "p": 8,
+   "scene": "shop",
+   "icon": "☁️",
+   "vars": {
+    "k": [
+     3,
+     8
+    ],
+    "len": "k*10"
+   },
+   "intro": {
+    "en": "☁️ The friendly giant is back: \"A swiss roll as long as a bus, filled with cloud cream!\"",
+    "zh": "☁️ 友好的巨人又来了：“要一条像公交车那么长的瑞士卷，里面夹云朵奶油！”"
+   },
+   "steps": [
+    {
+     "calc": "{k} × 10",
+     "a": "len",
+     "fam": "calc",
+     "q": {
+      "en": "A normal roll is 10 cm. The giant wants one {k} times longer.",
+      "zh": "普通的卷 10 厘米，巨人要长 {k} 倍。"
+     }
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Up to the clouds for cloud cream!",
+     "zh": "上云端取云朵奶油！"
+    },
+    "do": [
+     [
+      "flag",
+      "wantCloud",
+      4
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Up to the clouds anyway!",
+     "zh": "还是先上云端！"
+    },
+    "do": [
+     [
+      "flag",
+      "wantCloud",
+      4
+     ]
+    ]
+   },
+   "show": {
+    "cake": {
+     "type": "roll",
+     "flavour": "vanilla",
+     "topping": "sprinkle",
+     "per": 5
+    }
+   }
+  },
+  {
+   "id": "cloudFetch",
+   "p": 100,
+   "scene": "sky",
+   "icon": "🍦",
+   "vars": {
+    "b": [
+     2,
+     5
+    ],
+    "k": [
+     2,
+     5
+    ],
+    "tot": "b*k"
+   },
+   "intro": {
+    "en": "🍦 A balloon lifts you to {place}. The clouds here are made of cream!",
+    "zh": "🍦 气球把你带上{place}，这里的云是奶油做的！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "You fill {b} buckets with {k} scoops each. How many scoops?",
+      "zh": "装 {b} 桶，每桶 {k} 勺，一共几勺？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "gen": "add"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Buckets of cloud cream!",
+     "zh": "好几桶云朵奶油！"
+    },
+    "do": [
+     [
+      "item",
+      "cloudCream"
+     ],
+     [
+      "flag",
+      "giantWait",
+      4
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Some cream melted, but you have enough.",
+     "zh": "化了一些，不过够用。"
+    },
+    "do": [
+     [
+      "item",
+      "cloudCream"
+     ],
+     [
+      "flag",
+      "giantWait",
+      4
+     ]
+    ]
+   },
+   "needs": "wantCloud",
+   "pass": 1
+  },
+  {
+   "id": "giantDeliver",
+   "p": 100,
+   "scene": "shop",
+   "icon": "🦶",
+   "vars": {
+    "h": [
+     6,
+     12
+    ],
+    "p": "2*h"
+   },
+   "intro": {
+    "en": "🦶 The giant's roll is ready to fill!",
+    "zh": "🦶 巨人的瑞士卷准备夹奶油了！"
+   },
+   "steps": [
+    {
+     "gen": "times"
+    },
+    {
+     "gen": "divide"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "The giant hugs the shop (gently). +{p} coins!",
+     "zh": "巨人轻轻抱了抱小店。+{p} 金币！"
+    },
+    "do": [
+     [
+      "use",
+      "cloudCream"
+     ],
+     [
+      "cash",
+      "p"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "A bit lopsided — the giant pays {h}.",
+     "zh": "有点歪，巨人付 {h} 金币。"
+    },
+    "do": [
+     [
+      "use",
+      "cloudCream"
+     ],
+     [
+      "cash",
+      "h"
+     ]
+    ]
+   },
+   "needs": "giantWait",
+   "needsItem": "cloudCream",
+   "show": {
+    "cake": {
+     "type": "roll",
+     "flavour": "vanilla",
+     "topping": "sprinkle",
+     "per": 6
+    }
+   },
+   "pass": 1
+  },
+  {
+   "id": "compassTrip",
+   "p": 30,
+   "scene": "dino",
+   "icon": "🧭",
+   "vars": {
+    "d": [
+     2,
+     5
+    ],
+    "k": [
+     2,
+     6
+    ],
+    "tot": "d*k"
+   },
+   "intro": {
+    "en": "🧭 The wormhole compass spins… you are pulled back to {place}!",
+    "zh": "🧭 虫洞罗盘飞快转动… 你被拉回了{place}！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "{d} dinosaurs each want {k} cupcakes. How many?",
+      "zh": "{d} 只恐龙，每只要 {k} 个蛋糕，一共几个？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "gen": "times"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "The dinosaurs give you a dinosaur egg!",
+     "zh": "恐龙送你一个恐龙蛋！"
+    },
+    "do": [
+     [
+      "use",
+      "compass"
+     ],
+     [
+      "item",
+      "dinoEgg"
+     ],
+     [
+      "cash",
+      "d"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "You zip home empty-handed.",
+     "zh": "你两手空空飞回家。"
+    },
+    "do": [
+     [
+      "use",
+      "compass"
+     ]
+    ]
+   },
+   "needsItem": "compass",
+   "pass": 1
+  },
+  {
+   "id": "couponTrip",
+   "p": 30,
+   "scene": "candy",
+   "icon": "🎟️",
+   "vars": {
+    "n": [
+     2,
+     5
+    ],
+    "p": [
+     2,
+     6
+    ],
+    "tot": "n*p"
+   },
+   "intro": {
+    "en": "🎟️ You tear the portal coupon — whoosh, {place}!",
+    "zh": "🎟️ 你撕开传送券——呼，{place}！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "Gingerbread kids buy {n} cupcakes at {p} {money} each. How many {money}?",
+      "zh": "姜饼小孩买 {n} 个蛋糕，每个 {p} {money}，一共多少？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "gen": "add"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "A gingerbread friend follows you home!",
+     "zh": "一个姜饼小人跟你回家了！"
+    },
+    "do": [
+     [
+      "use",
+      "coupon"
+     ],
+     [
+      "item",
+      "gingerMan"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Sticky fun, then home.",
+     "zh": "黏糊糊地玩了一圈，回家。"
+    },
+    "do": [
+     [
+      "use",
+      "coupon"
+     ]
+    ]
+   },
+   "needsItem": "coupon",
+   "pass": 1
+  },
+  {
+   "id": "fireCake",
+   "p": 30,
+   "scene": "shop",
+   "icon": "🌶️",
+   "vars": {
+    "t": [
+     2,
+     5
+    ],
+    "k": [
+     3,
+     6
+    ],
+    "tot": "t*k",
+    "p": [
+     8,
+     15
+    ]
+   },
+   "intro": {
+    "en": "🌶️ You crumble dragon pepper into the batter… the cake glows red-hot!",
+    "zh": "🌶️ 你把喷火辣椒碾进面糊… 蛋糕烧得通红！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "{t} fire cakes, each needs {k} pinches of pepper. How many pinches?",
+      "zh": "{t} 个火焰蛋糕，每个要 {k} 撮辣椒，一共几撮？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "gen": "divide"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Dragons queue round the block! +{p} coins and a fire chef badge.",
+     "zh": "小龙们排起长队！+{p} 金币和一枚火焰厨师徽章。"
+    },
+    "do": [
+     [
+      "use",
+      "pepper"
+     ],
+     [
+      "cash",
+      "p"
+     ],
+     [
+      "item",
+      "fireBadge"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Too hot! You cool it down and sell it cheap.",
+     "zh": "太辣了！放凉后便宜卖了。"
+    },
+    "do": [
+     [
+      "use",
+      "pepper"
+     ],
+     [
+      "cash",
+      "3"
+     ]
+    ]
+   },
+   "needsItem": "pepper",
+   "show": {
+    "cake": {
+     "type": "layer",
+     "tiers": 2,
+     "flavour": "strawberry",
+     "topping": "candle",
+     "per": 3,
+     "candles": 3
+    }
+   },
+   "pass": 1
+  },
+  {
+   "id": "digTreasure",
+   "p": 30,
+   "scene": "cave",
+   "icon": "🔍",
+   "vars": {
+    "r": [
+     2,
+     4
+    ],
+    "h": [
+     2,
+     5
+    ],
+    "c": "2*h",
+    "tot": "r*c",
+    "half": "r*h"
+   },
+   "intro": {
+    "en": "🔍 The magnifier glints — there's treasure under the floor! You dig into {place}.",
+    "zh": "🔍 放大镜一闪——地板下有宝藏！你挖进了{place}。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "{r} bags of {c} coins. How many coins?",
+      "zh": "{r} 袋，每袋 {c} 枚，一共几枚？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "Half go to the museum. How many do you keep?",
+      "zh": "一半交给博物馆，你留几枚？"
+     },
+     "a": "half",
+     "fam": "div"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "You keep {half} coins!",
+     "zh": "你留下 {half} 金币！"
+    },
+    "do": [
+     [
+      "use",
+      "magnifier"
+     ],
+     [
+      "cash",
+      "half"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The coins roll into a crack…",
+     "zh": "金币滚进了石缝…"
+    },
+    "do": [
+     [
+      "use",
+      "magnifier"
+     ]
+    ]
+   },
+   "needsItem": "magnifier",
+   "pass": 1
+  },
+  {
+   "id": "peddler",
+   "p": 12,
+   "scene": "shop",
+   "icon": "🧳",
+   "vars": {},
+   "intro": {
+    "en": "🧳 A travelling peddler opens a suitcase full of strange things!",
+    "zh": "🧳 一位流浪商人打开一箱稀奇古怪的东西！"
+   },
+   "steps": [],
+   "win": {
+    "text": {
+     "en": "",
+     "zh": ""
+    },
+    "do": []
+   },
+   "lose": {
+    "text": {
+     "en": "",
+     "zh": ""
+    },
+    "do": []
+   },
+   "market": 3
+  },
+  {
+   "id": "blackmarket",
+   "p": 7,
+   "scene": "cave",
+   "icon": "🕯️",
+   "vars": {},
+   "intro": {
+    "en": "🕯️ Down a secret staircase: the monster night market! Rare weapons glitter.",
+    "zh": "🕯️ 走下秘密楼梯：怪兽夜市！稀有武器闪闪发光。"
+   },
+   "steps": [],
+   "win": {
+    "text": {
+     "en": "",
+     "zh": ""
+    },
+    "do": []
+   },
+   "lose": {
+    "text": {
+     "en": "",
+     "zh": ""
+    },
+    "do": []
+   },
+   "market": 4
+  },
+  {
+   "id": "spacemall",
+   "p": 6,
+   "scene": "space",
+   "icon": "🛸",
+   "vars": {},
+   "intro": {
+    "en": "🛸 A flying-saucer shop docks next to the bakery!",
+    "zh": "🛸 一艘飞碟商店停在了蛋糕店旁边！"
+   },
+   "steps": [],
+   "win": {
+    "text": {
+     "en": "",
+     "zh": ""
+    },
+    "do": []
+   },
+   "lose": {
+    "text": {
+     "en": "",
+     "zh": ""
+    },
+    "do": []
+   },
+   "market": 3
   }
  ]
 }
