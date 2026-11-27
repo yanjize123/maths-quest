@@ -135,7 +135,7 @@ function nextQ(){const R=RUN;if(R.idx>=R.total){finish();return}
  const dots=Array.from({length:R.total},(_,i)=>`<i class="${i<R.res.length?R.res[i]:i==R.idx?'cur':''}"></i>`).join('');
  $('scr').innerHTML=`<div class="row" style="margin:0 0 8px"><button class="ghost" onclick="quitRun()">✕</button><b style="font-size:18px">${esc(R.title)}</b>${R.combo>=2?`<span class="chip">⚡ Combo ×${R.combo}</span>`:''}</div>
  <div class="card"><div class="dots">${dots}</div><div class="mut" style="font-size:13px">${R.q.emoji} Year ${R.q.year} · ${esc(R.q.topic)}</div>
- <div class="qt">${esc(R.q.text)}</div><div class="fmt">${esc(R.q.fmt||'')}</div>
+ <div class="qt">${esc(R.q.text)}</div>${R.q.svg||''}<div class="fmt">${esc(R.q.fmt||'')}</div>
  <input id="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Your answer">
  <div class="keys">${KEYS.map(k=>`<button type="button" onclick="ins('${k}')">${k=='^2'?'x²':k}</button>`).join('')}</div>
  <div class="row" id="btns"><button class="go big" onclick="submit()">Check ✔</button>${R.q.hint?'<button class="ghost" onclick="showHint()">💡 Hint</button>':''}<button class="ghost" onclick="submit(true)">I'm not sure</button></div>

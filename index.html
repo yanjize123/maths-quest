@@ -46,7 +46,7 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
  <div class="tabs"><button id="t1" onclick="tab(1)">⚔️ Practice</button><button id="t5" onclick="tab(5)">🧮 Sets of 10</button><button id="t6" onclick="tab(6)">✍️ Step by step</button><button id="t7" onclick="tab(7)">🔢 Column</button><button id="t2" onclick="tab(2)">🧭 Placement test</button><button id="t3" onclick="tab(3)">🎯 Fix my mistakes</button><button id="t4" onclick="tab(4)">📒 Progress</button></div>
  <div id="ysel" class="row hide" style="margin:0 0 12px"><span class="mut">Question bank:</span><select id="year" onchange="nextQ()"></select></div>
  <div id="qbox" class="q hide"><span class="emo" id="emo"></span><span class="tag" id="tp"></span><span class="tag rev hide" id="rv"></span>
-  <div class="qt" id="qt"></div><div class="fmt" id="fmt"></div>
+  <div class="qt" id="qt"></div><div id="qsvg"></div><div class="fmt" id="fmt"></div>
   <input id="ans" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Your answer">
   <div class="row keys" id="keys"></div>
   <div class="row"><button class="go" id="sub" onclick="submit()">Check ✔</button>
@@ -141,7 +141,7 @@ function nextQ(){if(mode=='pure'&&SET&&SET.n>=10){setDone();return}
  show('qbox');done=false;$('tp').textContent=Q.why=='placement'?Q.strand:`Y${Q.year} · ${Q.topic}`;$('emo').textContent=Q.emoji;
  const lab={set:`🧮 Set · ${SET?SET.n+1:1}/10`,review:'🎯 Bonus mission',gap:'🧩 Gap filler',challenge:'⚡ Challenge',placement:'🧭 Placement'+(Q.progress?` · ${Q.progress.strands_done}/${Q.progress.strands} areas done · Q${Q.progress.asked+1}`:'')}[Q.why];
  $('rv').textContent=lab||'';$('rv').classList.toggle('hide',!lab);
- $('qt').textContent=Q.text;$('fmt').textContent=Q.fmt||'';$('hn').classList.add('hide');$('hn').textContent=Q.hint?'💡 '+Q.hint:'';$('hb').classList.toggle('hide',!Q.hint);
+ $('qt').textContent=Q.text;$('qsvg').innerHTML=Q.svg||'';$('fmt').textContent=Q.fmt||'';$('hn').classList.add('hide');$('hn').textContent=Q.hint?'💡 '+Q.hint:'';$('hb').classList.toggle('hide',!Q.hint);
  $('fb').className='fb hide';$('nx').classList.add('hide');$('sub').disabled=false;$('sk').disabled=false;$('ans').value='';$('ans').disabled=false;$('ans').focus();Q.shownAt=Date.now()}
 function hint(){$('hn').classList.remove('hide');if(Q)Q.hintUsed=true}
 function submit(skip){if(done||!Q)return;const a=$('ans').value;if(!a.trim()&&!skip)return;done=true;
@@ -180,7 +180,7 @@ const BACKEND=(window.MQ_BACKEND||'').trim();
 const CKEY='mathsquest_cred',QKEY='mathsquest_queue';
 let SESSION=null,flushing=false,saveMsg='';
 function backBtn(){if(BACKEND)logout();else home()}
-const PAGE_VERSION='classic page v6 · engine v5 · steps v2 · column v1 · 中文 v1 (2026-11-27)';
+const PAGE_VERSION='classic page v7 · engine v6 · steps v2 · column v1 · 中文 v1 (2026-11-27)';
 function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device · <span title="version">'+PAGE_VERSION+'</span>'}
 function footBackend(){const n=queueGet().filter(e=>SESSION&&e.user===SESSION.name).length;
  $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'} · ${PAGE_VERSION}`:''}

@@ -4,7 +4,7 @@ Maths practice for UK Year 1 to GCSE (Year 11 Higher), as a static web page — 
 
 **Open:** https://yanjize123.github.io/maths-quest/ (classic) · https://yanjize123.github.io/maths-quest/quest.html (adventure)
 
-- 180 question types (86 pure calculation), grouped into a question bank per school year and 7 areas (number, calculation, fractions/decimals/%, measurement, geometry, algebra & ratio, statistics & probability).
+- 216 question types (122 pure calculation), grouped into a question bank per school year and 7 areas (number, calculation, fractions/decimals/%, measurement, geometry, algebra & ratio, statistics & probability).
 - **Placement test:** adaptive, per area; finds the year each area is secure up to.
 - **My plan:** 60% school-year questions, 30% gap fillers from the placement result, 10% challenge.
 - Wrong answers come back as "Bonus missions" (new numbers, same skill) after 2 and 6 questions.
@@ -15,7 +15,13 @@ Maths practice for UK Year 1 to GCSE (Year 11 Higher), as a static web page — 
 - **🧮 Sets of 10:** ten pure calculations from the chosen question bank, timed, with a personal best per bank.
 - **✍️ Step by step:** order-of-operations calculations and linear equations, one line of working at a time. Every line is checked (same value / same solution as the line before); common slips are named (worked left to right instead of BIDMAS, sign not changed when moving a term, bracket not fully multiplied, subtracted instead of divided). Input is tolerant: × x * ·, ÷ : /, 3/4, 2 1/2, 3x, 2(x+1), [ ], ², 1,250, leading =, notes like (÷3). 💡 Next step suggests one line; Show me completes the working. No AI.
 
-Files: `index.html` (interface), `engine.js` (question generators, answer checking, placement and selection logic), `steps.js` (line-by-line checker). Tests: `node tests/test_steps.js`, `node tests/test_gens.js`.
+- **🔢 Column (竖式):** written methods digit by digit — column + and −, short and long ×, division by 1 or 2 digits (zeros in the quotient, remainders), short division. Rows are checked as they are filled; slips are named (quotient digit too big/small, multiplied/subtracted wrongly, forgot to bring down, forgot to carry, smaller-from-bigger). One layout for Chinese 竖式 and English long division; the placeholder 0 is optional. Division comes up twice as often.
+- **Step by step** also covers inequalities (sign flip when × ÷ by a negative) and simultaneous equations (any line true for the answer is accepted).
+- **📒 Progress → 📊 Report:** every answer is logged (type, mode, right/wrong, time, hint, mistake types). Report: 7/30-day totals, weekly accuracy, weak spots with a target, mistake types, level by area and next target.
+- **中文 / EN** button (top right): same data, interface in Chinese or English (word problems without a pattern stay English).
+- More types: missing numbers in any position (incl. remainders), comparing (< > =), rounding (dp, significant figures, up/down in context), estimating, fraction–decimal–percentage, laws of calculation, number pyramids, reading clocks (to 5 min, to the minute, 24-hour, time passed).
+
+Files: `index.html` (interface), `engine.js` (question generators, answer checking, placement and selection logic), `steps.js` (line-by-line checker), `column.js` (written methods), `i18n.js` (Chinese/English). Tests: `node tests/test_steps.js`, `node tests/test_steps2.js`, `node tests/test_column.js`, `node tests/test_gens.js`.
 
 ## Accounts and records (optional backend)
 

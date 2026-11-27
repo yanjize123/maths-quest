@@ -2,7 +2,7 @@
 const M = require("../engine.js"), S = require("../steps.js");
 let pass = 0, fail = 0; const t = (n, c, x = "") => { if (c) pass++; else { fail++; if (fail < 30) console.log("FAIL", n, x); } };
 for (const g of Object.keys(M.G)) for (let i = 0; i < 150; i++) {
-  const q = M.G[g](); if (!/^(a\d|s\d|e\d|c\d|i\d|q\d)/.test(g)) continue;
+  const q = M.G[g](); if (!/^(a\d|s\d|e\d|c\d|i\d|q\d|f\d|k\d|l\d|p\d|r\d|t\d|z\d)/.test(g)) continue;
   t(`self ${g}`, M.check(q, String(q.show).split("  (=")[0]), q.text + " | " + q.show);
   if (q.step) {
     const st = q.step; if (st.type === "eq" || st.type === "calc") { let v; try { v = st.type === "eq" ? S.solve(st.start, "x") : S.evaluate(st.start); } catch (e) { v = null; }
