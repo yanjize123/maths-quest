@@ -402,5 +402,79 @@
     1
    ]
   }
+ },
+ "ingredients": {
+  "flour": {
+   "en": "flour",
+   "zh": "面粉",
+   "unit": {
+    "en": "bags",
+    "zh": "袋"
+   },
+   "icon": "🌾",
+   "box": 5,
+   "price": 3
+  },
+  "egg": {
+   "en": "eggs",
+   "zh": "鸡蛋",
+   "unit": {
+    "en": "eggs",
+    "zh": "个"
+   },
+   "icon": "🥚",
+   "box": 6,
+   "price": 2
+  },
+  "cream": {
+   "en": "cream",
+   "zh": "奶油",
+   "unit": {
+    "en": "tubs",
+    "zh": "盒"
+   },
+   "icon": "🥛",
+   "box": 4,
+   "price": 3
+  },
+  "fruitBox": {
+   "box": 10,
+   "price": 3,
+   "note": "普通水果按盒买，每盒 box 个，价 price（+ 早上涨跌价）；奇幻水果买不到，只能出门找或集市水果包"
+  }
+ },
+ "recipe": {
+  "note": "一个蛋糕用多少原料（mq_cake.js recipe(spec)，纯函数）：水果 = 顶上的个数 nFruit；面粉 = 每层 flour 袋；鸡蛋 = 每层 egg 个；奶油 = 每层 cream 盒（naked 光身蛋糕不用）；small 里的小点心各项按 1 层且鸡蛋减半",
+  "flour": 1,
+  "egg": 2,
+  "cream": 1,
+  "noCream": [
+   "naked"
+  ],
+  "small": [
+   "cupcake",
+   "macaron",
+   "donut"
+  ]
+ },
+ "pricing": {
+  "note": "一个蛋糕卖多少金币（mq_cake.js price(spec)，纯函数）：base + perTier×(层数−1) + ⌈nFruit÷fruitPer⌉ + 装饰/顶饰加价 + 奇幻水果每个 magic",
+  "base": 2,
+  "perTier": 2,
+  "fruitPer": 2,
+  "magic": 1,
+  "style": {
+   "drip": 1,
+   "ruffle": 1,
+   "rosette": 1,
+   "ombre": 1
+  },
+  "topper": {
+   "crown": 2,
+   "macarons": 2,
+   "sparkler": 1,
+   "shards": 1,
+   "monster": 2
+  }
  }
 }

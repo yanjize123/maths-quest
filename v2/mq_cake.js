@@ -3,7 +3,7 @@
 // random(seed, 固定字段) → spec（纯数据，可存、可出题：几层、几个水果）；draw(spec) → SVG；name(spec, lang) → 名字。
 // 表面图案和顶饰复用别的库：场景装饰（MQScene）、怪兽（MQGen.monster）、数字。加水果/图案/顶饰只改 JSON；加形状才改本文件。
 (function (root) {
-  const CAKE_VERSION = 1;   // 2026-11-27 起：订单水果数超过形状 cap 时换形状（画面数得清）
+  const CAKE_VERSION = 2;   // v2：recipe(spec)、price(spec) 纯函数（迁移第 4 步）；   // 2026-11-27 起：订单水果数超过形状 cap 时换形状（画面数得清）
   let CD = null;
   const rng = seed => { let a = seed >>> 0; return () => { a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; };
   const pickW = (o, r) => { const ks = Object.keys(o), tot = ks.reduce((s, k) => s + (o[k].w ?? o[k]), 0); let x = r() * tot; for (const k of ks) if ((x -= (o[k].w ?? o[k])) < 0) return k; return ks[0]; };
@@ -141,11 +141,22 @@
     spots(s.layout, n, t, r).forEach(([x, y], i) => { const f = CD.fruits[s.fruit2 && i % 2 ? s.fruit2 : s.fruit] || CD.fruits.strawberry; g += `<g transform="translate(${x.toFixed(1)} ${(y - 2).toFixed(1)}) scale(${fs.toFixed(2)})">${f.svg}</g>`; });
     return `<svg class="art-cake" viewBox="0 0 ${W} 150" xmlns="http://www.w3.org/2000/svg" overflow="visible">${g}</svg>`;
   }
+  // ---- 配方与价格（纯函数，迁移第 4 步）：同一个 spec 用于订单卡、备料、图鉴；数据在 cakes.json recipe / pricing ----
+  function recipe(s) {
+    const R = CD.recipe, small = R.small.includes(s.shape), t = small ? 1 : (s.tiers || 1), out = {};
+    out[s.fruit] = s.nFruit; if (s.fruit2 && s.fruit2 !== s.fruit) out[s.fruit2] = (out[s.fruit2] || 0);
+    out.flour = R.flour * t; out.egg = small ? Math.max(1, R.egg / 2) : R.egg * t; if (!R.noCream.includes(s.style)) out.cream = R.cream * t;
+    return out;
+  }
+  function price(s) {
+    const P = CD.pricing, f = CD.fruits[s.fruit] || {};
+    return P.base + P.perTier * ((s.tiers || 1) - 1) + Math.ceil(s.nFruit / P.fruitPer) + (P.style[s.style] || 0) + (P.topper[s.topper] || 0) + (f.magic ? P.magic * s.nFruit : 0);
+  }
   function name(s, lang = 'zh') {
     const L = o => (o && (o[lang] || o.en)) || '', f = CD.fruits[s.fruit], f2 = s.fruit2 && CD.fruits[s.fruit2];
     if (lang === 'zh') return `${s.tiers > 1 ? s.tiers + ' 层' : ''}${L(CD.flavours[s.flavour])}${L(CD.styles[s.style])}${L(CD.shapes[s.shape])}，放 ${s.nFruit} 个${L(f)}${f2 && f2 !== f ? '和' + L(f2) : ''}`;
     return `${s.tiers > 1 ? s.tiers + '-tier ' : ''}${L(CD.flavours[s.flavour])} ${L(CD.styles[s.style])} ${L(CD.shapes[s.shape])} with ${s.nFruit} ${L(f)}${f2 && f2 !== f ? ' & ' + L(f2) : ''}`;
   }
-  const api = { CAKE_VERSION, load: d => { CD = d; }, data: () => CD, random, draw, name, shapes: () => Object.keys(SHAPES) };
+  const api = { recipe, price, CAKE_VERSION, load: d => { CD = d; }, data: () => CD, random, draw, name, shapes: () => Object.keys(SHAPES) };
   if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.MQCake = api;
 })(typeof window !== 'undefined' ? window : globalThis);

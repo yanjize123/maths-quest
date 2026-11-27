@@ -40,6 +40,13 @@ for (const [id, s] of Object.entries(SD.scenes)) {
   for (let i = 0; i < 600; i++) { const sp = K.random(i * 7919 + 3), svg = K.draw(sp); seen.add(sp.shape); if (/NaN|undefined/.test(svg)) { ok(false, '蛋糕画不出 ' + JSON.stringify(sp)); break; } ok(K.name(sp, 'zh').length > 3, '蛋糕无名'); }
   for (let n = 1; n <= 10; n++) for (let i = 0; i < 50; i++) { const sp = K.random(i * 31 + n, { nFruit: n }); ok(sp.nFruit <= (C('cakes.json').shapes[sp.shape].cap ?? 9), `水果 ${n} 个放不下 ${sp.shape}`); }
   K.shapes().forEach(x => ok(seen.has(x), '600 个里没有形状 ' + x)); Object.keys(C('cakes.json').shapes).forEach(x => ok(K.shapes().includes(x), 'cakes.json 形状无画法 ' + x)); }
+// ---- 主线（迁移第 4 步）：配方与价格是非负整数；订单用到的水果、题型族都存在 ----
+{ const K = require('../mq_cake.js'), CK = C('cakes.json'), TU = C('tuning.json'); K.load(CK);
+  for (const [, list] of TU.orders.fruitsByDay) list.forEach(f => ok(CK.fruits[f] && !CK.fruits[f].magic, 'fruitsByDay 水果不存在或是奇幻水果 ' + f));
+  Object.keys(TU.mainline.families).forEach(f => ok(GD.families[f], 'mainline 题型族不存在 ' + f));
+  ['flour', 'egg', 'cream', 'fruitBox'].forEach(k => ok(CK.ingredients[k] && CK.ingredients[k].box > 0 && CK.ingredients[k].price > 0, '原料缺 box/price ' + k));
+  for (let i = 0; i < 500; i++) { const f = Object.keys(CK.fruits)[i % Object.keys(CK.fruits).length], sp = K.random(i * 13 + 1, { fruit: f, fruit2: null, nFruit: 1 + (i % 10), tiers: i % 3 ? 1 : 2, shape: i % 3 ? undefined : 'layer' }), r = K.recipe(sp), pr = K.price(sp);
+    ok(Object.values(r).every(n => Number.isInteger(n) && n >= 0) && r[f] === sp.nFruit, '配方不是非负整数 ' + JSON.stringify(r)); ok(Number.isInteger(pr) && pr > 0, '价格不是正整数 ' + pr); ok(Object.keys(r).every(k => CK.fruits[k] || CK.ingredients[k]), '配方原料未登记 ' + JSON.stringify(r)); } }
 // ---- 集市货品 ----
 MD.goods.forEach((g, i) => { ok(g.price > 0, `market ${i} 无价格`); if (g.kind === 'weapon') ok(GD.weapons.some(w => w.rarity === g.rarity), `market ${i} 无该稀有度武器`); else { ok(g.icon && g.en && g.zh, `market ${g.id} 缺图标或名字`); if (g.item) ok(ED.items[g.item], `market ${g.id} 物品未登记 ${g.item}`); acts(g.do, 'market ' + g.id); } });
 // 物品链：needsItem 要求的物品必须有来源（事件给、或集市卖）
@@ -47,6 +54,9 @@ const sources = new Set(MD.goods.map(g => g.item).filter(Boolean)); ED.events.fo
 ED.events.forEach(e => e.needsItem && ok(sources.has(e.needsItem), `event ${e.id}: 物品 ${e.needsItem} 无来源`));
 // ---- 纯算式占比（题步中 gen/calc 的比例，按权重粗算）----
 { let pure = 0, all = 0; ED.events.forEach(e => e.steps.forEach(s => { all += e.p; if (s.gen || s.calc) pure += e.p; })); console.log(`纯算式题步占比（按出现权重）：${(100 * pure / all).toFixed(0)}%`); ok(pure / all >= 0.33, '纯算式占比 < 1/3'); }
+// ---- 语法：所有 js 与 index.html 内联脚本都能解析（行尾注释吞掉代码这类错误会在这里暴露）----
+{ const { execSync } = require('child_process'), dir = path.join(__dirname, '..'); const h = fs.readFileSync(path.join(dir, 'index.html'), 'utf8'), i = h.lastIndexOf('<script>') + 8; fs.writeFileSync('/tmp/_mq_inline.js', h.slice(i, h.indexOf('</script>', i)));
+  for (const f of [...fs.readdirSync(dir).filter(f => f.endsWith('.js')).map(f => path.join(dir, f)), '/tmp/_mq_inline.js']) { try { execSync(`node --check "${f}"`, { stdio: 'pipe' }); } catch (e) { ok(false, '语法错误 ' + path.basename(f) + ' ' + String(e.stderr).split('\n').slice(0, 5).join(' ')); } } }
 // ---- 版本一致（防缓存混用）：index.html 的 BUILD、所有 <script ?b=>、content/build.json 必须相同 ----
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8'), build = C('build.json').build;
 ok((html.match(/const BUILD = '(\w+)'/) || [])[1] === build, `index.html BUILD ≠ build.json ${build}`);

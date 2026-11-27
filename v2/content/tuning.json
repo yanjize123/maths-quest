@@ -31,8 +31,8 @@
  "day": {
   "helper": 22,
   "rush": 15,
-  "layer": 35,
-  "note": "早上掷：换店员、顾客高峰、多层蛋糕订单（%）"
+  "note": "早上掷：换店员、顾客高峰、把一单改成多层蛋糕（%）",
+  "tier": 35
  },
  "morning": [
   {
@@ -119,5 +119,113 @@
   "ageScale": 15,
   "ageCap": 60,
   "note": "同一类别里选哪个事件：没见过的权重 ×neverSeen；见过的 ×(1 + min(距上次出现的事件数, ageCap)/ageScale)（script_framework_v2 §B 类内久未出现优先）"
+ },
+ "orders": {
+  "note": "每天的订单（迁移第 4 步：订单 = 顾客 + 组合库蛋糕 + 数量）。bands 按孩子平均水平（年级，自动定）选数量与水果数；fruitsByDay 第几天起有哪些水果（开始只 2 种，加面粉鸡蛋奶油共 5 种原料，Jize 20:25）；magicPct 篮子里奇幻水果够时用它做一单的机会；tierLevel/tierPct 多层蛋糕（高难度订单）",
+  "bands": [
+   {
+    "maxLevel": 3,
+    "qty": [
+     1,
+     3
+    ],
+    "nFruit": [
+     2,
+     5
+    ]
+   },
+   {
+    "maxLevel": 5,
+    "qty": [
+     2,
+     4
+    ],
+    "nFruit": [
+     3,
+     7
+    ]
+   },
+   {
+    "maxLevel": 7,
+    "qty": [
+     2,
+     6
+    ],
+    "nFruit": [
+     4,
+     9
+    ]
+   },
+   {
+    "maxLevel": 99,
+    "qty": [
+     3,
+     9
+    ],
+    "nFruit": [
+     5,
+     10
+    ]
+   }
+  ],
+  "fruitsByDay": [
+   [
+    1,
+    [
+     "strawberry",
+     "blueberry"
+    ]
+   ],
+   [
+    3,
+    [
+     "strawberry",
+     "blueberry",
+     "cherry"
+    ]
+   ],
+   [
+    5,
+    [
+     "strawberry",
+     "blueberry",
+     "cherry",
+     "kiwi",
+     "orange"
+    ]
+   ],
+   [
+    8,
+    [
+     "strawberry",
+     "blueberry",
+     "cherry",
+     "raspberry",
+     "kiwi",
+     "orange",
+     "grape",
+     "mango",
+     "dragonfruit",
+     "starfruit",
+     "banana"
+    ]
+   ]
+  ],
+  "magicPct": 40,
+  "tierLevel": 4,
+  "tierPct": 35
+ },
+ "mainline": {
+  "note": "主线每单的题：备料（算要几个水果，纯算式）→ 打包连练 drillPerOrder 道（按水平出的纯算式，题型族按 families 权重）→ 收钱（文字题）。早上：今天主要水果算总数 → 差多少 → 买几盒（向上取整）→ 付钱；其余原料企鹅代买。纯算式目标 65–70%（R6）",
+  "drillPerOrder": 1,
+  "families": {
+   "times": 3,
+   "divide": 3,
+   "add": 2,
+   "fraction": 2,
+   "decimal": 1,
+   "mixed": 1
+  },
+  "morningChain": true
  }
 }

@@ -1,5 +1,5 @@
 // sim_days.js — 甜品店多天模拟（node，无浏览器、无参数，秒级）。P-20261126-maths-game 迁移第 1 步（script_framework_v2.md §E-1）。
-// 用真实的 mq_events.js（导演、选事件、结果动作）+ 真实内容 JSON，按页面的一天流程走：进货 1 题 → 每单做蛋糕 1 题、收钱 1 题（每单前问导演要不要出节拍）→ 高峰 → 晚上结账 1 题。
+// 用真实的 mq_events.js（导演、选事件、结果动作）+ 真实内容 JSON，按页面的一天流程走（v010a 主线）：早上进货链 3–4 题 → 每单备料、打包连练、收钱（每单前问导演要不要出节拍）→ 高峰 → 晚上结账 1 题。
 // 假设（写在这里，便于以后对照）：每题一次答对率 75%（只影响打怪轮数）；事件都按“赢”结算（物品、前因照常流转）；集市一半时候买一件带物品的货；不计重试。
 // 输出：每天平均题数、纯算式占比、节拍、换场景次数与最长间隔、怪兽、每个事件第几天第一次出现；写入 tests/sim_report.json。
 // 被 check_requirements.js 调用（module.exports.simulate）。
@@ -33,7 +33,7 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
     if (roll(P('helper')) && rnd() < 1 / GD.helpers.length) nCust++;   // 帮手 extra（6 种之一）
     T.orders = Array(nCust).fill(0); T.idx = 0;   // 导演的每天保底要看剩几单
     const rush = roll(P('rush'));
-    const word = (n = 1) => { for (let i = 0; i < n; i++) { day.q++; ctx.MQEv.count(); sinceBeatQ++; } };
+    const word = (n = 1) => { for (let i = 0; i < n; i++) { while (beat()); day.q++; ctx.MQEv.count(); sinceBeatQ++; } };
     const pureQ = (n, share) => { day.q += n; day.pure += n * share; };   // 节拍内的题不计导演
     const beat = () => {
       const b = ctx.MQEv.due(); if (!b) return false;
@@ -53,9 +53,11 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
       }
       return true;
     };
-    word(1);                                         // 早上进货
-    for (let i = 0; i < nCust; i++) { T.idx = i; while (beat()); word(2); }
-    T.idx = nCust;   // 每单前问导演；做蛋糕 + 收钱
+    const ML = C('tuning.json').mainline, drill = ML.drillPerOrder, mixPure = ['times', 'divide', 'add', 'fraction', 'decimal', 'mixed'].reduce((a, f) => a + famPure(f), 0) / 6;
+    const shopQ = (n, share) => { for (let i = 0; i < n; i++) { while (beat()); day.q++; day.pure += share; ctx.MQEv.count(); sinceBeatQ++; } };   // 店内题：每题前问导演（页面每小步都问，v010a），计导演
+    shopQ(rnd() < 0.8 ? 3 : 1, 1); word(1);          // 早上（v010a）：总数、差几个、几盒（纯算式；够了只 1 道）+ 付钱（文字题）
+    for (let i = 0; i < nCust; i++) { T.idx = i; while (beat()); shopQ(1, 1); shopQ(drill, mixPure); word(1); }   // 每单：备料（纯算式）+ 打包连练 + 收钱（文字题）
+    T.idx = nCust;
     while (beat());
     if (rush) pureQ(10, rushPure);                   // 60 秒高峰约 10 题
     word(1);                                         // 晚上结账

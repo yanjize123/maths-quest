@@ -1,7 +1,7 @@
 // mq_play.js — 甜品店随机事件层 v1（2026-11-27，P-20261126-maths-game）：怪兽来抢（选武器打怪、怪兽卡图鉴）、换店员（动物加成）、顾客高峰（限时）、多层蛋糕订单。
 // 依赖 index.html 里的全局（ST、T、C、LANG、panel、actors、hud、record、save、serveNext、evening、PG、R、money、$），以及 MQ（../engine.js 题目生成）、MQGen（mq_gen.js 画图）。
 // 数据在 content/game_data.json（武器、题型族、店员、事件概率）。版本写在文件内。
-const PLAY_VERSION = 9;   // v9：概率改读 tuning.json（day、monster），game_data.json 不再有 events；v8：随机走 MQRng；打怪每轮的题进入时冻结在 T.monster.q、答完结果存 .last，打赢/跑掉只结算一次（.won/.fled），画面可重画（切换语言不换题）；askMQ 可传入冻结的题与作答次数；v7：怪兽交给导演（不再按天掷），打完回到当前订单（原来重置 idx=0）； v6：每天 2–3 个场景事件（MQEv.pickDay）； v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
+const PLAY_VERSION = 10;   // v10：早上“多层蛋糕”改为把一单换成多层组合库蛋糕（MQShop.tierUp）；店员加价改为每单 +1；v9：概率改读 tuning.json（day、monster），game_data.json 不再有 events；v8：随机走 MQRng；打怪每轮的题进入时冻结在 T.monster.q、答完结果存 .last，打赢/跑掉只结算一次（.won/.fled），画面可重画（切换语言不换题）；askMQ 可传入冻结的题与作答次数；v7：怪兽交给导演（不再按天掷），打完回到当前订单（原来重置 idx=0）； v6：每天 2–3 个场景事件（MQEv.pickDay）； v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
 let GD = null;
 const TX2 = {
   en: { book: '🃏 Monster cards', back: '← Back', bookIntro: (n, m) => `You have caught <b>${n}</b> of ${m} monsters. Defeat monsters with maths to collect their cards!`, unknown: '???',
@@ -64,8 +64,8 @@ function playDay() {
   if (roll(P('helper'))) {
     const h = GD.helpers[R(0, GD.helpers.length - 1)]; T.helper = h;
     if (h.bonus === 'cheap') T.price = Math.max(1, T.price - 1);
-    if (h.bonus === 'price') T.cakePrice += 1;
-    if (h.bonus === 'extra') T.orders.push({ ...T.orders[0] });
+    if (h.bonus === 'price') T.orders.forEach(o => o.price += 1);
+    if (h.bonus === 'extra') T.orders.push({ ...T.orders[0], stage: undefined });
     if (h.bonus === 'guard' && T.ev && T.ev.lost) { ST.stock += T.ev.lost; T.ev.lost = 0; }
     if (h.bonus === 'weapon') { const left = GD.weapons.filter(w => !ST.weapons.includes(w.id) && w.rarity !== 'legend'); if (left.length) { const w = left[R(0, left.length - 1)]; ST.weapons.push(w.id); T.newWeapon = w; } }
   }
@@ -73,11 +73,8 @@ function playDay() {
   // 怪兽与场景事件由导演（mq_events.js due，参数 content/tuning.json pacing）按答题数安排；这里只掷高峰
   if (roll(P('rush'))) T.rush = true;
   // 场景事件（mq_events.js）：前因成立的事件优先；怪兽日也可出“前因事件”（如墙洞），其余事件只在非怪兽日
-  // 多层蛋糕订单：替换一单
-  if (roll(P('layer')) && T.orders.length > 1) {
-    const i = R(1, T.orders.length - 1), fl = ['vanilla', 'chocolate', 'strawberry', 'lemon', 'blueberry', 'mint'][R(0, 5)];
-    T.orders[i] = { who: T.orders[i].who, kind: 'LAYER', p: { n: R(2, 5), k: R(2, 6), fl } };
-  }
+  // 多层蛋糕订单：把一单换成 2–3 层的组合库蛋糕（高难度订单）
+  if (roll(P('tier')) && T.orders.length) MQShop.tierUp(T.orders[R(0, T.orders.length - 1)]);
 }
 function helperBlock() {
   if (!T.helper) return '';
