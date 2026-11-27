@@ -1,0 +1,30 @@
+{
+ "version": 1,
+ "note": "甜品店需求总表（机器可读）。每条 = 家长原话 → 指标 → 阈值 → 检查。改游戏前先读，改完跑 node v2/tests/check_requirements.js；新要求先加一条再动手（Jize 2026-11-27 21:40）。指标名对应 tests/sim_days.js 的输出或 check_requirements.js 里的静态检查；check=manual 的靠人看。人读版说明见 yanjize123/claude projects/P-20261126-maths-game/requirements.md。",
+ "items": [
+  { "id": "R1", "said": "经常出事：每 2–4 题一次", "src": "11-27 21:00/21:05", "metric": "max_beat_gap_questions", "op": "<=", "value": 4 },
+  { "id": "R2a", "said": "怪兽要有，但不压过场景（比例差不多）", "src": "11-27 21:16", "metric": "monster_share", "op": "between", "value": [0.15, 0.35] },
+  { "id": "R2b", "said": "怪兽不能太久不来", "src": "11-27 20:43", "metric": "max_monster_gap_beats", "op": "<=", "value": 5 },
+  { "id": "R3a", "said": "特殊场景要经常出现——孩子不烦的关键", "src": "11-27 21:40, 21:55", "metric": "trip_share", "op": ">=", "value": 0.30 },
+  { "id": "R3b", "said": "特殊场景保底：最多隔 3 个事件", "src": "11-27 21:55", "metric": "max_trip_gap_events", "op": "<=", "value": 3 },
+  { "id": "R3c", "said": "特殊场景保底：每天都有、每天几次", "src": "11-27 21:55", "metric": "trips_per_day", "op": ">=", "value": 2 },
+  { "id": "R3d", "said": "不能有一天一次特殊场景都没有", "src": "11-27 21:05（玩了一会儿只出一个场景）", "metric": "days_without_trip", "op": "<=", "value": 0 },
+  { "id": "R4a", "said": "各类新奇事件都要轮到", "src": "11-27 21:40", "metric": "last_first_seen_day", "op": "<=", "value": 60 },
+  { "id": "R4b", "said": "每个无前因事件都能出现", "src": "11-27 21:40", "metric": "never_seen", "op": "empty" },
+  { "id": "R4c", "said": "不连续同类", "src": "11-27 21:40", "metric": "same_cat_repeats", "op": "<=", "value": 0 },
+  { "id": "R5", "said": "有前因后果（墙洞←打怪、任务链），前因与物品都有来源", "src": "11-27 20:43", "check": "test_events" },
+  { "id": "R6a", "said": "纯算式至少 1/3（底线，按实际答题数）", "src": "11-27 21:16", "metric": "pure_share", "op": ">=", "value": 0.33 },
+  { "id": "R6b", "said": "纯算式目标 65–70%", "src": "11-27 21:16", "metric": "pure_share", "op": ">=", "value": 0.65, "level": "target" },
+  { "id": "R7", "said": "题目沿因果线、数取自当天场景", "src": "11-27 20:17", "check": "manual", "plan": "迁移第 4–5 步（蛋糕主线 + 每日剧本）" },
+  { "id": "R8", "said": "不问年级，按对错自动定难度", "src": "11-27 20:20", "check": "manual" },
+  { "id": "R9", "said": "蛋糕漂亮、多样、随机，数得清", "src": "11-27 21:26", "check": "test_events" },
+  { "id": "R10", "said": "奇幻水果可进货、存放", "src": "11-27 21:40", "check": "test_events" },
+  { "id": "R11", "said": "收集：武器、怪兽卡、蛋糕图鉴、物品", "src": "11-27 20:25, 21:40", "check": "manual" },
+  { "id": "R12", "said": "能买武器和怪东西", "src": "11-27 21:16", "check": "test_events" },
+  { "id": "R13", "said": "加内容只改数据、少写、省 token", "src": "11-27 20:46", "check": "manual" },
+  { "id": "R14", "said": "页面与脚本版本一致，避免旧缓存", "src": "11-27 21:05 复盘", "check": "test_events" },
+  { "id": "R15", "said": "中英切换是同一份内容换语言，内容和进度不变", "src": "11-27 21:51", "check": "lang_switch", "plan": "迁移第 2 步" },
+  { "id": "R16", "said": "随机只有一个来源（可复现）", "src": "script_framework_v2 §A", "check": "static_rng", "plan": "迁移第 2 步" },
+  { "id": "R17", "said": "调节参数只在一处，不到处乱动", "src": "11-27 21:51", "check": "static_tuning", "plan": "迁移第 3 步" }
+ ]
+}
