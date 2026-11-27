@@ -1,7 +1,7 @@
 // mq_play.js — 甜品店随机事件层 v1（2026-11-27，P-20261126-maths-game）：怪兽来抢（选武器打怪、怪兽卡图鉴）、换店员（动物加成）、顾客高峰（限时）、多层蛋糕订单。
 // 依赖 index.html 里的全局（ST、T、C、LANG、panel、actors、hud、record、save、serveNext、evening、PG、R、money、$），以及 MQ（../engine.js 题目生成）、MQGen（mq_gen.js 画图）。
 // 数据在 content/game_data.json（武器、题型族、店员、事件概率）。版本写在文件内。
-const PLAY_VERSION = 5;   // v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
+const PLAY_VERSION = 6;   // v6：每天 2–3 个场景事件（MQEv.pickDay）； v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
 let GD = null;
 const TX2 = {
   en: { book: '🃏 Monster cards', back: '← Back', bookIntro: (n, m) => `You have caught <b>${n}</b> of ${m} monsters. Defeat monsters with maths to collect their cards!`, unknown: '???',
@@ -74,7 +74,7 @@ function playDay() {
   if (ST.noMonster >= 2 || roll(P('monster'))) { T.monster = { idx: pickMonster() }; ST.noMonster = 0; }
   else { ST.noMonster++; if (roll(P('rush'))) T.rush = true; }
   // 场景事件（mq_events.js）：前因成立的事件优先；怪兽日也可出“前因事件”（如墙洞），其余事件只在非怪兽日
-  if (typeof MQEv !== 'undefined') { const x = MQEv.pick(); if (x && (!T.monster || x.e.needs)) T.sev = x; }
+  if (typeof MQEv !== 'undefined') T.sevs = MQEv.pickDay(T.orders.length);
   // 多层蛋糕订单：替换一单
   if (roll(P('layer')) && T.orders.length > 1) {
     const i = R(1, T.orders.length - 1), fl = ['vanilla', 'chocolate', 'strawberry', 'lemon', 'blueberry', 'mint'][R(0, 5)];

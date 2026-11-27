@@ -1,83 +1,479 @@
 {
-  "version": 1,
-  "note": "场景事件全部写在这里；通用执行器 mq_events.js 不需要改。字段说明见 content/README_events.md。",
-  "on": {
-    "battle": [["flag", "bigHit", 1, 45]],
-    "oven":   [["flag", "ovenHot", 2, 100]]
-  },
-  "items": {
-    "stardust": { "icon": "✨", "en": "stardust sugar", "zh": "星尘糖" },
-    "dinoEgg":  { "icon": "🥚", "en": "dinosaur egg", "zh": "恐龙蛋" },
-    "coupon":   { "icon": "🎟️", "en": "portal coupon", "zh": "传送券" },
-    "iceGem":   { "icon": "💎", "en": "ice gem", "zh": "冰晶" }
-  },
-  "events": [
-    {
-      "id": "wallhole", "p": 100, "needs": "bigHit", "scene": "shop", "states": ["hole"], "icon": "🕳️",
-      "vars": { "w": [2, 5], "h": [1, 3], "c": [2, 6], "area": "w*h", "cost": "area*c" },
-      "intro": { "en": "💥 Yesterday's monster crashed into the wall and left a hole {w} m wide and {h} m tall! Something is peeking through…", "zh": "💥 昨天的怪兽撞墙逃走，墙上留下一个宽 {w} 米、高 {h} 米的洞！洞里好像有眼睛在看…" },
-      "steps": [
-        { "q": { "en": "The hole is {w} m by {h} m. What is its area in m²?", "zh": "洞宽 {w} 米、高 {h} 米，面积是多少平方米？" }, "a": "area", "fam": "area" },
-        { "q": { "en": "The builder charges {c} coins per m². How much to fix the wall?", "zh": "工人每平方米收 {c} 金币，修好要多少金币？" }, "a": "cost", "fam": "mul" }
-      ],
-      "win":  { "text": { "en": "🧱 The builder fixes the wall. You pay {cost} coins.", "zh": "🧱 墙修好了，付了 {cost} 金币。" }, "do": [["cash", "-cost"]] },
-      "lose": { "text": { "en": "The builder is confused and will come back later. The hole scares 1 customer away each day for 2 days.", "zh": "工人算不清，过两天再来。这两天墙上有洞，每天少来 1 位顾客。" }, "do": [["state", "hole", 2], ["cust", -1, 2]] }
-    },
-    {
-      "id": "horde", "p": 12, "scene": "shop", "icon": "👾",
-      "vars": { "r": [2, 4], "c": [2, 5], "hp": [2, 4], "n": "r*c", "tot": "n*hp", "m": [3, 6], "dmg": [2, 5], "bhp": "m*dmg" },
-      "show": { "grid": ["r", "c"], "boss": true },
-      "intro": { "en": "👾 A big monster marches in with little monsters in {r} rows of {c}!", "zh": "👾 一只大怪兽带着一群小怪兽冲进来了，小怪排成 {r} 排，每排 {c} 只！" },
-      "steps": [
-        { "q": { "en": "How many little monsters are there?", "zh": "一共有多少只小怪兽？" }, "a": "n", "fam": "mul" },
-        { "q": { "en": "Each little monster has {hp} hearts. How many hearts altogether?", "zh": "每只小怪兽有 {hp} 颗心，一共多少颗心？" }, "a": "tot", "fam": "mul" },
-        { "q": { "en": "The big monster has {bhp} hearts. Your cream cannon takes {dmg} hearts per shot. How many shots?", "zh": "大怪兽有 {bhp} 颗心，奶油炮每发打掉 {dmg} 颗，要打几发？" }, "a": "m", "fam": "div" }
-      ],
-      "pass": 2,
-      "win":  { "text": { "en": "🎉 The whole gang runs away! They drop {n} coins.", "zh": "🎉 一群怪兽全被打跑了！掉下 {n} 金币。" }, "do": [["cash", "n"], ["flag", "bigHit", 1]] },
-      "lose": { "text": { "en": "They grab {r} strawberries and run!", "zh": "它们抢走 {r} 颗草莓跑了！" }, "do": [["stock", "-r"], ["flag", "bigHit", 1]] }
-    },
-    {
-      "id": "wormhole", "p": 10, "scene": "space", "icon": "🌀",
-      "vars": { "n": [2, 5], "k": [1, 3], "rate": [2, 4], "p": "k*rate", "tot": "n*p", "gold": "n*k" },
-      "intro": { "en": "🌀 The oven clock spins backwards… WHOOSH! A wormhole pulls the shop into {place}! An alien wants cupcakes.", "zh": "🌀 烤箱上的钟倒着转… 呼！一个虫洞把小店吸到了{place}！外星人想买蛋糕。" },
-      "steps": [
-        { "q": { "en": "The alien buys {n} cupcakes at {p} {money} each. How many {money}?", "zh": "外星人买 {n} 个蛋糕，每个 {p} {money}，一共多少{money}？" }, "a": "tot", "fam": "mul" },
-        { "q": { "en": "{rate} {money} = 1 coin. How many coins is that?", "zh": "{rate} {money} 换 1 金币，能换多少金币？" }, "a": "gold", "fam": "div" }
-      ],
-      "win":  { "text": { "en": "The wormhole spits you back home with {gold} coins and a bag of stardust sugar!", "zh": "虫洞把你送回家，带回 {gold} 金币和一袋星尘糖！" }, "do": [["cash", "gold"], ["item", "stardust"]] },
-      "lose": { "text": { "en": "The alien pays, but you lose some in the wormhole. Back home with 1 coin.", "zh": "外星人付了钱，可在虫洞里掉了不少，回家只剩 1 金币。" }, "do": [["cash", "1"]] }
-    },
-    {
-      "id": "dino", "p": 8, "needs": "ovenHot", "scene": "dino", "icon": "🦖",
-      "vars": { "d": [2, 5], "e": [3, 6], "need": "d*e", "egg": [2, 4] },
-      "intro": { "en": "🔥 The hot oven from yesterday cracks open time itself… you land in {place}!", "zh": "🔥 昨天过热的烤箱把时空烤裂了… 你掉进了{place}！" },
-      "steps": [
-        { "q": { "en": "{d} baby dinosaurs each want {e} cupcakes. How many cupcakes?", "zh": "{d} 只小恐龙，每只要 {e} 个蛋糕，一共多少个？" }, "a": "need", "fam": "mul" },
-        { "q": { "en": "Mummy dino gives you {egg} eggs for each baby. How many eggs?", "zh": "恐龙妈妈为每只小恐龙送你 {egg} 个蛋，一共几个蛋？" }, "a": "d*egg", "fam": "mul" }
-      ],
-      "win":  { "text": { "en": "A time-wind blows you home with a dinosaur egg!", "zh": "一阵时空风把你吹回家，还带回一个恐龙蛋！" }, "do": [["item", "dinoEgg"]] },
-      "lose": { "text": { "en": "The dinosaurs eat everything and you float home empty-handed.", "zh": "小恐龙把蛋糕吃光了，你两手空空飘回家。" }, "do": [] }
-    },
-    {
-      "id": "portal", "p": 8, "scene": "forest", "icon": "🎟️",
-      "vars": { "s": [2, 5], "d": [2, 6], "km": "s*d", "v": [1, 1] },
-      "intro": { "en": "🎟️ A mysterious fox paid with a portal coupon. It opens… you are in {place}! A delivery is waiting.", "zh": "🎟️ 一只神秘狐狸用传送券付了账，券一打开… 你到了{place}！有一单要送。" },
-      "steps": [
-        { "q": { "en": "On the map 1 cm = {s} km. The cottage is {d} cm away. How many km?", "zh": "地图上 1 厘米代表 {s} 千米，小屋在 {d} 厘米外，实际多少千米？" }, "a": "km", "fam": "mul" }
-      ],
-      "win":  { "text": { "en": "Delivered! The fox gives you another portal coupon.", "zh": "送到了！狐狸又给你一张传送券。" }, "do": [["item", "coupon"], ["cash", "s"]] },
-      "lose": { "text": { "en": "You get lost, but the portal brings you back.", "zh": "你迷路了，好在传送门把你送了回来。" }, "do": [] }
-    },
-    {
-      "id": "freeze", "p": 8, "scene": "shop", "states": ["frozen"], "icon": "🥶",
-      "vars": { "t0": [-9, -2], "rise": "4-t0" },
-      "intro": { "en": "🥶 An ice monster breathed on the shop! The fridge shows {t0} °C.", "zh": "🥶 冰怪对着小店吹了一口气！冰箱显示 {t0} °C。" },
-      "steps": [
-        { "q": { "en": "Strawberries thaw at 4 °C. How many degrees must it warm up from {t0} °C?", "zh": "草莓要到 4 °C 才解冻，从 {t0} °C 要升高多少度？" }, "a": "rise", "fam": "neg" }
-      ],
-      "win":  { "text": { "en": "Thawed in time! You find an ice gem in the fridge.", "zh": "及时解冻！还在冰箱里发现一颗冰晶。" }, "do": [["item", "iceGem"]] },
-      "lose": { "text": { "en": "3 strawberries are ruined by the frost.", "zh": "3 颗草莓被冻坏了。" }, "do": [["stock", "-3"]] }
-    }
+ "version": 2,
+ "note": "场景事件全部写在这里；通用执行器 mq_events.js 不需要改。字段说明见 content/README_events.md。v2：每天必出 perDay 个事件（按 p 加权抽，前因成立的先排），分散在营业开头、中间、结尾。",
+ "on": {
+  "battle": [
+   [
+    "flag",
+    "bigHit",
+    1,
+    45
+   ]
+  ],
+  "oven": [
+   [
+    "flag",
+    "ovenHot",
+    2,
+    100
+   ]
   ]
+ },
+ "items": {
+  "stardust": {
+   "icon": "✨",
+   "en": "stardust sugar",
+   "zh": "星尘糖"
+  },
+  "dinoEgg": {
+   "icon": "🥚",
+   "en": "dinosaur egg",
+   "zh": "恐龙蛋"
+  },
+  "coupon": {
+   "icon": "🎟️",
+   "en": "portal coupon",
+   "zh": "传送券"
+  },
+  "iceGem": {
+   "icon": "💎",
+   "en": "ice gem",
+   "zh": "冰晶"
+  }
+ },
+ "events": [
+  {
+   "id": "wallhole",
+   "p": 100,
+   "needs": "bigHit",
+   "scene": "shop",
+   "states": [
+    "hole"
+   ],
+   "icon": "🕳️",
+   "vars": {
+    "w": [
+     2,
+     5
+    ],
+    "h": [
+     1,
+     3
+    ],
+    "c": [
+     2,
+     6
+    ],
+    "area": "w*h",
+    "cost": "area*c"
+   },
+   "intro": {
+    "en": "💥 Yesterday's monster crashed into the wall and left a hole {w} m wide and {h} m tall! Something is peeking through…",
+    "zh": "💥 昨天的怪兽撞墙逃走，墙上留下一个宽 {w} 米、高 {h} 米的洞！洞里好像有眼睛在看…"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "The hole is {w} m by {h} m. What is its area in m²?",
+      "zh": "洞宽 {w} 米、高 {h} 米，面积是多少平方米？"
+     },
+     "a": "area",
+     "fam": "area"
+    },
+    {
+     "q": {
+      "en": "The builder charges {c} coins per m². How much to fix the wall?",
+      "zh": "工人每平方米收 {c} 金币，修好要多少金币？"
+     },
+     "a": "cost",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "🧱 The builder fixes the wall. You pay {cost} coins.",
+     "zh": "🧱 墙修好了，付了 {cost} 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "-cost"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The builder is confused and will come back later. The hole scares 1 customer away each day for 2 days.",
+     "zh": "工人算不清，过两天再来。这两天墙上有洞，每天少来 1 位顾客。"
+    },
+    "do": [
+     [
+      "state",
+      "hole",
+      2
+     ],
+     [
+      "cust",
+      -1,
+      2
+     ]
+    ]
+   }
+  },
+  {
+   "id": "horde",
+   "p": 12,
+   "scene": "shop",
+   "icon": "👾",
+   "vars": {
+    "r": [
+     2,
+     4
+    ],
+    "c": [
+     2,
+     5
+    ],
+    "hp": [
+     2,
+     4
+    ],
+    "n": "r*c",
+    "tot": "n*hp",
+    "m": [
+     3,
+     6
+    ],
+    "dmg": [
+     2,
+     5
+    ],
+    "bhp": "m*dmg"
+   },
+   "show": {
+    "grid": [
+     "r",
+     "c"
+    ],
+    "boss": true
+   },
+   "intro": {
+    "en": "👾 A big monster marches in with little monsters in {r} rows of {c}!",
+    "zh": "👾 一只大怪兽带着一群小怪兽冲进来了，小怪排成 {r} 排，每排 {c} 只！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "How many little monsters are there?",
+      "zh": "一共有多少只小怪兽？"
+     },
+     "a": "n",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "Each little monster has {hp} hearts. How many hearts altogether?",
+      "zh": "每只小怪兽有 {hp} 颗心，一共多少颗心？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "The big monster has {bhp} hearts. Your cream cannon takes {dmg} hearts per shot. How many shots?",
+      "zh": "大怪兽有 {bhp} 颗心，奶油炮每发打掉 {dmg} 颗，要打几发？"
+     },
+     "a": "m",
+     "fam": "div"
+    }
+   ],
+   "pass": 2,
+   "win": {
+    "text": {
+     "en": "🎉 The whole gang runs away! They drop {n} coins.",
+     "zh": "🎉 一群怪兽全被打跑了！掉下 {n} 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "n"
+     ],
+     [
+      "flag",
+      "bigHit",
+      1
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "They grab {r} strawberries and run!",
+     "zh": "它们抢走 {r} 颗草莓跑了！"
+    },
+    "do": [
+     [
+      "stock",
+      "-r"
+     ],
+     [
+      "flag",
+      "bigHit",
+      1
+     ]
+    ]
+   }
+  },
+  {
+   "id": "wormhole",
+   "p": 10,
+   "scene": "space",
+   "icon": "🌀",
+   "vars": {
+    "n": [
+     2,
+     5
+    ],
+    "k": [
+     1,
+     3
+    ],
+    "rate": [
+     2,
+     4
+    ],
+    "p": "k*rate",
+    "tot": "n*p",
+    "gold": "n*k"
+   },
+   "intro": {
+    "en": "🌀 The oven clock spins backwards… WHOOSH! A wormhole pulls the shop into {place}! An alien wants cupcakes.",
+    "zh": "🌀 烤箱上的钟倒着转… 呼！一个虫洞把小店吸到了{place}！外星人想买蛋糕。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "The alien buys {n} cupcakes at {p} {money} each. How many {money}?",
+      "zh": "外星人买 {n} 个蛋糕，每个 {p} {money}，一共多少{money}？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "{rate} {money} = 1 coin. How many coins is that?",
+      "zh": "{rate} {money} 换 1 金币，能换多少金币？"
+     },
+     "a": "gold",
+     "fam": "div"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "The wormhole spits you back home with {gold} coins and a bag of stardust sugar!",
+     "zh": "虫洞把你送回家，带回 {gold} 金币和一袋星尘糖！"
+    },
+    "do": [
+     [
+      "cash",
+      "gold"
+     ],
+     [
+      "item",
+      "stardust"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The alien pays, but you lose some in the wormhole. Back home with 1 coin.",
+     "zh": "外星人付了钱，可在虫洞里掉了不少，回家只剩 1 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "1"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "dino",
+   "p": 8,
+   "needs": "ovenHot",
+   "scene": "dino",
+   "icon": "🦖",
+   "vars": {
+    "d": [
+     2,
+     5
+    ],
+    "e": [
+     3,
+     6
+    ],
+    "need": "d*e",
+    "egg": [
+     2,
+     4
+    ]
+   },
+   "intro": {
+    "en": "🔥 The hot oven from yesterday cracks open time itself… you land in {place}!",
+    "zh": "🔥 昨天过热的烤箱把时空烤裂了… 你掉进了{place}！"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "{d} baby dinosaurs each want {e} cupcakes. How many cupcakes?",
+      "zh": "{d} 只小恐龙，每只要 {e} 个蛋糕，一共多少个？"
+     },
+     "a": "need",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "Mummy dino gives you {egg} eggs for each baby. How many eggs?",
+      "zh": "恐龙妈妈为每只小恐龙送你 {egg} 个蛋，一共几个蛋？"
+     },
+     "a": "d*egg",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "A time-wind blows you home with a dinosaur egg!",
+     "zh": "一阵时空风把你吹回家，还带回一个恐龙蛋！"
+    },
+    "do": [
+     [
+      "item",
+      "dinoEgg"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "The dinosaurs eat everything and you float home empty-handed.",
+     "zh": "小恐龙把蛋糕吃光了，你两手空空飘回家。"
+    },
+    "do": []
+   }
+  },
+  {
+   "id": "portal",
+   "p": 8,
+   "scene": "forest",
+   "icon": "🎟️",
+   "vars": {
+    "s": [
+     2,
+     5
+    ],
+    "d": [
+     2,
+     6
+    ],
+    "km": "s*d",
+    "v": [
+     1,
+     1
+    ]
+   },
+   "intro": {
+    "en": "🎟️ A mysterious fox paid with a portal coupon. It opens… you are in {place}! A delivery is waiting.",
+    "zh": "🎟️ 一只神秘狐狸用传送券付了账，券一打开… 你到了{place}！有一单要送。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "On the map 1 cm = {s} km. The cottage is {d} cm away. How many km?",
+      "zh": "地图上 1 厘米代表 {s} 千米，小屋在 {d} 厘米外，实际多少千米？"
+     },
+     "a": "km",
+     "fam": "mul"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Delivered! The fox gives you another portal coupon.",
+     "zh": "送到了！狐狸又给你一张传送券。"
+    },
+    "do": [
+     [
+      "item",
+      "coupon"
+     ],
+     [
+      "cash",
+      "s"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "You get lost, but the portal brings you back.",
+     "zh": "你迷路了，好在传送门把你送了回来。"
+    },
+    "do": []
+   }
+  },
+  {
+   "id": "freeze",
+   "p": 8,
+   "scene": "shop",
+   "states": [
+    "frozen"
+   ],
+   "icon": "🥶",
+   "vars": {
+    "t0": [
+     -9,
+     -2
+    ],
+    "rise": "4-t0"
+   },
+   "intro": {
+    "en": "🥶 An ice monster breathed on the shop! The fridge shows {t0} °C.",
+    "zh": "🥶 冰怪对着小店吹了一口气！冰箱显示 {t0} °C。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "Strawberries thaw at 4 °C. How many degrees must it warm up from {t0} °C?",
+      "zh": "草莓要到 4 °C 才解冻，从 {t0} °C 要升高多少度？"
+     },
+     "a": "rise",
+     "fam": "neg"
+    }
+   ],
+   "win": {
+    "text": {
+     "en": "Thawed in time! You find an ice gem in the fridge.",
+     "zh": "及时解冻！还在冰箱里发现一颗冰晶。"
+    },
+    "do": [
+     [
+      "item",
+      "iceGem"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "3 strawberries are ruined by the frost.",
+     "zh": "3 颗草莓被冻坏了。"
+    },
+    "do": [
+     [
+      "stock",
+      "-3"
+     ]
+    ]
+   }
+  }
+ ],
+ "perDay": [
+  2,
+  3
+ ]
 }
