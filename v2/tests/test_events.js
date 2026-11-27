@@ -5,10 +5,10 @@ const E = require('../mq_engine.js'), S = require('../mq_scene.js');
 const C = f => JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'content', f), 'utf8'));
 const SD = C('scenes.json'), ED = C('events.json'); S.load(SD);
 let fail = 0; const ok = (c, m) => { if (!c) { fail++; console.log('FAIL', m); } };
-const OPS = { cash: 1, stock: 1, flag: 1, state: 1, cust: 1, item: 1, use: 1 };
+const OPS = { cash: 1, stock: 1, flag: 1, state: 1, cust: 1, item: 1, use: 1, fruit: 1, usefruit: 1 };
 const GD = C('game_data.json'), MD = C('market.json'), CAKES = { cupcake: 1, layer: 1, donut: 1, cookie: 1, tart: 1, roll: 1, castle: 1 };
 const flagsSet = new Set();
-const acts = (list, where) => (list || []).forEach(a => { ok(OPS[a[0]], `${where}: 未知动作 ${a[0]}`); if (a[0] === 'flag') flagsSet.add(a[1]); if (a[0] === 'state') ok(SD.states[a[1]], `${where}: 无状态 ${a[1]}`); if (a[0] === 'item' || a[0] === 'use') ok(ED.items[a[1]], `${where}: 无物品 ${a[1]}`); });
+const acts = (list, where) => (list || []).forEach(a => { ok(OPS[a[0]], `${where}: 未知动作 ${a[0]}`); if (a[0] === 'flag') flagsSet.add(a[1]); if (a[0] === 'state') ok(SD.states[a[1]], `${where}: 无状态 ${a[1]}`); if (a[0] === 'item' || a[0] === 'use') ok(ED.items[a[1]], `${where}: 无物品 ${a[1]}`); if (a[0] === 'fruit') ok(C('cakes.json').fruits[a[1]], `${where}: 无水果 ${a[1]}`); });
 Object.entries(ED.on).forEach(([k, l]) => acts(l, 'on.' + k));
 const ids = new Set();
 for (const e of ED.events) {
@@ -16,12 +16,13 @@ for (const e of ED.events) {
   ok(SD.scenes[e.scene], w + ' 无场景 ' + e.scene); (e.states || []).forEach(s => ok(SD.states[s], w + ' 无状态 ' + s));
   acts(e.win.do, w + '.win'); acts(e.lose.do, w + '.lose');
   if (e.needsItem) ok(ED.items[e.needsItem], w + ' needsItem 无物品 ' + e.needsItem);
-  const CK = C('cakes.json'); if (e.show && e.show.cake) { const c = e.show.cake; if (c.type) ok(CAKES[c.type], w + ' 蛋糕类型 ' + c.type); for (const [k, tab] of [['shape', 'shapes'], ['fruit', 'fruits'], ['fruit2', 'fruits'], ['topper', 'toppers'], ['pattern', 'patterns'], ['style', 'styles'], ['flavour', 'flavours']]) if (c[k]) ok(CK[tab][c[k]], `${w} 蛋糕${k} 不存在 ${c[k]}`); }
+  const CK = C('cakes.json'); if (e.show && e.show.cake) { const c = e.show.cake; if (c.type) ok(CAKES[c.type], w + ' 蛋糕类型 ' + c.type); for (const [k, tab] of [['shape', 'shapes'], ['fruit', 'fruits'], ['fruit2', 'fruits'], ['topper', 'toppers'], ['pattern', 'patterns'], ['style', 'styles'], ['flavour', 'flavours']]) if (c[k] && !String(c[k]).startsWith('$')) ok(CK[tab][c[k]], `${w} 蛋糕${k} 不存在 ${c[k]}`); }
   ok(e.steps.length || e.market, w + ' 没有题也不是集市');
+  ok(C('pacing.json').mix[e.cat], w + ' 没有类别 cat 或类别不在 pacing.mix 里: ' + e.cat);
   e.steps.forEach((s, i) => { if (s.gen) ok(GD.families[s.gen], `${w} 步 ${i} 题型族不存在 ${s.gen}`); else ok(s.a != null && (s.q || s.calc), `${w} 步 ${i} 缺 q/calc 或 a`); });
   for (let n = 0; n < 500; n++) {
     const v = {}; for (const [k, d] of Object.entries(e.vars || {})) v[k] = Array.isArray(d) ? d[0] + Math.floor(Math.random() * (d[1] - d[0] + 1)) : E.evalExpr(d, v);
-    v.place = 'X'; v.money = 'Y'; if (e.show && e.show.cake && !e.show.cake.type) Object.assign(v, { cakeName: 'Z', nFruit: 3 + (n % 6), tiers: e.show.cake.tiers || 1 + (n % 3) });
+    v.place = 'X'; v.money = 'Y'; if (e.show && e.show.cake && !e.show.cake.type) Object.assign(v, { cakeName: 'Z', nFruit: 3 + (n % 6), tiers: e.show.cake.tiers || 1 + (n % 3) }); if (e.show && e.show.cake && e.show.cake.fruit === '$pantry') Object.assign(v, { have: (v.k || 1) * v.nFruit + (n % 5), fruitName: 'F' });
     const texts = [e.intro, ...(e.market ? [] : [e.win.text, e.lose.text]), ...e.steps.filter(s => s.q).map(s => s.q), ...e.steps.filter(s => s.calc).map(s => ({ en: s.calc, zh: s.calc }))];
     for (const t of texts) for (const L of ['en', 'zh']) { const f = String(t[L] || '').replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m)); if (/\{\w+\}/.test(f) || !t[L]) { ok(false, `${w} ${L} 占位符未填或缺文字: ${f.slice(0, 60)}`); n = 500; } }
     for (const s of e.steps.filter(s => !s.gen)) { const a = E.evalExpr(s.a, v); if (!(Number.isInteger(a) && a >= 0)) { ok(false, `${w} 答案 ${s.a}=${a} 不是非负整数 ${JSON.stringify(v)}`); n = 500; } }
@@ -61,6 +62,13 @@ ctx.MQEv.load().then(() => {
     if (b) { beats++; maxGap = Math.max(maxGap, q - last); last = q; if (b === 'monster') { mon++; sinceMon = 0; ctx.MQEv.on('battle'); } else { sinceMon++; maxNoMon = Math.max(maxNoMon, sinceMon); ctx.T.sev.done = true; ctx.T.inBeat = false; } }
   }
   ok(maxGap <= PD.gap[1], `节拍最大间隔 ${maxGap} > ${PD.gap[1]}`); ok(beats >= 200 / PD.gap[1], `200 题只有 ${beats} 拍`); ok(maxNoMon <= PD.monsterMaxGap, `连续 ${maxNoMon} 拍没怪兽`);
+  // 类别比例与保底：3000 次选事件（物品与水果篮都给满），换场景占比、最长间隔、不连续同类、每个事件都出现过
+  Object.keys(ED.items).forEach(k => ctx.ST.items[k] = 99); ctx.ST.pantry = { moonberry: 20 }; ctx.ST.flags = {};
+  const cnt = {}, catN = {}; let gapT = 0, maxGapT = 0, prev = null, rep = 0;
+  for (let i = 0; i < 3000; i++) { const x = ctx.MQEv.chooseEvent().e; cnt[x.id] = (cnt[x.id] || 0) + 1; catN[x.cat] = (catN[x.cat] || 0) + 1; if (!x.needs) { if (x.cat === prev) rep++; prev = x.cat; } gapT = x.cat === 'trip' ? 0 : gapT + 1; maxGapT = Math.max(maxGapT, gapT); ctx.ST.flags = {}; }
+  ED.events.filter(e => !e.needs).forEach(e => ok(cnt[e.id], `事件 ${e.id} 3000 次里一次没出（被别的类别冲淡）`));
+  ok(catN.trip / 3000 >= 0.3, `换场景只占 ${(100 * catN.trip / 3000).toFixed(0)}%`); ok(maxGapT <= PD.tripMaxGap, `换场景最长隔 ${maxGapT} 拍`); ok(rep === 0, `同类连续出现 ${rep} 次`);
+  console.log('事件类别占比：' + Object.entries(catN).map(([k, n]) => `${k} ${(100 * n / 3000).toFixed(0)}%`).join('，') + `；换场景最长隔 ${maxGapT} 拍`);
   console.log(`导演模拟 200 题：${beats} 拍（怪兽 ${mon}），最大间隔 ${maxGap} 题`);
   console.log(fail ? `${fail} 项失败` : `全部通过：${ED.events.length} 个事件、${Object.keys(SD.scenes).length} 个场景、${Object.keys(SD.sprites).length} 个装饰`);
   process.exit(fail ? 1 : 0);

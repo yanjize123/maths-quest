@@ -1,5 +1,5 @@
 {
- "version": 5,
+ "version": 6,
  "note": "场景事件全部写在这里；何时出由导演 content/pacing.json 决定；字段说明见 content/README_events.md。",
  "on": {
   "battle": [
@@ -213,7 +213,8 @@
       2
      ]
     ]
-   }
+   },
+   "cat": "story"
   },
   {
    "id": "horde",
@@ -316,7 +317,8 @@
       1
      ]
     ]
-   }
+   },
+   "cat": "story"
   },
   {
    "id": "wormhole",
@@ -367,8 +369,8 @@
    ],
    "win": {
     "text": {
-     "en": "The wormhole spits you back home with {gold} coins and a bag of stardust sugar!",
-     "zh": "虫洞把你送回家，带回 {gold} 金币和一袋星尘糖！"
+     "en": "The wormhole spits you back home with {gold} coins and a bag of stardust sugar! (+3 local magic fruit)",
+     "zh": "虫洞把你送回家，带回 {gold} 金币和一袋星尘糖！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -378,6 +380,11 @@
      [
       "item",
       "stardust"
+     ],
+     [
+      "fruit",
+      "starmelon",
+      "3"
      ]
     ]
    },
@@ -393,7 +400,8 @@
      ]
     ]
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "trip"
   },
   {
    "id": "dino",
@@ -440,13 +448,18 @@
    ],
    "win": {
     "text": {
-     "en": "A time-wind blows you home with a dinosaur egg!",
-     "zh": "一阵时空风把你吹回家，还带回一个恐龙蛋！"
+     "en": "A time-wind blows you home with a dinosaur egg! (+3 local magic fruit)",
+     "zh": "一阵时空风把你吹回家，还带回一个恐龙蛋！（+3 个当地奇幻水果）"
     },
     "do": [
      [
       "item",
       "dinoEgg"
+     ],
+     [
+      "fruit",
+      "flameberry",
+      "3"
      ]
     ]
    },
@@ -456,7 +469,8 @@
      "zh": "小恐龙把蛋糕吃光了，你两手空空飘回家。"
     },
     "do": []
-   }
+   },
+   "cat": "trip"
   },
   {
    "id": "portal",
@@ -494,8 +508,8 @@
    ],
    "win": {
     "text": {
-     "en": "Delivered! The fox gives you another portal coupon.",
-     "zh": "送到了！狐狸又给你一张传送券。"
+     "en": "Delivered! The fox gives you another portal coupon. (+3 local magic fruit)",
+     "zh": "送到了！狐狸又给你一张传送券。（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -505,6 +519,11 @@
      [
       "cash",
       "s"
+     ],
+     [
+      "fruit",
+      "moonberry",
+      "3"
      ]
     ]
    },
@@ -514,7 +533,8 @@
      "zh": "你迷路了，好在传送门把你送了回来。"
     },
     "do": []
-   }
+   },
+   "cat": "trip"
   },
   {
    "id": "freeze",
@@ -568,7 +588,8 @@
       "-3"
      ]
     ]
-   }
+   },
+   "cat": "story"
   },
   {
    "id": "tornado",
@@ -622,8 +643,8 @@
    ],
    "win": {
     "text": {
-     "en": "Soft landing! The birds paid {n} coins and left cloud candy.",
-     "zh": "平稳落地！云雀付了 {n} 金币，还留下云朵糖。"
+     "en": "Soft landing! The birds paid {n} coins and left cloud candy. (+3 local magic fruit)",
+     "zh": "平稳落地！云雀付了 {n} 金币，还留下云朵糖。（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -633,6 +654,11 @@
      [
       "item",
       "cloudCandy"
+     ],
+     [
+      "fruit",
+      "cloudplum",
+      "3"
      ]
     ]
    },
@@ -648,7 +674,8 @@
      ]
     ]
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "trip"
   },
   {
    "id": "magician",
@@ -718,7 +745,8 @@
    },
    "states": [
     "sparkle"
-   ]
+   ],
+   "cat": "cake"
   },
   {
    "id": "mirror",
@@ -772,7 +800,8 @@
      "zh": "分身搞糊涂了，又走回镜子里。"
     },
     "do": []
-   }
+   },
+   "cat": "story"
   },
   {
    "id": "treasure",
@@ -819,8 +848,8 @@
    ],
    "win": {
     "text": {
-     "en": "You climb out with {half} coins and a treasure map!",
-     "zh": "你带着 {half} 金币和一张藏宝图爬了出来！"
+     "en": "You climb out with {half} coins and a treasure map! (+3 local magic fruit)",
+     "zh": "你带着 {half} 金币和一张藏宝图爬了出来！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -830,6 +859,11 @@
      [
       "item",
       "treasureMap"
+     ],
+     [
+      "fruit",
+      "rainbowgrape",
+      "3"
      ]
     ]
    },
@@ -840,7 +874,8 @@
     },
     "do": []
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "trip"
   },
   {
    "id": "snowroad",
@@ -874,8 +909,8 @@
    ],
    "win": {
     "text": {
-     "en": "All delivered! The driver gives you {k} extra strawberries.",
-     "zh": "全部运到！司机多送你 {k} 颗草莓。"
+     "en": "All delivered! The driver gives you {k} extra strawberries. (+3 local magic fruit)",
+     "zh": "全部运到！司机多送你 {k} 颗草莓。（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -885,6 +920,11 @@
      [
       "item",
       "iceGem"
+     ],
+     [
+      "fruit",
+      "crystalpear",
+      "3"
      ]
     ]
    },
@@ -899,7 +939,8 @@
       "n"
      ]
     ]
-   }
+   },
+   "cat": "trip"
   },
   {
    "id": "clockstop",
@@ -958,7 +999,8 @@
    },
    "states": [
     "clock"
-   ]
+   ],
+   "cat": "story"
   },
   {
    "id": "candyland",
@@ -1012,8 +1054,8 @@
    ],
    "win": {
     "text": {
-     "en": "A gingerbread friend comes home with you!",
-     "zh": "一个姜饼小人跟着你回家了！"
+     "en": "A gingerbread friend comes home with you! (+3 local magic fruit)",
+     "zh": "一个姜饼小人跟着你回家了！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -1023,6 +1065,11 @@
      [
       "cash",
       "r"
+     ],
+     [
+      "fruit",
+      "jellybean",
+      "3"
      ]
     ]
    },
@@ -1033,7 +1080,8 @@
     },
     "do": []
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "trip"
   },
   {
    "id": "giant",
@@ -1094,7 +1142,8 @@
    "states": [
     "giant"
    ],
-   "pass": 1
+   "pass": 1,
+   "cat": "cake"
   },
   {
    "id": "ghost",
@@ -1167,7 +1216,8 @@
    "states": [
     "night"
    ],
-   "pass": 2
+   "pass": 2,
+   "cat": "story"
   },
   {
    "id": "parade",
@@ -1231,7 +1281,8 @@
     },
     "do": []
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "story"
   },
   {
    "id": "robot",
@@ -1298,7 +1349,8 @@
     },
     "do": []
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "story"
   },
   {
    "id": "bosstrio",
@@ -1392,7 +1444,8 @@
      "n"
     ],
     "boss": true
-   }
+   },
+   "cat": "story"
   },
   {
    "id": "ovenwarm",
@@ -1434,7 +1487,8 @@
     },
     "do": []
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "drill"
   },
   {
    "id": "safe",
@@ -1499,7 +1553,8 @@
     },
     "do": []
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "drill"
   },
   {
    "id": "shield",
@@ -1544,7 +1599,8 @@
     },
     "do": []
    },
-   "pass": 3
+   "pass": 3,
+   "cat": "drill"
   },
   {
    "id": "till",
@@ -1591,7 +1647,8 @@
      ]
     ]
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "drill"
   },
   {
    "id": "slice",
@@ -1660,7 +1717,8 @@
      "shape": "roll"
     }
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "drill"
   },
   {
    "id": "potion",
@@ -1721,7 +1779,8 @@
     },
     "do": []
    },
-   "pass": 2
+   "pass": 2,
+   "cat": "drill"
   },
   {
    "id": "column",
@@ -1787,7 +1846,8 @@
       "-1"
      ]
     ]
-   }
+   },
+   "cat": "drill"
   },
   {
    "id": "princessOrder",
@@ -1852,7 +1912,8 @@
      "topping": "star",
      "per": 3
     }
-   }
+   },
+   "cat": "cake"
   },
   {
    "id": "starFetch",
@@ -1889,8 +1950,8 @@
    ],
    "win": {
     "text": {
-     "en": "A jar full of stardust sugar!",
-     "zh": "装满一罐星尘糖！"
+     "en": "A jar full of stardust sugar! (+3 local magic fruit)",
+     "zh": "装满一罐星尘糖！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -1901,6 +1962,11 @@
       "flag",
       "princessWait",
       4
+     ],
+     [
+      "fruit",
+      "starmelon",
+      "3"
      ]
     ]
    },
@@ -1922,7 +1988,8 @@
     ]
    },
    "needs": "wantStar",
-   "pass": 1
+   "pass": 1,
+   "cat": "trip"
   },
   {
    "id": "princessCake",
@@ -2008,7 +2075,8 @@
      "per": 4
     }
    },
-   "pass": 1
+   "pass": 1,
+   "cat": "cake"
   },
   {
    "id": "mermaidOrder",
@@ -2073,7 +2141,8 @@
      "topping": "blueberry",
      "per": 8
     }
-   }
+   },
+   "cat": "cake"
   },
   {
    "id": "pearlDive",
@@ -2110,8 +2179,8 @@
    ],
    "win": {
     "text": {
-     "en": "A shell full of magic pearls!",
-     "zh": "一壳魔法珍珠！"
+     "en": "A shell full of magic pearls! (+3 local magic fruit)",
+     "zh": "一壳魔法珍珠！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -2122,6 +2191,11 @@
       "flag",
       "mermaidWait",
       4
+     ],
+     [
+      "fruit",
+      "cloudplum",
+      "3"
      ]
     ]
    },
@@ -2143,7 +2217,8 @@
     ]
    },
    "needs": "wantPearl",
-   "pass": 1
+   "pass": 1,
+   "cat": "trip"
   },
   {
    "id": "pearlTart",
@@ -2215,7 +2290,8 @@
      "per": 8
     }
    },
-   "pass": 1
+   "pass": 1,
+   "cat": "cake"
   },
   {
    "id": "giantRoll",
@@ -2277,7 +2353,8 @@
      "topping": "sprinkle",
      "per": 5
     }
-   }
+   },
+   "cat": "cake"
   },
   {
    "id": "cloudFetch",
@@ -2314,8 +2391,8 @@
    ],
    "win": {
     "text": {
-     "en": "Buckets of cloud cream!",
-     "zh": "好几桶云朵奶油！"
+     "en": "Buckets of cloud cream! (+3 local magic fruit)",
+     "zh": "好几桶云朵奶油！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -2326,6 +2403,11 @@
       "flag",
       "giantWait",
       4
+     ],
+     [
+      "fruit",
+      "cloudplum",
+      "3"
      ]
     ]
    },
@@ -2347,7 +2429,8 @@
     ]
    },
    "needs": "wantCloud",
-   "pass": 1
+   "pass": 1,
+   "cat": "trip"
   },
   {
    "id": "giantDeliver",
@@ -2415,7 +2498,8 @@
      "per": 6
     }
    },
-   "pass": 1
+   "pass": 1,
+   "cat": "cake"
   },
   {
    "id": "compassTrip",
@@ -2452,8 +2536,8 @@
    ],
    "win": {
     "text": {
-     "en": "The dinosaurs give you a dinosaur egg!",
-     "zh": "恐龙送你一个恐龙蛋！"
+     "en": "The dinosaurs give you a dinosaur egg! (+3 local magic fruit)",
+     "zh": "恐龙送你一个恐龙蛋！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -2467,6 +2551,11 @@
      [
       "cash",
       "d"
+     ],
+     [
+      "fruit",
+      "flameberry",
+      "3"
      ]
     ]
    },
@@ -2483,7 +2572,8 @@
     ]
    },
    "needsItem": "compass",
-   "pass": 1
+   "pass": 1,
+   "cat": "trip"
   },
   {
    "id": "couponTrip",
@@ -2520,8 +2610,8 @@
    ],
    "win": {
     "text": {
-     "en": "A gingerbread friend follows you home!",
-     "zh": "一个姜饼小人跟你回家了！"
+     "en": "A gingerbread friend follows you home! (+3 local magic fruit)",
+     "zh": "一个姜饼小人跟你回家了！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -2531,6 +2621,11 @@
      [
       "item",
       "gingerMan"
+     ],
+     [
+      "fruit",
+      "jellybean",
+      "3"
      ]
     ]
    },
@@ -2547,7 +2642,8 @@
     ]
    },
    "needsItem": "coupon",
-   "pass": 1
+   "pass": 1,
+   "cat": "trip"
   },
   {
    "id": "fireCake",
@@ -2633,7 +2729,8 @@
      "candles": 3
     }
    },
-   "pass": 1
+   "pass": 1,
+   "cat": "cake"
   },
   {
    "id": "digTreasure",
@@ -2677,8 +2774,8 @@
    ],
    "win": {
     "text": {
-     "en": "You keep {half} coins!",
-     "zh": "你留下 {half} 金币！"
+     "en": "You keep {half} coins! (+3 local magic fruit)",
+     "zh": "你留下 {half} 金币！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -2688,6 +2785,11 @@
      [
       "cash",
       "half"
+     ],
+     [
+      "fruit",
+      "rainbowgrape",
+      "3"
      ]
     ]
    },
@@ -2704,7 +2806,8 @@
     ]
    },
    "needsItem": "magnifier",
-   "pass": 1
+   "pass": 1,
+   "cat": "trip"
   },
   {
    "id": "peddler",
@@ -2731,7 +2834,8 @@
     },
     "do": []
    },
-   "market": 3
+   "market": 3,
+   "cat": "market"
   },
   {
    "id": "blackmarket",
@@ -2758,7 +2862,8 @@
     },
     "do": []
    },
-   "market": 4
+   "market": 4,
+   "cat": "market"
   },
   {
    "id": "spacemall",
@@ -2785,7 +2890,8 @@
     },
     "do": []
    },
-   "market": 3
+   "market": 3,
+   "cat": "market"
   },
   {
    "id": "fancyOrder",
@@ -2837,7 +2943,8 @@
      "zh": "“跟图片不太一样。”猫头鹰说。"
     },
     "do": []
-   }
+   },
+   "cat": "cake"
   },
   {
    "id": "cakeShow",
@@ -2910,7 +3017,8 @@
       "2"
      ]
     ]
-   }
+   },
+   "cat": "cake"
   },
   {
    "id": "magicFruit",
@@ -2954,8 +3062,8 @@
    "pass": 1,
    "win": {
     "text": {
-     "en": "Your basket is full of magic fruit — new cakes unlocked!",
-     "zh": "篮子装满奇幻水果，能做新蛋糕了！"
+     "en": "Your basket is full of magic fruit — new cakes unlocked! (+3 local magic fruit)",
+     "zh": "篮子装满奇幻水果，能做新蛋糕了！（+3 个当地奇幻水果）"
     },
     "do": [
      [
@@ -2965,6 +3073,11 @@
      [
       "cash",
       "2"
+     ],
+     [
+      "fruit",
+      "moonberry",
+      "3"
      ]
     ]
    },
@@ -2974,7 +3087,8 @@
      "zh": "掉了几个果子，滚走了。"
     },
     "do": []
-   }
+   },
+   "cat": "trip"
   },
   {
    "id": "birthdayCake",
@@ -3037,6 +3151,79 @@
      "zh": "蜡烛不够，小龙干脆自己喷火点上了。"
     },
     "do": []
+   },
+   "cat": "cake"
+  },
+  {
+   "id": "specialOrder",
+   "p": 20,
+   "cat": "cake",
+   "scene": "shop",
+   "icon": "🧺",
+   "needsPantry": true,
+   "vars": {
+    "k": [
+     1,
+     2
+    ]
+   },
+   "show": {
+    "cake": {
+     "fruit": "$pantry"
+    }
+   },
+   "intro": {
+    "en": "🧺 A customer spots your magic fruit basket: \"Can you make {k} of: {cakeName}?\"",
+    "zh": "🧺 一位顾客看见你的奇幻水果篮：“能做 {k} 个这样的吗：{cakeName}？”"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "Each cake needs {nFruit} {fruitName}. How many for {k} cakes?",
+      "zh": "每个蛋糕要 {nFruit} 个{fruitName}，{k} 个蛋糕要几个？"
+     },
+     "a": "k*nFruit",
+     "fam": "mul"
+    },
+    {
+     "q": {
+      "en": "You have {have} {fruitName}. How many are left after baking?",
+      "zh": "你有 {have} 个{fruitName}，做完还剩几个？"
+     },
+     "a": "have-k*nFruit",
+     "fam": "sub"
+    }
+   ],
+   "pass": 1,
+   "win": {
+    "text": {
+     "en": "Magic cakes sell for double! +{k}×{nFruit} coins.",
+     "zh": "奇幻蛋糕卖双倍价！+{k}×{nFruit} 金币。"
+    },
+    "do": [
+     [
+      "usefruit",
+      "$cake",
+      "k*nFruit"
+     ],
+     [
+      "cash",
+      "k*nFruit"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "You use the fruit but the cakes come out wobbly.",
+     "zh": "水果用掉了，蛋糕有点歪。"
+    },
+    "do": [
+     [
+      "usefruit",
+      "$cake",
+      "k*nFruit"
+     ]
+    ]
    }
   }
  ]

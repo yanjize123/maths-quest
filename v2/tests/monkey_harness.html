@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<!-- 端到端乱点试玩（headless Chrome）：登录后按真实界面一路点下去（输入框填 1 并提交，否则点面板里第一个可用按钮），?ticks=N。
+     统计期间出现过的场景事件、怪兽、答题数；标题 PASS/FAIL：每 6 题至少 1 拍才 PASS。 -->
+<html><head><meta charset="utf-8"></head><body><iframe id="f" src="../index.html?lang=zh" style="width:820px;height:900px;border:0"></iframe>
+<script>
+const f = document.getElementById('f'), errs = [], N = +(new URLSearchParams(location.search).get('ticks') || 400);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+f.onload = async () => {
+  const w = f.contentWindow, d = w.document; w.onerror = (m, s, l) => errs.push(m + '@' + l);
+  try { w.localStorage.clear(); } catch (e) {}
+  d.querySelector('#ll').click(); await sleep(900);
+  let answers = 0; const seen = new Set(), evs = []; let mons = 0, lastMon = null;
+  let lastQ = null; const i0 = w.MQEngine.instantiate; w.MQEngine.instantiate = (...a) => (lastQ = i0(...a));   // 主流程填正确答案（只为推进流程）
+  const r0 = w.record; w.record = row => { answers++; return r0(row); };
+  try {
+    for (let t = 0; t < N; t++) {
+      const sev = w.eval('T && T.sev && !T.sev.done ? T.sev.e.id : null'); if (sev && !seen.has(sev + '@' + w.eval('T.sev.seed'))) { seen.add(sev + '@' + w.eval('T.sev.seed')); evs.push(sev + ':' + w.eval('T.sev.e.scene')); }
+      const m = w.eval('T && T.monster && !T.monsterDone ? T.monster.idx + "@" + ST.day : null'); if (m && m !== lastMon) { mons++; lastMon = m; }
+      const inp = [...d.querySelectorAll('#panel input')].find(x => !x.disabled && x.offsetParent);
+      if (inp) { inp.value = inp.id === 'ans' && lastQ && typeof lastQ.correct === 'number' ? String(lastQ.correct) : '1'; const b = inp.parentElement.querySelector('button:not([disabled])'); if (b) b.click(); await sleep(15); continue; }
+      const all = [...d.querySelectorAll('#panel button')].filter(x => !x.disabled && x.offsetParent && !/^[−+\-]$/.test(x.textContent.trim()));
+      const fg = d.getElementById('fg'); if (fg && fg.disabled) { const tb = d.querySelector('[data-t]'); if (tb) { tb.click(); await sleep(15); continue; } }
+      const btn = all.find(x => !x.classList.contains('alt') && !x.dataset.w && !x.dataset.t) || all[0];
+      if (btn) btn.click(); await sleep(15);
+    }
+  } catch (x) { errs.push(String(x)); }
+  const beats = evs.length + mons;
+  document.title = (errs.length ? 'FAIL ' + errs.slice(0, 2).join('|') : beats * 6 >= answers ? 'PASS' : 'FAIL 太少') + ` 答题 ${answers}，场景事件 ${evs.length}，怪兽 ${mons}，第 ${w.eval('ST.day')} 天：${evs.join(',')}`;
+};
+</script></body></html>

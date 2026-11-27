@@ -2,7 +2,7 @@
 // 读 content/events.json、scenes.json、pacing.json；一个事件 = 前因(needs 标记) → 场景 → 几道题 → 结果动作 → 回店。
 // 新事件只写 JSON。动作词表（固定，加新词才改本文件）：cash 表达式 | stock 表达式 | flag 名 天数 [概率%] | state 名 天数 | cust 增减 天数 | item 名 | use 名（用掉一件）
 // 依赖 index.html / mq_play.js 的全局：ST、T、LANG、panel、actors、hud、save、askMQ、serveNext、PG、R、read、MQGen、bookSpec、pickMonster；MQ_E = MQEngine.evalExpr。
-const EVENTS_VERSION = 5;   // v5：事件随机蛋糕（MQCake，变量 cakeName/nFruit/tiers）；v4： v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
+const EVENTS_VERSION = 6;   // v6：事件类别 cat + pacing.mix 比例与保底（换场景最多隔 3 拍必来、不连续同类）、奇幻水果篮 pantry（fruit/usefruit、needsPantry、$pantry 蛋糕）、蛋糕图鉴；v5： v5：事件随机蛋糕（MQCake，变量 cakeName/nFruit/tiers）；v4： v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
 const MQEv = (() => {
   let ED = null, PD = null, MD = null;
   const ev = (x, v) => MQEngine.evalExpr(x, v);
@@ -11,7 +11,8 @@ const MQEv = (() => {
   async function load() {
     const [e, s, p, m, ck] = await Promise.all([read('content/events.json'), read('content/scenes.json'), read('content/pacing.json'), read('content/market.json'), read('content/cakes.json')]);
     ED = JSON.parse(e); MQScene.load(JSON.parse(s)); PD = JSON.parse(p); MD = JSON.parse(m); if (typeof MQCake !== 'undefined') MQCake.load(JSON.parse(ck));
-    ST.flags = ST.flags || {}; ST.states = ST.states || {}; ST.cust = ST.cust || []; ST.items = ST.items || {};
+    ST.flags = ST.flags || {}; ST.states = ST.states || {}; ST.cust = ST.cust || []; ST.items = ST.items || {}; ST.pantry = ST.pantry || {}; ST.cakeBook = ST.cakeBook || { shape: {}, fruit: {}, style: {} };
+    if (typeof document !== 'undefined' && !document.getElementById('cakeb')) { const bar = document.querySelector('.bar'); if (bar) { bar.insertAdjacentHTML('beforeend', '<button class="alt" id="cakeb" style="font-size:14px;padding:4px 10px"></button>'); document.getElementById('cakeb').onclick = () => cakeBook(); } }
   }
   // 变量：[lo,hi] 取整数；字符串是表达式（按书写顺序，可引用前面的变量）
   function vars(e, r = Math.random) {
@@ -29,6 +30,8 @@ const MQEv = (() => {
       else if (op === 'cust') ST.cust.push([a, b || 1]);
       else if (op === 'item') ST.items[a] = (ST.items[a] || 0) + 1;
       else if (op === 'use') { ST.items[a] = Math.max(0, (ST.items[a] || 0) - 1); }
+      else if (op === 'fruit') { ST.pantry[a] = (ST.pantry[a] || 0) + ev(b, v); if (ST.cakeBook) ST.cakeBook.fruit[a] = Math.max(1, ST.cakeBook.fruit[a] || 0); }
+      else if (op === 'usefruit') { const f = a === '$cake' ? T.sev && T.sev.cake && T.sev.cake.fruit : a; if (f) ST.pantry[f] = Math.max(0, (ST.pantry[f] || 0) - ev(b, v)); }
     }
   }
   const on = name => { if (name === 'battle' && T) T.inBeat = false; if (ED) act(ED.on[name], {}); };
@@ -42,20 +45,44 @@ const MQEv = (() => {
   function cakeVars(sev) {
     const c = sev.e.show && sev.e.show.cake; if (!c || c.type || typeof MQCake === 'undefined' || !MQCake.data()) return;
     const fix = {}; for (const [k, x] of Object.entries(c)) fix[k] = typeof x === 'string' && x in sev.v ? sev.v[x] : x;
-    sev.cake = MQCake.random(sev.seed, fix); Object.assign(sev.v, { cakeName: MQCake.name(sev.cake, LANG), nFruit: sev.cake.nFruit, tiers: sev.cake.tiers });
+    if (fix.fruit === '$pantry') { const [f, n] = Object.entries(ST.pantry || {}).sort((a, b) => b[1] - a[1])[0] || ['strawberry', 4]; const k = sev.v.k || 1; fix.fruit = f; fix.fruit2 = null; fix.nFruit = Math.max(1, Math.min(6, Math.floor(n / k))); sev.v.have = n; sev.v.fruitName = MQCake.data().fruits[f][LANG] || f; }
+    sev.cake = MQCake.random(sev.seed, fix); noteCake(sev.cake); Object.assign(sev.v, { cakeName: MQCake.name(sev.cake, LANG), nFruit: sev.cake.nFruit, tiers: sev.cake.tiers });
   }
+  // 蛋糕图鉴：记下见过的形状、水果、装饰
+  function noteCake(c) { if (!c || !ST.cakeBook) return; const b = ST.cakeBook; b.shape[c.shape] = (b.shape[c.shape] || 0) + 1; b.style[c.style] = (b.style[c.style] || 0) + 1; [c.fruit, c.fruit2].filter(Boolean).forEach(f => b.fruit[f] = (b.fruit[f] || 0) + 1); }
+  function cakeBook() {
+    const D = MQCake.data(), b = ST.cakeBook, L = o => o[LANG] || o.en, zh = LANG === 'zh';
+    const cell = (art, label, n) => `<div style="width:92px;text-align:center;margin:3px;opacity:${n ? 1 : .35}">${art}<div class="note">${n ? label + ' ×' + n : '？？？'}</div></div>`;
+    const shapes = Object.keys(D.shapes).map((k, i) => cell(MQCake.draw(MQCake.random(1000 + i, { shape: k, fruit: 'strawberry', fruit2: null, topper: 'none', pattern: 'none' })).replace('<svg', '<svg style="width:84px;height:78px"' + (b.shape[k] ? '' : ' filter="grayscale(1)"')), L(D.shapes[k]), b.shape[k] || 0)).join('');
+    const fruits = Object.keys(D.fruits).map(k => cell(`<svg viewBox="-8 -8 16 16" style="width:40px;height:40px">${D.fruits[k].svg}</svg>`, L(D.fruits[k]) + (ST.pantry[k] ? ` 🧺${ST.pantry[k]}` : ''), b.fruit[k] || 0)).join('');
+    const got = Object.keys(b.shape).length + Object.keys(b.fruit).length, all = Object.keys(D.shapes).length + Object.keys(D.fruits).length;
+    panel(`<div class="say">${zh ? `🎂 蛋糕图鉴：已收集 <b>${got}</b> / ${all}（形状和水果）。做蛋糕、出门找水果就能点亮！` : `🎂 Cake book: <b>${got}</b> / ${all} shapes and fruits collected.`}</div>
+      <div class="say"><b>${zh ? '形状' : 'Shapes'}</b></div><div style="display:flex;flex-wrap:wrap">${shapes}</div><div class="say"><b>${zh ? '水果（🧺 = 篮子里有几个）' : 'Fruits (🧺 = in your basket)'}</b></div><div style="display:flex;flex-wrap:wrap">${fruits}</div>
+      <div class="row"><button id="bk">${zh ? '← 返回' : '← Back'}</button></div>`);
+    document.getElementById('bk').onclick = () => { if (typeof CUR === 'function') CUR(); };
+  }
+  const pantryCount = () => Object.values(ST.pantry || {}).reduce((a, n) => a + n, 0);
   // ---- 导演（v3）：何时出事，只在这里决定；参数在 content/pacing.json ----
   // 按答题数计：每答 gap 道题来一次节拍；节拍 = 怪兽或场景事件（按 beats 权重，怪兽最多隔 monsterMaxGap 拍必来）；前因成立的事件优先；最近 3 个不重复。
   const rint = ([lo, hi]) => lo + Math.floor(Math.random() * (hi - lo + 1));
   function count() { if (!PD || (T && T.inBeat)) return; ST.since = (ST.since || 0) + 1; }
+  // 选事件（v6）：前因成立的先出；否则先按 pacing.mix 选类别（不连续同类；换场景 trip 最多隔 tripMaxGap 拍必来），再在类别里按 p 选，最近 3 个不重复
+  const has = e => (!e.needsItem || (ST.items[e.needsItem] || 0) > 0) && (!e.needsPantry || Object.values(ST.pantry || {}).some(n => n >= 2));
   function chooseEvent() {
-    const has = e => !e.needsItem || (ST.items[e.needsItem] || 0) > 0, recent = ST.recentEv || [], caused = ED.events.filter(e => e.needs && e.needs in ST.flags && has(e));
+    const recent = ST.recentEv || [], caused = ED.events.filter(e => e.needs && e.needs in ST.flags && has(e));
     let e = caused[0];
     if (e) delete ST.flags[e.needs];
     else {
-      const pool = ED.events.filter(x => !x.needs && has(x) && !recent.includes(x.id)), tot = pool.reduce((a, x) => a + x.p, 0); let r = Math.random() * tot, k = 0;
+      const free = ED.events.filter(x => !x.needs && has(x) && !recent.includes(x.id)), cats = {};
+      free.forEach(x => (cats[x.cat || 'story'] = cats[x.cat || 'story'] || []).push(x));
+      const mix = PD.mix || { story: 1 }; let names = Object.keys(cats).filter(c => mix[c]);
+      if (PD.noRepeat && names.length > 1) names = names.filter(c => c !== ST.lastCat);
+      let cat = (ST.sinceTrip || 0) >= (PD.tripMaxGap || 99) && cats.trip ? 'trip' : null;
+      if (!cat) { const tot = names.reduce((a, c) => a + mix[c], 0); let r = Math.random() * tot; cat = names.find(c => (r -= mix[c]) < 0) || names[0]; }
+      const pool = cats[cat] || free, tot = pool.reduce((a, x) => a + x.p, 0); let r = Math.random() * tot, k = 0;
       while ((r -= pool[k].p) > 0 && k < pool.length - 1) k++; e = pool[k];
     }
+    ST.lastCat = e.cat; ST.sinceTrip = e.cat === 'trip' ? 0 : (ST.sinceTrip || 0) + 1;
     ST.recentEv = [e.id, ...recent].slice(0, 3);
     const seed = (Math.random() * 1e9) | 0, v = vars(e), sev = { e, v, seed, done: false };
     cakeVars(sev); return sev;
@@ -145,5 +172,5 @@ const MQEv = (() => {
     const step = () => { if (i >= (e.steps || []).length) return e.market ? market(e, v, finish) : finish(); ask(e, e.steps[i], i, v, ok => { if (ok) right++; i++; step(); }); };
     step();
   }
-  return { load, tick, count, due, chooseEvent, cakeVars, on, run, pacing: () => PD, backdrop, vars, act, data: () => ED, EVENTS_VERSION };
+  return { load, tick, count, due, chooseEvent, cakeVars, noteCake, cakeBook, pantryCount, on, run, pacing: () => PD, backdrop, vars, act, data: () => ED, EVENTS_VERSION };
 })();

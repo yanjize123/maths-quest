@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Penguin Cupcakes · Maths Quest v2</title>
-<!-- 甜品店 第 1 关 页面 v008e（蛋糕组合库 mq_cake.js + content/cakes.json：12 形状 × 6 装饰 × 9 图案 × 18 水果（含 7 种奇幻水果）× 5 摆法 × 8 顶饰 × 12 口味，订单与事件都用；纯算式步 calc/gen 约一半、蛋糕任务链（龙公主城堡、人鱼珍珠挞、巨人云朵卷）、集市买武器与怪东西（算找零）、道具开启场景、蛋糕新画法挞/瑞士卷/城堡；41 个事件；导演 pacing.json 按答题数出事件/怪兽，每 2–4 题一次；18 个事件 9 个场景；版本自检防缓存混用；每天 2–3 个场景事件，开头/中间/结尾；场景事件机制：content/scenes.json + events.json，通用执行器 mq_events.js、通用画法 mq_scene.js；墙洞、群怪、虫洞、恐龙、传送门、冰封 6 个事件；怪兽 45% + 保底：最多隔 2 天必来；mq_play v3 起不问年级、自动定难度；2026-11-27 随机事件层 mq_play.js：怪兽来抢+选武器+怪兽卡图鉴、换店员、顾客高峰、多层蛋糕订单；程序化画图 mq_gen.js；题目借用 ../engine.js。v006 宝箱只给东西不给金币；v005 金币写法统一、草莓不够可去补货、每 3 件一次随机大变化；v004 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
+<!-- 甜品店 第 1 关 页面 v008f（事件类别比例 pacing.mix + 换场景保底 + 不连续同类；奇幻水果篮；蛋糕图鉴；蛋糕组合库 mq_cake.js + content/cakes.json：12 形状 × 6 装饰 × 9 图案 × 18 水果（含 7 种奇幻水果）× 5 摆法 × 8 顶饰 × 12 口味，订单与事件都用；纯算式步 calc/gen 约一半、蛋糕任务链（龙公主城堡、人鱼珍珠挞、巨人云朵卷）、集市买武器与怪东西（算找零）、道具开启场景、蛋糕新画法挞/瑞士卷/城堡；41 个事件；导演 pacing.json 按答题数出事件/怪兽，每 2–4 题一次；18 个事件 9 个场景；版本自检防缓存混用；每天 2–3 个场景事件，开头/中间/结尾；场景事件机制：content/scenes.json + events.json，通用执行器 mq_events.js、通用画法 mq_scene.js；墙洞、群怪、虫洞、恐龙、传送门、冰封 6 个事件；怪兽 45% + 保底：最多隔 2 天必来；mq_play v3 起不问年级、自动定难度；2026-11-27 随机事件层 mq_play.js：怪兽来抢+选武器+怪兽卡图鉴、换店员、顾客高峰、多层蛋糕订单；程序化画图 mq_gen.js；题目借用 ../engine.js。v006 宝箱只给东西不给金币；v005 金币写法统一、草莓不够可去补货、每 3 件一次随机大变化；v004 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
      规则：business_loop.md（yanjize123/claude 条目 P-20261126-maths-game）。奖惩不对称：对方吃亏的错误被拒绝要重算，对方占便宜的错误被接受、店里亏。 -->
 <style>
  :root{--pink:#ff7eb6;--ink:#3a2a3a}
@@ -46,17 +46,17 @@
  </div>
 </div>
 
-<script src="config.js?b=008e"></script>
-<script src="rules.js?b=008e"></script>
-<script src="mq_engine.js?b=008e"></script>
-<script src="mq_store.js?b=008e"></script>
-<script src="mq_art.js?b=008e"></script>
-<script src="../engine.js?b=008e"></script>
-<script src="mq_gen.js?b=008e"></script>
-<script src="mq_play.js?b=008e"></script>
-<script src="mq_scene.js?b=008e"></script>
-<script src="mq_cake.js?b=008e"></script>
-<script src="mq_events.js?b=008e"></script>
+<script src="config.js?b=008f"></script>
+<script src="rules.js?b=008f"></script>
+<script src="mq_engine.js?b=008f"></script>
+<script src="mq_store.js?b=008f"></script>
+<script src="mq_art.js?b=008f"></script>
+<script src="../engine.js?b=008f"></script>
+<script src="mq_gen.js?b=008f"></script>
+<script src="mq_play.js?b=008f"></script>
+<script src="mq_scene.js?b=008f"></script>
+<script src="mq_cake.js?b=008f"></script>
+<script src="mq_events.js?b=008f"></script>
 <script>
 const PAGE_VERSION = 7, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
 const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
@@ -136,7 +136,7 @@ $('lang2').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); hud(); if ($(
 renderLogin();
 $('ll').onclick = () => { S = { name: 'guest', local: true }; ST = fixShop(MQStore.loadProgress('guest') || newShop()); boot(); };
 
-const BUILD = '008e';   // 与 content/build.json 一致；不一致说明浏览器用了旧缓存
+const BUILD = '008f';   // 与 content/build.json 一致；不一致说明浏览器用了旧缓存
 async function boot() {
   try { const b = JSON.parse(await read('content/build.json')).build; if (b !== BUILD) document.body.insertAdjacentHTML('afterbegin', `<div style="background:#ffd23f;padding:8px;text-align:center">${LANG === 'zh' ? '有新版本，请按 Ctrl+F5（手机下拉）刷新' : 'New version available — please refresh (Ctrl+F5)'}（${BUILD} → ${b}）</div>`); } catch (e) {}
   C = await E.loadContent(read, [1, 'level01biz']); SHOP = JSON.parse(await read('content/shop_A.json')).items;
@@ -147,7 +147,7 @@ async function boot() {
 // ---------------- 画面 ----------------
 function hud() {
   $('cash').textContent = '🪙 ' + money(ST.cash) + (ST.cash < 0 ? t('loan') : ''); $('cash').className = 'pill' + (ST.cash < 0 ? ' neg' : '');
-  $('stock').textContent = '🍓 ' + ST.stock; $('day').textContent = LANG === 'zh' ? `📅 第 ${ST.day} 天` : '📅 Day ' + ST.day; $('btitle').textContent = '🧁 ' + t('title'); $('lang2').textContent = t('other');
+  $('stock').textContent = '🍓 ' + ST.stock + (typeof MQEv !== 'undefined' && MQEv.pantryCount && MQEv.pantryCount() ? '  🧺 ' + MQEv.pantryCount() : ''); if ($('cakeb')) $('cakeb').textContent = LANG === 'zh' ? '🎂 蛋糕图鉴' : '🎂 Cake book'; $('day').textContent = LANG === 'zh' ? `📅 第 ${ST.day} 天` : '📅 Day ' + ST.day; $('btitle').textContent = '🧁 ' + t('title'); $('lang2').textContent = t('other');
   const n = ST.owned.length, theme = ST.theme || (n >= 10 ? 'sea' : 'shop');
   const palette = ST.palette || {};
   const shelf = ST.owned.map(id => (SHOP.find(x => x.id === id) || {}).emoji || ''), shopSvg = A.scene(theme, palette, shelf);
@@ -243,7 +243,7 @@ function serveNext() {
   if (T.idx >= T.orders.length) return T.rush && !T.rushDone ? rushIntro() : evening();
   if (T.orders[T.idx].kind === 'LAYER') return serveLayer(T.orders[T.idx]);
   const o = T.orders[T.idx], item = C.byItem[o.kind], need = E.evalExpr(item.answer, o.p);
-  if (!o.cake && typeof MQCake !== 'undefined' && MQCake.data()) o.cake = MQCake.random((ST.day * 131 + T.idx * 17 + R(0, 1e6)) | 0, { fruit: 'strawberry', fruit2: null, nFruit: Math.min(10, (o.p && o.p.k) || 4) });
+  if (!o.cake && typeof MQCake !== 'undefined' && MQCake.data()) { o.cake = MQCake.random((ST.day * 131 + T.idx * 17 + R(0, 1e6)) | 0, { fruit: 'strawberry', fruit2: null, nFruit: Math.min(10, (o.p && o.p.k) || 4) }); MQEv.noteCake(o.cake); }
   actors(PG(), o.cake ? MQCake.draw(o.cake).replace('<svg', '<svg style="width:150px;height:140px"') : A.cupcake(0), A.dragon(o.who));
   if (need > ST.stock) {
     panel(`<div class="say"><span class="who">${o.who}:</span> ${t('wants')(o.p.n, o.p.k)}</div>

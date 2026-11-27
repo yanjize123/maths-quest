@@ -146,6 +146,78 @@
     "en": "spots buried treasure",
     "zh": "能发现埋着的宝藏"
    }
+  },
+  {
+   "id": "pack_moonberry",
+   "icon": "🌙",
+   "en": "moonberry pack",
+   "zh": "月光莓一包",
+   "price": 8,
+   "do": [
+    [
+     "fruit",
+     "moonberry",
+     "4"
+    ]
+   ],
+   "note": {
+    "en": "+4 for magic cakes",
+    "zh": "+4 个，做奇幻蛋糕用"
+   }
+  },
+  {
+   "id": "pack_rainbowgrape",
+   "icon": "🌈",
+   "en": "rainbow grape pack",
+   "zh": "彩虹葡萄一包",
+   "price": 8,
+   "do": [
+    [
+     "fruit",
+     "rainbowgrape",
+     "4"
+    ]
+   ],
+   "note": {
+    "en": "+4 for magic cakes",
+    "zh": "+4 个，做奇幻蛋糕用"
+   }
+  },
+  {
+   "id": "pack_flameberry",
+   "icon": "🔥",
+   "en": "flame berry pack",
+   "zh": "火焰莓一包",
+   "price": 8,
+   "do": [
+    [
+     "fruit",
+     "flameberry",
+     "4"
+    ]
+   ],
+   "note": {
+    "en": "+4 for magic cakes",
+    "zh": "+4 个，做奇幻蛋糕用"
+   }
+  },
+  {
+   "id": "pack_crystalpear",
+   "icon": "💎",
+   "en": "crystal pear pack",
+   "zh": "水晶梨一包",
+   "price": 8,
+   "do": [
+    [
+     "fruit",
+     "crystalpear",
+     "4"
+    ]
+   ],
+   "note": {
+    "en": "+4 for magic cakes",
+    "zh": "+4 个，做奇幻蛋糕用"
+   }
   }
  ]
 }
