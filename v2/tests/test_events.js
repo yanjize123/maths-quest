@@ -16,12 +16,12 @@ for (const e of ED.events) {
   ok(SD.scenes[e.scene], w + ' 无场景 ' + e.scene); (e.states || []).forEach(s => ok(SD.states[s], w + ' 无状态 ' + s));
   acts(e.win.do, w + '.win'); acts(e.lose.do, w + '.lose');
   if (e.needsItem) ok(ED.items[e.needsItem], w + ' needsItem 无物品 ' + e.needsItem);
-  if (e.show && e.show.cake) ok(CAKES[e.show.cake.type], w + ' 蛋糕类型 ' + e.show.cake.type);
+  const CK = C('cakes.json'); if (e.show && e.show.cake) { const c = e.show.cake; if (c.type) ok(CAKES[c.type], w + ' 蛋糕类型 ' + c.type); for (const [k, tab] of [['shape', 'shapes'], ['fruit', 'fruits'], ['fruit2', 'fruits'], ['topper', 'toppers'], ['pattern', 'patterns'], ['style', 'styles'], ['flavour', 'flavours']]) if (c[k]) ok(CK[tab][c[k]], `${w} 蛋糕${k} 不存在 ${c[k]}`); }
   ok(e.steps.length || e.market, w + ' 没有题也不是集市');
   e.steps.forEach((s, i) => { if (s.gen) ok(GD.families[s.gen], `${w} 步 ${i} 题型族不存在 ${s.gen}`); else ok(s.a != null && (s.q || s.calc), `${w} 步 ${i} 缺 q/calc 或 a`); });
   for (let n = 0; n < 500; n++) {
     const v = {}; for (const [k, d] of Object.entries(e.vars || {})) v[k] = Array.isArray(d) ? d[0] + Math.floor(Math.random() * (d[1] - d[0] + 1)) : E.evalExpr(d, v);
-    v.place = 'X'; v.money = 'Y';
+    v.place = 'X'; v.money = 'Y'; if (e.show && e.show.cake && !e.show.cake.type) Object.assign(v, { cakeName: 'Z', nFruit: 3 + (n % 6), tiers: e.show.cake.tiers || 1 + (n % 3) });
     const texts = [e.intro, ...(e.market ? [] : [e.win.text, e.lose.text]), ...e.steps.filter(s => s.q).map(s => s.q), ...e.steps.filter(s => s.calc).map(s => ({ en: s.calc, zh: s.calc }))];
     for (const t of texts) for (const L of ['en', 'zh']) { const f = String(t[L] || '').replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m)); if (/\{\w+\}/.test(f) || !t[L]) { ok(false, `${w} ${L} 占位符未填或缺文字: ${f.slice(0, 60)}`); n = 500; } }
     for (const s of e.steps.filter(s => !s.gen)) { const a = E.evalExpr(s.a, v); if (!(Number.isInteger(a) && a >= 0)) { ok(false, `${w} 答案 ${s.a}=${a} 不是非负整数 ${JSON.stringify(v)}`); n = 500; } }
@@ -34,6 +34,11 @@ for (const [id, s] of Object.entries(SD.scenes)) {
   (s.decor || []).forEach(k => ok(SD.sprites[k], `scene ${id}: 无装饰 ${k}`));
   for (let seed = 1; seed < 20; seed++) { const svg = S.render(S.roll(id, seed), ['hole'], ''); ok(svg && svg.startsWith('<svg') && !/\{[cd]\}/.test(svg) && !/NaN|undefined/.test(svg), `scene ${id} seed ${seed} 画不出`); }
 }
+// ---- 蛋糕组合库：随机 600 个都能画、无 NaN/undefined，每种形状都出现 ----
+{ const K = require('../mq_cake.js'); K.load(C('cakes.json')); const seen = new Set();
+  for (let i = 0; i < 600; i++) { const sp = K.random(i * 7919 + 3), svg = K.draw(sp); seen.add(sp.shape); if (/NaN|undefined/.test(svg)) { ok(false, '蛋糕画不出 ' + JSON.stringify(sp)); break; } ok(K.name(sp, 'zh').length > 3, '蛋糕无名'); }
+  for (let n = 1; n <= 10; n++) for (let i = 0; i < 50; i++) { const sp = K.random(i * 31 + n, { nFruit: n }); ok(sp.nFruit <= (C('cakes.json').shapes[sp.shape].cap ?? 9), `水果 ${n} 个放不下 ${sp.shape}`); }
+  K.shapes().forEach(x => ok(seen.has(x), '600 个里没有形状 ' + x)); Object.keys(C('cakes.json').shapes).forEach(x => ok(K.shapes().includes(x), 'cakes.json 形状无画法 ' + x)); }
 // ---- 集市货品 ----
 MD.goods.forEach((g, i) => { ok(g.price > 0, `market ${i} 无价格`); if (g.kind === 'weapon') ok(GD.weapons.some(w => w.rarity === g.rarity), `market ${i} 无该稀有度武器`); else { ok(g.icon && g.en && g.zh, `market ${g.id} 缺图标或名字`); if (g.item) ok(ED.items[g.item], `market ${g.id} 物品未登记 ${g.item}`); acts(g.do, 'market ' + g.id); } });
 // 物品链：needsItem 要求的物品必须有来源（事件给、或集市卖）

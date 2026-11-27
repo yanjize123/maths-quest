@@ -24,7 +24,7 @@
 | intro / steps[].q / win.text / lose.text | 中英文本，`{变量}` 自动填；`{place}` 场景名，`{money}` 场景货币 |
 | steps[] 三种题 | 情境题 `{q, a, fam}`；纯算式 `{calc: "{a} × {b}", a}`（题面就是算式，可加 q 作引子）；按水平出题 `{gen: 题型族}`（族名见 game_data.json families，自动选纯算式题型并调难度） |
 | needsItem | 有这件物品才可能出（配合动作 use 用掉）；物品可由事件给或集市卖 |
-| show.cake | 画蛋糕：`{type: cupcake/layer/donut/cookie/tart/roll/castle, tiers, flavour, topping, per, candles}`，值可写变量名 |
+| show.cake | 画蛋糕。不写 type = 用蛋糕组合库随机出（可固定 shape/fruit/fruit2/nFruit/tiers/topper/nTop/pattern/number/style/flavour，值可写变量名），并给变量 `{cakeName}` `{nFruit}` `{tiers}` 用于出题；写 type = 旧画法（tart/roll/castle 等） |
 | market | 集市：抽 n 件 content/market.json 的货，买时算找零；steps 可为空 |
 | pass | 答对几题算赢（默认全对） |
 | win.do / lose.do | 动作列表，见下 |
@@ -49,3 +49,9 @@
 - `node tests/test_events.js`：引用、词表、占位符、500 组随机数下答案均为非负整数、每个场景能画。
 - 同一脚本还核对版本一致，并用真实数据模拟答 200 题检查节拍间隔。
 - 浏览器：`tests/event_harness.html?ev=<id>&at=q|end` 强制某事件并自动答对走完；`tests/pacing_harness.html` 真实页面 30 题内的节拍数（≥ 7.5 才 PASS）。
+
+## 蛋糕组合库（content/cakes.json + mq_cake.js）
+- 一个蛋糕 = 形状 × 大小 × 层数 × 装饰方式 × 表面图案 × 两种水果 × 摆法 × 顶饰 × 口味 × 点缀色，种子决定，同一种子画面固定。
+- 加水果、表面图案、顶饰、口味、装饰方式：在 cakes.json 加一行（SVG 片段，{c}{d}{l} 为随机点缀色）。表面图案可引用场景装饰（from: scene）、怪兽（from: monster）、数字（from: number）。
+- 加形状：在 cakes.json shapes 登记（含 cap = 顶上最多数得清的水果数），并在 mq_cake.js SHAPES 写一个画法函数。
+- 样张：`tests/cake_gallery.html?seed=1&n=24&shapes=layer,heart`。

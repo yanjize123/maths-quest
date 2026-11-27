@@ -12,7 +12,7 @@ f.onload = async () => {
     const mk = w.MQ.makeQuestion; w.MQ.makeQuestion = g => (lastQ = mk(g));
     try { w.localStorage.clear(); } catch (e) {}
     d.querySelector('#ll').click(); await sleep(900);
-    w.eval(`T.monster = null; const e = MQEv.data().events.find(x => x.id === '${id}'); T.sev = { e, v: MQEv.vars(e), seed: 12345, done: false }; T.inBeat = true; MQEv.run()`);
+    w.eval(`T.monster = null; const e = MQEv.data().events.find(x => x.id === '${id}'); T.sev = { e, v: MQEv.vars(e), seed: 12345, done: false }; MQEv.cakeVars(T.sev); T.inBeat = true; MQEv.run()`);
     await sleep(150);
     const e = w.eval('T.sev.e'), v = w.eval('T.sev.v');
     for (let i = 0; i < e.steps.length; i++) {

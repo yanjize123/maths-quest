@@ -1,5 +1,5 @@
 {
- "version": 4,
+ "version": 5,
  "note": "场景事件全部写在这里；何时出由导演 content/pacing.json 决定；字段说明见 content/README_events.md。",
  "on": {
   "battle": [
@@ -129,6 +129,11 @@
    "icon": "🔥",
    "en": "fire chef badge",
    "zh": "火焰厨师徽章"
+  },
+  "medal": {
+   "icon": "🥇",
+   "en": "gold medal",
+   "zh": "金牌"
   }
  },
  "events": [
@@ -1652,10 +1657,7 @@
    },
    "show": {
     "cake": {
-     "type": "roll",
-     "flavour": "strawberry",
-     "topping": "strawberry",
-     "per": 3
+     "shape": "roll"
     }
    },
    "pass": 2
@@ -2784,6 +2786,258 @@
     "do": []
    },
    "market": 3
+  },
+  {
+   "id": "fancyOrder",
+   "p": 16,
+   "scene": "shop",
+   "icon": "🎂",
+   "vars": {
+    "k": [
+     2,
+     5
+    ]
+   },
+   "show": {
+    "cake": {}
+   },
+   "intro": {
+    "en": "🎂 A fussy owl points at the picture: \"{k} of these, exactly like this: {cakeName}!\"",
+    "zh": "🎂 一只挑剔的猫头鹰指着图片：“照这个样子做 {k} 个：{cakeName}！”"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "Each cake has {nFruit} fruits on top. How many fruits for {k} cakes?",
+      "zh": "每个蛋糕上面放 {nFruit} 个水果，{k} 个蛋糕要多少个？"
+     },
+     "a": "k*nFruit",
+     "fam": "mul"
+    },
+    {
+     "gen": "times"
+    }
+   ],
+   "pass": 1,
+   "win": {
+    "text": {
+     "en": "The owl hoots happily and pays {k} coins!",
+     "zh": "猫头鹰开心地咕咕叫，付了 {k} 金币！"
+    },
+    "do": [
+     [
+      "cash",
+      "k"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "\"Not quite like the picture,\" says the owl.",
+     "zh": "“跟图片不太一样。”猫头鹰说。"
+    },
+    "do": []
+   }
+  },
+  {
+   "id": "cakeShow",
+   "p": 10,
+   "scene": "shop",
+   "icon": "🏆",
+   "vars": {
+    "j": [
+     3,
+     5
+    ],
+    "m": [
+     6,
+     9
+    ]
+   },
+   "show": {
+    "cake": {
+     "tiers": 3,
+     "shape": "layer"
+    }
+   },
+   "intro": {
+    "en": "🏆 Cake show! Your entry: {cakeName}. {j} judges each give up to {m} points.",
+    "zh": "🏆 蛋糕大赛！你的作品：{cakeName}。{j} 位评委，每人最高给 {m} 分。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "All {j} judges give full marks. What is the total score?",
+      "zh": "{j} 位评委都给满分，总分是多少？"
+     },
+     "a": "j*m",
+     "fam": "mul"
+    },
+    {
+     "calc": "{tiers} × {nFruit}",
+     "a": "tiers*nFruit",
+     "q": {
+      "en": "Bonus round: tiers × fruits on top",
+      "zh": "加分题：层数 × 顶上水果数"
+     }
+    }
+   ],
+   "pass": 1,
+   "win": {
+    "text": {
+     "en": "🥇 First prize! +6 coins and a gold medal.",
+     "zh": "🥇 一等奖！+6 金币和一枚金牌。"
+    },
+    "do": [
+     [
+      "cash",
+      "6"
+     ],
+     [
+      "item",
+      "medal"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "🥈 Second place — still great!",
+     "zh": "🥈 第二名，也很棒！"
+    },
+    "do": [
+     [
+      "cash",
+      "2"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "magicFruit",
+   "p": 10,
+   "scene": "forest",
+   "icon": "🌳",
+   "vars": {
+    "t": [
+     2,
+     5
+    ],
+    "k": [
+     3,
+     6
+    ],
+    "tot": "t*k"
+   },
+   "show": {
+    "cake": {
+     "fruit": "moonberry",
+     "fruit2": "rainbowgrape"
+    }
+   },
+   "intro": {
+    "en": "🌳 A strange tree in {place} grows moonberries and rainbow grapes! Perfect for: {cakeName}.",
+    "zh": "🌳 {place}里有一棵怪树，结着月光莓和彩虹葡萄！正好做：{cakeName}。"
+   },
+   "steps": [
+    {
+     "q": {
+      "en": "{t} branches, {k} magic fruits on each. How many?",
+      "zh": "{t} 根树枝，每根 {k} 个奇幻水果，一共几个？"
+     },
+     "a": "tot",
+     "fam": "mul"
+    },
+    {
+     "gen": "divide"
+    }
+   ],
+   "pass": 1,
+   "win": {
+    "text": {
+     "en": "Your basket is full of magic fruit — new cakes unlocked!",
+     "zh": "篮子装满奇幻水果，能做新蛋糕了！"
+    },
+    "do": [
+     [
+      "stock",
+      "t"
+     ],
+     [
+      "cash",
+      "2"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "A few fruits fall and roll away.",
+     "zh": "掉了几个果子，滚走了。"
+    },
+    "do": []
+   }
+  },
+  {
+   "id": "birthdayCake",
+   "p": 10,
+   "scene": "shop",
+   "icon": "🕯️",
+   "vars": {
+    "age": [
+     5,
+     12
+    ],
+    "b": [
+     2,
+     4
+    ],
+    "tot": "age*b"
+   },
+   "show": {
+    "cake": {
+     "topper": "candles",
+     "nTop": 5,
+     "pattern": "number",
+     "number": "age",
+     "shape": "layer"
+    }
+   },
+   "intro": {
+    "en": "🕯️ A little dragon turns {age} today! Bake: {cakeName}.",
+    "zh": "🕯️ 一只小龙今天 {age} 岁！做一个：{cakeName}。"
+   },
+   "steps": [
+    {
+     "calc": "{age} × {b}",
+     "a": "tot",
+     "q": {
+      "en": "Candles come in packs; you need {b} candles for each year (dragons breathe fire!).",
+      "zh": "小龙会喷火，每岁要准备 {b} 根蜡烛。"
+     }
+    },
+    {
+     "gen": "add"
+    }
+   ],
+   "pass": 1,
+   "win": {
+    "text": {
+     "en": "🎉 Happy birthday! The dragon family pays {age} coins.",
+     "zh": "🎉 生日快乐！小龙一家付了 {age} 金币。"
+    },
+    "do": [
+     [
+      "cash",
+      "age"
+     ]
+    ]
+   },
+   "lose": {
+    "text": {
+     "en": "Not enough candles — the dragon lights them with fire anyway.",
+     "zh": "蜡烛不够，小龙干脆自己喷火点上了。"
+    },
+    "do": []
+   }
   }
  ]
 }

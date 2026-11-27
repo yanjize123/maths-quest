@@ -2,15 +2,15 @@
 // 读 content/events.json、scenes.json、pacing.json；一个事件 = 前因(needs 标记) → 场景 → 几道题 → 结果动作 → 回店。
 // 新事件只写 JSON。动作词表（固定，加新词才改本文件）：cash 表达式 | stock 表达式 | flag 名 天数 [概率%] | state 名 天数 | cust 增减 天数 | item 名 | use 名（用掉一件）
 // 依赖 index.html / mq_play.js 的全局：ST、T、LANG、panel、actors、hud、save、askMQ、serveNext、PG、R、read、MQGen、bookSpec、pickMonster；MQ_E = MQEngine.evalExpr。
-const EVENTS_VERSION = 4;   // v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
+const EVENTS_VERSION = 5;   // v5：事件随机蛋糕（MQCake，变量 cakeName/nFruit/tiers）；v4： v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
 const MQEv = (() => {
   let ED = null, PD = null, MD = null;
   const ev = (x, v) => MQEngine.evalExpr(x, v);
   const fill = (s, v) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m));
   const tx = o => (o && (o[LANG] || o.en)) || '';
   async function load() {
-    const [e, s, p, m] = await Promise.all([read('content/events.json'), read('content/scenes.json'), read('content/pacing.json'), read('content/market.json')]);
-    ED = JSON.parse(e); MQScene.load(JSON.parse(s)); PD = JSON.parse(p); MD = JSON.parse(m);
+    const [e, s, p, m, ck] = await Promise.all([read('content/events.json'), read('content/scenes.json'), read('content/pacing.json'), read('content/market.json'), read('content/cakes.json')]);
+    ED = JSON.parse(e); MQScene.load(JSON.parse(s)); PD = JSON.parse(p); MD = JSON.parse(m); if (typeof MQCake !== 'undefined') MQCake.load(JSON.parse(ck));
     ST.flags = ST.flags || {}; ST.states = ST.states || {}; ST.cust = ST.cust || []; ST.items = ST.items || {};
   }
   // 变量：[lo,hi] 取整数；字符串是表达式（按书写顺序，可引用前面的变量）
@@ -38,6 +38,12 @@ const MQEv = (() => {
     for (const o of [ST.flags, ST.states]) for (const k of Object.keys(o)) if (--o[k] < 0) delete o[k];   // 值 = 还剩几天（0 = 今天最后一天）
     const d = ST.cust.reduce((s, c) => s + c[0], 0); ST.cust = ST.cust.map(c => [c[0], c[1] - 1]).filter(c => c[1] > 0); return d;
   }
+  // 事件里的随机蛋糕：show.cake 没写 type 时用 MQCake 组合库（写了的字段固定，值可写变量名）；蛋糕数据进变量 {cakeName} {nFruit} {tiers}
+  function cakeVars(sev) {
+    const c = sev.e.show && sev.e.show.cake; if (!c || c.type || typeof MQCake === 'undefined' || !MQCake.data()) return;
+    const fix = {}; for (const [k, x] of Object.entries(c)) fix[k] = typeof x === 'string' && x in sev.v ? sev.v[x] : x;
+    sev.cake = MQCake.random(sev.seed, fix); Object.assign(sev.v, { cakeName: MQCake.name(sev.cake, LANG), nFruit: sev.cake.nFruit, tiers: sev.cake.tiers });
+  }
   // ---- 导演（v3）：何时出事，只在这里决定；参数在 content/pacing.json ----
   // 按答题数计：每答 gap 道题来一次节拍；节拍 = 怪兽或场景事件（按 beats 权重，怪兽最多隔 monsterMaxGap 拍必来）；前因成立的事件优先；最近 3 个不重复。
   const rint = ([lo, hi]) => lo + Math.floor(Math.random() * (hi - lo + 1));
@@ -51,7 +57,8 @@ const MQEv = (() => {
       while ((r -= pool[k].p) > 0 && k < pool.length - 1) k++; e = pool[k];
     }
     ST.recentEv = [e.id, ...recent].slice(0, 3);
-    return { e, v: vars(e), seed: (Math.random() * 1e9) | 0, done: false };
+    const seed = (Math.random() * 1e9) | 0, v = vars(e), sev = { e, v, seed, done: false };
+    cakeVars(sev); return sev;
   }
   function due() {
     if (!PD || !T || T.inBeat) return null;
@@ -73,6 +80,7 @@ const MQEv = (() => {
   // 画面中间：群怪（show.grid/boss）或蛋糕（show.cake，字段值可写变量名）
   function crowd(e, v) {
     const sh = e.show; if (!sh) return '';
+    if (sh.cake && T.sev && T.sev.cake) return box(MQCake.draw(T.sev.cake), 170);
     if (sh.cake) { const c = {}; for (const [k, x] of Object.entries(sh.cake)) c[k] = typeof x === 'string' && x in v ? v[x] : x; return box(MQGen.cake(c), 150); }
     const [r, c] = sh.grid.map(k => v[k]), one = box(MQGen.monster(bookSpec(pickMonster()), 'idle'), 40);
     const grid = `<div style="display:grid;grid-template-columns:repeat(${c},40px);gap:2px">${Array(r * c).fill(one).join('')}</div>`;
@@ -137,5 +145,5 @@ const MQEv = (() => {
     const step = () => { if (i >= (e.steps || []).length) return e.market ? market(e, v, finish) : finish(); ask(e, e.steps[i], i, v, ok => { if (ok) right++; i++; step(); }); };
     step();
   }
-  return { load, tick, count, due, chooseEvent, on, run, pacing: () => PD, backdrop, vars, act, data: () => ED, EVENTS_VERSION };
+  return { load, tick, count, due, chooseEvent, cakeVars, on, run, pacing: () => PD, backdrop, vars, act, data: () => ED, EVENTS_VERSION };
 })();

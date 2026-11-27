@@ -1,0 +1,406 @@
+{
+ "version": 1,
+ "note": "蛋糕组合库：形状 × 大小 × 层数 × 装饰方式 × 表面图案 × 水果 × 顶饰 × 口味，全部随机组合（mq_cake.js 一套画法）。加水果/图案/顶饰只加一行 SVG（局部坐标约 −6…6，{c} 主色 {d} 深色 {l} 浅色）；加形状才改代码。w = 抽中权重。 shapes.cap = 顶上最多能清楚摆几个水果（订单要求的水果数超过 cap 时换形状，保证画面上数得清）。",
+ "flavours": {
+  "vanilla": {
+   "en": "vanilla",
+   "zh": "香草",
+   "sponge": "#f6dca0",
+   "cream": "#fff6e0"
+  },
+  "chocolate": {
+   "en": "chocolate",
+   "zh": "巧克力",
+   "sponge": "#8a5634",
+   "cream": "#5e3622"
+  },
+  "strawberry": {
+   "en": "strawberry",
+   "zh": "草莓",
+   "sponge": "#f7c1c8",
+   "cream": "#ff9fbf"
+  },
+  "lemon": {
+   "en": "lemon",
+   "zh": "柠檬",
+   "sponge": "#fbe58a",
+   "cream": "#fff6a8"
+  },
+  "blueberry": {
+   "en": "blueberry",
+   "zh": "蓝莓",
+   "sponge": "#d8c9f0",
+   "cream": "#a99cf0"
+  },
+  "mint": {
+   "en": "mint",
+   "zh": "薄荷",
+   "sponge": "#cdeedd",
+   "cream": "#9fe3c3"
+  },
+  "matcha": {
+   "en": "matcha",
+   "zh": "抹茶",
+   "sponge": "#b8d68a",
+   "cream": "#e4f2c8"
+  },
+  "redvelvet": {
+   "en": "red velvet",
+   "zh": "红丝绒",
+   "sponge": "#b8323f",
+   "cream": "#fff4ee"
+  },
+  "caramel": {
+   "en": "caramel",
+   "zh": "焦糖",
+   "sponge": "#e0a45a",
+   "cream": "#f6d2a0"
+  },
+  "taro": {
+   "en": "taro",
+   "zh": "香芋",
+   "sponge": "#c9a7e0",
+   "cream": "#ecdcff"
+  },
+  "galaxy": {
+   "en": "galaxy",
+   "zh": "银河",
+   "sponge": "#3a2a7a",
+   "cream": "#8f7bff"
+  },
+  "bubblegum": {
+   "en": "bubblegum",
+   "zh": "泡泡糖",
+   "sponge": "#ffb3e0",
+   "cream": "#9fe8ff"
+  }
+ },
+ "shapes": {
+  "layer": {
+   "w": 10,
+   "en": "layer cake",
+   "zh": "多层蛋糕",
+   "cap": 10
+  },
+  "sheet": {
+   "w": 5,
+   "en": "square cake",
+   "zh": "方蛋糕",
+   "cap": 10
+  },
+  "heart": {
+   "w": 5,
+   "en": "heart cake",
+   "zh": "爱心蛋糕",
+   "cap": 6
+  },
+  "bundt": {
+   "w": 5,
+   "en": "bundt cake",
+   "zh": "咕咕霍夫",
+   "cap": 8
+  },
+  "dome": {
+   "w": 5,
+   "en": "mirror dome",
+   "zh": "镜面圆顶",
+   "cap": 5
+  },
+  "cupcake": {
+   "w": 7,
+   "en": "cupcake",
+   "zh": "纸杯蛋糕",
+   "cap": 3
+  },
+  "rainbow": {
+   "w": 5,
+   "en": "rainbow slice",
+   "zh": "彩虹切块",
+   "cap": 6
+  },
+  "macaron": {
+   "w": 4,
+   "en": "macaron tower",
+   "zh": "马卡龙塔",
+   "cap": 1
+  },
+  "donut": {
+   "w": 4,
+   "en": "donut stack",
+   "zh": "甜甜圈塔",
+   "cap": 5
+  },
+  "pavlova": {
+   "w": 4,
+   "en": "pavlova",
+   "zh": "蛋白霜蛋糕",
+   "cap": 8
+  },
+  "cheese": {
+   "w": 4,
+   "en": "cheesecake",
+   "zh": "芝士蛋糕",
+   "cap": 10
+  },
+  "roll": {
+   "w": 3,
+   "en": "swiss roll",
+   "zh": "瑞士卷",
+   "cap": 5
+  }
+ },
+ "styles": {
+  "smooth": {
+   "w": 6,
+   "en": "smooth",
+   "zh": "光面"
+  },
+  "drip": {
+   "w": 6,
+   "en": "drip",
+   "zh": "滴淋"
+  },
+  "naked": {
+   "w": 3,
+   "en": "naked",
+   "zh": "半裸"
+  },
+  "ombre": {
+   "w": 4,
+   "en": "ombré",
+   "zh": "渐变"
+  },
+  "ruffle": {
+   "w": 3,
+   "en": "ruffle",
+   "zh": "褶边"
+  },
+  "rosette": {
+   "w": 4,
+   "en": "rosette",
+   "zh": "玫瑰边"
+  }
+ },
+ "patterns": {
+  "none": {
+   "w": 6
+  },
+  "dots": {
+   "w": 4,
+   "svg": "<circle r='2.2' fill='{l}'/>"
+  },
+  "hearts": {
+   "w": 3,
+   "svg": "<path d='M0 2 L-3 -1 A1.6 1.6 0 0 1 0 -2 A1.6 1.6 0 0 1 3 -1 Z' fill='{l}'/>"
+  },
+  "stars": {
+   "w": 3,
+   "svg": "<path d='M0 -3 L0.9 -0.9 L3 -0.9 L1.3 0.5 L1.9 2.7 L0 1.4 L-1.9 2.7 L-1.3 0.5 L-3 -0.9 L-0.9 -0.9Z' fill='#ffe066'/>"
+  },
+  "zigzag": {
+   "w": 3,
+   "band": "zig"
+  },
+  "stripes": {
+   "w": 3,
+   "band": "stripe"
+  },
+  "sprite": {
+   "w": 3,
+   "from": "scene"
+  },
+  "monster": {
+   "w": 3,
+   "from": "monster"
+  },
+  "number": {
+   "w": 2,
+   "from": "number"
+  }
+ },
+ "fruits": {
+  "strawberry": {
+   "w": 8,
+   "en": "strawberry",
+   "zh": "草莓",
+   "svg": "<path d='M0 -4 Q5 -4 4 1 Q2 5 0 5 Q-2 5 -4 1 Q-5 -4 0 -4Z' fill='#e8334a'/><path d='M-3 -4 L0 -2 L3 -4 L0 -6Z' fill='#3a9a3a'/><circle cx='-1.5' cy='0' r='.5' fill='#ffe'/><circle cx='1.5' cy='1.5' r='.5' fill='#ffe'/>"
+  },
+  "blueberry": {
+   "w": 5,
+   "en": "blueberry",
+   "zh": "蓝莓",
+   "svg": "<circle r='3.6' fill='#4a4fbf'/><circle cx='1' cy='-1.2' r='1' fill='#9aa0ff'/>"
+  },
+  "cherry": {
+   "w": 5,
+   "en": "cherry",
+   "zh": "樱桃",
+   "svg": "<path d='M0 -2 Q2 -8 5 -9' stroke='#3a7a2a' stroke-width='1' fill='none'/><circle r='3.8' fill='#c8102e'/><circle cx='-1.2' cy='-1.2' r='1' fill='#fff8'/>"
+  },
+  "raspberry": {
+   "w": 4,
+   "en": "raspberry",
+   "zh": "覆盆子",
+   "svg": "<g fill='#e0306a'><circle cx='-1.6' cy='-1' r='1.8'/><circle cx='1.6' cy='-1' r='1.8'/><circle cx='0' cy='1.4' r='1.8'/><circle cx='0' cy='-2.6' r='1.6'/></g>"
+  },
+  "kiwi": {
+   "w": 4,
+   "en": "kiwi",
+   "zh": "猕猴桃",
+   "svg": "<circle r='5' fill='#8a6a3a'/><circle r='4.3' fill='#8fd14f'/><circle r='1.4' fill='#f4f8d0'/><g fill='#222'><circle cx='2.3' r='.5'/><circle cx='-2.3' r='.5'/><circle cy='2.3' r='.5'/><circle cy='-2.3' r='.5'/></g>"
+  },
+  "orange": {
+   "w": 4,
+   "en": "orange slice",
+   "zh": "橙片",
+   "svg": "<circle r='5' fill='#ff9a1f'/><circle r='4.2' fill='#ffc35a'/><path d='M0 0 L0 -4 M0 0 L3.5 -2 M0 0 L3.5 2 M0 0 L0 4 M0 0 L-3.5 2 M0 0 L-3.5 -2' stroke='#fff3' stroke-width='.8'/>"
+  },
+  "grape": {
+   "w": 3,
+   "en": "grapes",
+   "zh": "葡萄",
+   "svg": "<g fill='#8a4fbf'><circle cx='-2' cy='-2' r='2'/><circle cx='2' cy='-2' r='2'/><circle cx='0' cy='1' r='2'/><circle cx='0' cy='-4.5' r='1.8'/></g>"
+  },
+  "mango": {
+   "w": 3,
+   "en": "mango",
+   "zh": "芒果",
+   "svg": "<rect x='-3.5' y='-3.5' width='7' height='7' rx='1.5' fill='#ffbf2e'/><rect x='-2' y='-2' width='3' height='3' fill='#ffd86a'/>"
+  },
+  "dragonfruit": {
+   "w": 3,
+   "en": "dragon fruit",
+   "zh": "火龙果",
+   "svg": "<circle r='5' fill='#e8338a'/><circle r='4' fill='#fff'/><g fill='#222'><circle cx='-1.5' cy='-1' r='.4'/><circle cx='1.2' cy='-1.8' r='.4'/><circle cx='1.5' cy='1.2' r='.4'/><circle cx='-1' cy='1.8' r='.4'/></g>"
+  },
+  "starfruit": {
+   "w": 3,
+   "en": "star fruit",
+   "zh": "杨桃",
+   "svg": "<path d='M0 -5 L1.5 -1.5 L5 -1.5 L2.2 1 L3.2 4.5 L0 2.5 L-3.2 4.5 L-2.2 1 L-5 -1.5 L-1.5 -1.5Z' fill='#f4e04a' stroke='#c9b020' stroke-width='.6'/>"
+  },
+  "banana": {
+   "w": 3,
+   "en": "banana slice",
+   "zh": "香蕉片",
+   "svg": "<circle r='4' fill='#fff2b0' stroke='#e8d070' stroke-width='.8'/><circle r='1' fill='#d8c070'/>"
+  },
+  "moonberry": {
+   "w": 3,
+   "magic": 1,
+   "en": "moonberry",
+   "zh": "月光莓",
+   "svg": "<circle r='4.5' fill='#c9d8ff'/><circle cx='1.8' cy='-1' r='3.8' fill='#6a78d8'/><circle r='5.5' fill='none' stroke='#fff8' stroke-width='.6'/>"
+  },
+  "rainbowgrape": {
+   "w": 3,
+   "magic": 1,
+   "en": "rainbow grape",
+   "zh": "彩虹葡萄",
+   "svg": "<circle cx='-2' cy='-1' r='2' fill='#ff6b6b'/><circle cx='2' cy='-1' r='2' fill='#ffd93b'/><circle cx='0' cy='2' r='2' fill='#4fd1a5'/><circle cx='0' cy='-3.8' r='1.8' fill='#6b8bff'/>"
+  },
+  "crystalpear": {
+   "w": 2,
+   "magic": 1,
+   "en": "crystal pear",
+   "zh": "水晶梨",
+   "svg": "<path d='M0 -5 Q3 -2 3.5 2 Q3 5 0 5 Q-3 5 -3.5 2 Q-3 -2 0 -5Z' fill='#bff4ff' stroke='#7fd8f0' stroke-width='.7' opacity='.9'/><path d='M-1 -2 L-1.8 2' stroke='#fff' stroke-width='.8'/>"
+  },
+  "flameberry": {
+   "w": 2,
+   "magic": 1,
+   "en": "flame berry",
+   "zh": "火焰莓",
+   "svg": "<path d='M0 -6 Q4 -2 3 2 Q2 5 0 5 Q-2 5 -3 2 Q-4 -2 0 -6Z' fill='#ff5a1f'/><path d='M0 -3 Q2 0 1.2 2.5 Q0 3.5 -1.2 2.5 Q-2 0 0 -3Z' fill='#ffd23f'/>"
+  },
+  "cloudplum": {
+   "w": 2,
+   "magic": 1,
+   "en": "cloud plum",
+   "zh": "云朵李",
+   "svg": "<circle r='4' fill='#f0e6ff'/><circle cx='-2.5' cy='1' r='2.5' fill='#fff'/><circle cx='2.5' cy='1' r='2.5' fill='#fff'/><circle cx='0' cy='-1' r='1' fill='#c9a7ff'/>"
+  },
+  "starmelon": {
+   "w": 2,
+   "magic": 1,
+   "en": "star melon",
+   "zh": "星星瓜",
+   "svg": "<circle r='4.5' fill='#3a2a7a'/><circle cx='-1.5' cy='-1' r='.7' fill='#fff'/><circle cx='1.5' cy='1.2' r='.5' fill='#fff'/><circle cx='1' cy='-2' r='.4' fill='#ffe066'/>"
+  },
+  "jellybean": {
+   "w": 2,
+   "magic": 1,
+   "en": "jelly pod",
+   "zh": "果冻豆",
+   "svg": "<ellipse rx='5' ry='3' fill='#7fe0a0'/><ellipse cx='-1.5' rx='1.4' ry='1.6' fill='#ff8fc0'/><ellipse cx='1.5' rx='1.4' ry='1.6' fill='#ffd23f'/>"
+  }
+ },
+ "layouts": {
+  "ring": 4,
+  "row": 3,
+  "pile": 3,
+  "half": 2,
+  "scatter": 3
+ },
+ "toppers": {
+  "none": {
+   "w": 4
+  },
+  "candles": {
+   "w": 4,
+   "svg": "<rect x='-1.3' y='-10' width='2.6' height='10' fill='{c}'/><path d='M0 -15 Q2 -12 0 -10 Q-2 -12 0 -15Z' fill='#ffb02e'/>",
+   "n": [
+    1,
+    5
+   ]
+  },
+  "macarons": {
+   "w": 3,
+   "svg": "<ellipse cx='0' cy='-4' rx='4.5' ry='2' fill='{c}'/><rect x='-4' y='-3.3' width='8' height='1.4' fill='#fff'/><ellipse cx='0' cy='-1.5' rx='4.5' ry='2' fill='{c}'/>",
+   "n": [
+    1,
+    3
+   ]
+  },
+  "flag": {
+   "w": 2,
+   "svg": "<path d='M0 0 V-16' stroke='#888' stroke-width='.8'/><path d='M0 -16 L8 -13 L0 -10Z' fill='{c}'/>",
+   "n": [
+    1,
+    2
+   ]
+  },
+  "crown": {
+   "w": 2,
+   "svg": "<path d='M-7 0 L-7 -7 L-3.5 -3 L0 -9 L3.5 -3 L7 -7 L7 0Z' fill='#ffd23f' stroke='#e0a800' stroke-width='.6'/><circle cx='0' cy='-9' r='1' fill='#e8334a'/>",
+   "n": [
+    1,
+    1
+   ]
+  },
+  "shards": {
+   "w": 2,
+   "svg": "<path d='M-2 0 L0 -10 L3 -1Z' fill='{d}'/><path d='M2 0 L5 -7 L6 0Z' fill='{d}' opacity='.8'/>",
+   "n": [
+    1,
+    3
+   ]
+  },
+  "sparkler": {
+   "w": 2,
+   "svg": "<path d='M0 0 V-12' stroke='#999'/><g stroke='#ffe066' stroke-width='.8'><path d='M0 -12 L0 -17 M0 -12 L4 -15 M0 -12 L-4 -15 M0 -12 L4 -10 M0 -12 L-4 -10'/></g>",
+   "n": [
+    1,
+    2
+   ]
+  },
+  "monster": {
+   "w": 2,
+   "from": "monster",
+   "n": [
+    1,
+    1
+   ]
+  }
+ }
+}
