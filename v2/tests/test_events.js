@@ -18,7 +18,7 @@ for (const e of ED.events) {
   if (e.needsItem) ok(ED.items[e.needsItem], w + ' needsItem 无物品 ' + e.needsItem);
   const CK = C('cakes.json'); if (e.show && e.show.cake) { const c = e.show.cake; if (c.type) ok(CAKES[c.type], w + ' 蛋糕类型 ' + c.type); for (const [k, tab] of [['shape', 'shapes'], ['fruit', 'fruits'], ['fruit2', 'fruits'], ['topper', 'toppers'], ['pattern', 'patterns'], ['style', 'styles'], ['flavour', 'flavours']]) if (c[k] && !String(c[k]).startsWith('$')) ok(CK[tab][c[k]], `${w} 蛋糕${k} 不存在 ${c[k]}`); }
   ok(e.steps.length || e.market, w + ' 没有题也不是集市');
-  ok(C('pacing.json').mix[e.cat], w + ' 没有类别 cat 或类别不在 pacing.mix 里: ' + e.cat);
+  ok(C('tuning.json').pacing.mix[e.cat], w + ' 没有类别 cat 或类别不在 tuning.pacing.mix 里: ' + e.cat);
   e.steps.forEach((s, i) => { if (s.gen) ok(GD.families[s.gen], `${w} 步 ${i} 题型族不存在 ${s.gen}`); else ok(s.a != null && (s.q || s.calc), `${w} 步 ${i} 缺 q/calc 或 a`); });
   for (let n = 0; n < 500; n++) {
     const v = {}; for (const [k, d] of Object.entries(e.vars || {})) v[k] = Array.isArray(d) ? d[0] + Math.floor(Math.random() * (d[1] - d[0] + 1)) : E.evalExpr(d, v);
@@ -52,7 +52,7 @@ const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8'), 
 ok((html.match(/const BUILD = '(\w+)'/) || [])[1] === build, `index.html BUILD ≠ build.json ${build}`);
 (html.match(/<script src="[^"]+"/g) || []).forEach(t => ok(t.includes('?b=' + build), '脚本缺版本号 ' + t));
 // ---- 导演节奏：真实数据下模拟答 200 题，节拍间隔不超过 gap 上限，怪兽不超过 monsterMaxGap 拍不来 ----
-const PD = C('pacing.json'), vm = require('vm');
+const PD = C('tuning.json').pacing, vm = require('vm');
 const ctx = { ST: { flags: {}, states: {}, cust: [], items: {}, seed: 5 }, T: {}, LANG: 'zh', pickMonster: () => 0, MQEngine: E, MQScene: S, read: f => Promise.resolve(fs.readFileSync(path.join(__dirname, '..', f), 'utf8')), console };
 vm.createContext(ctx); vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'rng.js'), 'utf8'), ctx); vm.runInContext(fs.readFileSync(path.join(__dirname, '..', 'mq_events.js'), 'utf8') + ';this.MQEv = MQEv;', ctx);
 ctx.MQEv.load().then(() => {

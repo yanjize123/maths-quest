@@ -17,7 +17,7 @@ const STATIC = {
     if (!fs.existsSync(path.join(ROOT, 'content', 'tuning.json'))) bad.push('缺 content/tuning.json');
     if (/const EVENTS = \[/.test(src('index.html'))) bad.push('index.html EVENTS');
     if ('events' in JSON.parse(src('content/game_data.json'))) bad.push('game_data.json events 概率');
-    for (const f of jsFiles()) if (/Math\.random\(\)\s*[<>]\s*0?\.\d|rnd\(\)\s*[<>]\s*0?\.\d|roll\(\s*\d/.test(src(f))) bad.push(f + ' 有写死的概率');
+    for (const f of ['index.html', 'mq_events.js', 'mq_play.js']) if (/(random|rnd|\br|MQRng\.r)\(\)\s*[<>]\s*0?\.\d|chance\(\s*\d|roll\(\s*\d/.test(src(f))) bad.push(f + ' 有写死的概率');   // 游戏层文件；出题器、画图库内部常数不算
     return { ok: !bad.length, note: bad.length ? bad.join('；') : 'ok' };
   },
 };

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Penguin Cupcakes · Maths Quest v2</title>
-<!-- 甜品店 第 1 关 页面 v008f（事件类别比例 pacing.mix + 换场景保底 + 不连续同类；奇幻水果篮；蛋糕图鉴；蛋糕组合库 mq_cake.js + content/cakes.json：12 形状 × 6 装饰 × 9 图案 × 18 水果（含 7 种奇幻水果）× 5 摆法 × 8 顶饰 × 12 口味，订单与事件都用；纯算式步 calc/gen 约一半、蛋糕任务链（龙公主城堡、人鱼珍珠挞、巨人云朵卷）、集市买武器与怪东西（算找零）、道具开启场景、蛋糕新画法挞/瑞士卷/城堡；41 个事件；导演 pacing.json 按答题数出事件/怪兽，每 2–4 题一次；18 个事件 9 个场景；版本自检防缓存混用；每天 2–3 个场景事件，开头/中间/结尾；场景事件机制：content/scenes.json + events.json，通用执行器 mq_events.js、通用画法 mq_scene.js；墙洞、群怪、虫洞、恐龙、传送门、冰封 6 个事件；怪兽 45% + 保底：最多隔 2 天必来；mq_play v3 起不问年级、自动定难度；2026-11-27 随机事件层 mq_play.js：怪兽来抢+选武器+怪兽卡图鉴、换店员、顾客高峰、多层蛋糕订单；程序化画图 mq_gen.js；题目借用 ../engine.js。v006 宝箱只给东西不给金币；v005 金币写法统一、草莓不够可去补货、每 3 件一次随机大变化；v004 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
+<!-- 甜品店 第 1 关 页面 v009b（迁移第 1–3 步：需求检查与多天模拟、rng.js 唯一随机与冻结题（中英切换内容不变、当天存档）、参数收进 tuning.json + 每天换场景保底；此前 v008f：事件类别比例 pacing.mix + 换场景保底 + 不连续同类；奇幻水果篮；蛋糕图鉴；蛋糕组合库 mq_cake.js + content/cakes.json：12 形状 × 6 装饰 × 9 图案 × 18 水果（含 7 种奇幻水果）× 5 摆法 × 8 顶饰 × 12 口味，订单与事件都用；纯算式步 calc/gen 约一半、蛋糕任务链（龙公主城堡、人鱼珍珠挞、巨人云朵卷）、集市买武器与怪东西（算找零）、道具开启场景、蛋糕新画法挞/瑞士卷/城堡；41 个事件；导演 pacing.json 按答题数出事件/怪兽，每 2–4 题一次；18 个事件 9 个场景；版本自检防缓存混用；每天 2–3 个场景事件，开头/中间/结尾；场景事件机制：content/scenes.json + events.json，通用执行器 mq_events.js、通用画法 mq_scene.js；墙洞、群怪、虫洞、恐龙、传送门、冰封 6 个事件；怪兽 45% + 保底：最多隔 2 天必来；mq_play v3 起不问年级、自动定难度；2026-11-27 随机事件层 mq_play.js：怪兽来抢+选武器+怪兽卡图鉴、换店员、顾客高峰、多层蛋糕订单；程序化画图 mq_gen.js；题目借用 ../engine.js。v006 宝箱只给东西不给金币；v005 金币写法统一、草莓不够可去补货、每 3 件一次随机大变化；v004 方案 A 每日橱窗、金币、答对奖草莓、过夜坏 25%、随机事件、宝箱外观惊喜；v003 切换语言停在当前步骤；v002 中英切换；v001 首版）：故事线 + 经营线（进货→做蛋糕→收钱→结账→升级→宝箱）。
      规则：business_loop.md（yanjize123/claude 条目 P-20261126-maths-game）。奖惩不对称：对方吃亏的错误被拒绝要重算，对方占便宜的错误被接受、店里亏。 -->
 <style>
  :root{--pink:#ff7eb6;--ink:#3a2a3a}
@@ -46,18 +46,18 @@
  </div>
 </div>
 
-<script src="rng.js?b=009a"></script>
-<script src="config.js?b=009a"></script>
-<script src="rules.js?b=009a"></script>
-<script src="mq_engine.js?b=009a"></script>
-<script src="mq_store.js?b=009a"></script>
-<script src="mq_art.js?b=009a"></script>
-<script src="../engine.js?b=009a"></script>
-<script src="mq_gen.js?b=009a"></script>
-<script src="mq_play.js?b=009a"></script>
-<script src="mq_scene.js?b=009a"></script>
-<script src="mq_cake.js?b=009a"></script>
-<script src="mq_events.js?b=009a"></script>
+<script src="rng.js?b=009b"></script>
+<script src="config.js?b=009b"></script>
+<script src="rules.js?b=009b"></script>
+<script src="mq_engine.js?b=009b"></script>
+<script src="mq_store.js?b=009b"></script>
+<script src="mq_art.js?b=009b"></script>
+<script src="../engine.js?b=009b"></script>
+<script src="mq_gen.js?b=009b"></script>
+<script src="mq_play.js?b=009b"></script>
+<script src="mq_scene.js?b=009b"></script>
+<script src="mq_cake.js?b=009b"></script>
+<script src="mq_events.js?b=009b"></script>
 <script>
 const PAGE_VERSION = 7, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
 const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
@@ -137,7 +137,7 @@ $('lang2').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); hud(); if ($(
 renderLogin();
 $('ll').onclick = () => { S = { name: 'guest', local: true }; ST = fixShop(MQStore.loadProgress('guest') || newShop()); boot(); };
 
-const BUILD = '009a';   // 与 content/build.json 一致；不一致说明浏览器用了旧缓存
+const BUILD = '009b';   // 与 content/build.json 一致；不一致说明浏览器用了旧缓存
 async function boot() {
   try { const b = JSON.parse(await read('content/build.json')).build; if (b !== BUILD) document.body.insertAdjacentHTML('afterbegin', `<div style="background:#ffd23f;padding:8px;text-align:center">${LANG === 'zh' ? '有新版本，请按 Ctrl+F5（手机下拉）刷新' : 'New version available — please refresh (Ctrl+F5)'}（${BUILD} → ${b}）</div>`); } catch (e) {}
   C = await E.loadContent(read, [1, 'level01biz']); SHOP = JSON.parse(await read('content/shop_A.json')).items;
@@ -383,7 +383,7 @@ function openChest(tier) {
       surprise += `<div class="say good">${t('chestBerry')(berries)}</div>`;
       const free = candidates()[0], left = APRONS.filter(c => !ST.aprons.includes(c));
       if (got === 'gold' && free) { ST.owned.push(free.id); const n = ST.owned.length; surprise += `<div class="say good">${t('chestItem')(free.emoji + ' ' + (LANG === 'zh' ? free.zh : free.en))}</div>` + (n % 3 === 0 ? `<div class="say good">${bigChange(n)}</div>` : ''); }
-      else if (left.length && (got === 'gold' || (got === 'silver' && MQRng.chance(50)))) { const c = left[R(0, left.length - 1)]; ST.aprons.push(c); ST.apron = c; surprise += `<div class="say good">${t('newapron')}</div>`; }
+      else if (left.length && (got === 'gold' || (got === 'silver' && MQRng.chance(MQEv.tuning().chest.silverApron)))) { const c = left[R(0, left.length - 1)]; ST.aprons.push(c); ST.apron = c; surprise += `<div class="say good">${t('newapron')}</div>`; }
       hud(); actors(PG(), '<div style="font-size:80px">🎉</div>', A.dragon(DRAGONS[ST.day % 3]));
       $('msg').innerHTML = `<span class="good">${t('opened')(got)}</span>${surprise}${wrong && got !== tier ? `<div class="note">${t('became')(got)}</div>` : ''}<div class="row"><button id="nx">${t('sleep')}</button></div>`;
       $('nx').onclick = () => { ST.day++; save(); morning(); };
@@ -391,7 +391,7 @@ function openChest(tier) {
   });
 }
 
-function showSleep() { CUR = showSleep; actors(PG(), '', A.dragon(DRAGONS[ST.day % 3])); panel(`<div class="row"><button id="nx">${t('sleep')}</button></div>`); $('nx').onclick = () => { ST.spoiled = T && T.helper && T.helper.bonus === 'fresh' ? 0 : Math.floor(ST.stock * 0.25); ST.stock -= ST.spoiled; ST.day++; save(); morning(); }; }
+function showSleep() { CUR = showSleep; actors(PG(), '', A.dragon(DRAGONS[ST.day % 3])); panel(`<div class="row"><button id="nx">${t('sleep')}</button></div>`); $('nx').onclick = () => { ST.spoiled = T && T.helper && T.helper.bonus === 'fresh' ? 0 : Math.floor(ST.stock * MQEv.tuning().spoil / 100); ST.stock -= ST.spoiled; ST.day++; save(); morning(); }; }
 
 const PALETTES = [{ awning: '#6fd3a8', wall: '#ecfff6' }, { awning: '#f0a35a', wall: '#fff6ea' }, { awning: '#8fb6ff', wall: '#eef4ff' }, { awning: '#c79bff', wall: '#f6efff' }, { awning: '#ff7b7b', wall: '#fff0ee' }, { awning: '#ffd23f', wall: '#fffbe6' }];
 // 大变化：第 3/6/10 件固定内容（颜色随机），之后每 3 件从惊喜池随机挑一个（Jize 00:37：经常有变化、带随机性）
@@ -403,17 +403,9 @@ function bigChange(n) {
   const pool = [() => { ST.palette = pick(PALETTES); return t('chPaint'); }, () => { ST.theme = ST.theme === 'space' ? 'shop' : 'space'; return t('chSpace'); }, () => { const c = pick(APRONS); ST.apron = c; if (!ST.aprons.includes(c)) ST.aprons.push(c); return t('newapron'); }, () => { const g = R(4, 8); ST.stock += g; return t('chGift')(g); }, () => { ST.helper = pick(APRONS); return t('chHelperNew'); }];
   return pick(pool)();
 }
-const EVENTS = [
-  { id: 'drizzle', p: 6, bad: 1, icon: '🌧️', orders: -1, en: 'Drizzle! One customer stays home today.', zh: '下小雨了！今天少来一位顾客。' },
-  { id: 'rainbow', p: 5, icon: '🌈', orders: 1, en: 'A rainbow brings an extra customer!', zh: '彩虹出来了，多来一位顾客！' },
-  { id: 'dearer', p: 5, bad: 1, icon: '📈', price: 1, en: 'Strawberries cost 1 coin more per punnet today.', zh: '今天草莓每盒贵 1 金币。' },
-  { id: 'cheaper', p: 5, icon: '📉', price: -1, en: 'Strawberry sale: 1 coin less per punnet today!', zh: '草莓大减价：今天每盒便宜 1 金币！' },
-  { id: 'fairy', p: 4, bad: 1, icon: '🧚', steal: 5, en: 'The naughty fairy sneaked in and took some strawberries!', zh: '坏仙子偷偷溜进来，拿走了一些草莓！' },
-  { id: 'fair', p: 4, icon: '🎪', cake: 1, en: 'Village fair! Cupcakes sell for 1 coin more today.', zh: '村里赶集！今天每个蛋糕多卖 1 金币。' },
-  { id: 'oven', p: 4, bad: 1, icon: '🔧', cost: 8, en: 'A screw in the oven came loose. Repair: 8 coins.', zh: '烤箱螺丝松了，修理花 8 金币。' },
-];  // 改编自 Codex Q-20261126-2350 方案 A 事件表（概率为假设）
+// 早上的小事件（下雨、彩虹、涨价……）与概率在 content/tuning.json morning（v009b 起；原写在这里）
 function pickEvent() {
-  const last = ST.lastEvent, r = MQRng.r() * 100; let acc = 0;
+  const EVENTS = MQEv.tuning().morning, last = ST.lastEvent, r = MQRng.r() * 100; let acc = 0;
   for (const e of EVENTS) { acc += e.p; if (r < acc) { if (e.bad && last && last.bad) return null; if (e.cost && ST.cash < -15) return null; ST.lastEvent = { id: e.id, bad: !!e.bad }; return { ...e }; } }
   ST.lastEvent = null; return null;
 }

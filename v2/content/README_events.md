@@ -38,7 +38,7 @@
 ## 集市货品（content/market.json）
 `{kind:"weapon", rarity, price}` 从未拥有的武器里抽；其余 `{id, icon, en, zh, price, item?, do?, note?}`。道具可开启事件（如 compass → compassTrip）。
 
-## 何时出事：导演（content/pacing.json，只在这里调节奏）
+## 何时出事：导演（content/tuning.json 的 pacing 与 floors，只在这里调节奏；v009b 起 pacing.json 并入 tuning.json）
 - `gap` [2,4]：每答 2–4 道题来一次节拍；`beats` 怪兽与场景事件的权重；`monsterMaxGap` 最多隔几拍必来怪兽；`first` 每天第几题后可来第一拍。
 - 节拍只在两单之间插入（serveNext），节拍进行中的题不计数；最近 3 个事件不重复。
 

@@ -646,28 +646,6 @@
    "zh": "刺猬把冰箱看好了：今晚草莓不会坏。"
   }
  ],
- "events": [
-  {
-   "id": "monster",
-   "p": 45,
-   "where": "open"
-  },
-  {
-   "id": "helper",
-   "p": 22,
-   "where": "morning"
-  },
-  {
-   "id": "rush",
-   "p": 15,
-   "where": "close"
-  },
-  {
-   "id": "layer",
-   "p": 35,
-   "where": "orders"
-  }
- ],
  "rush": {
   "seconds": 60,
   "gens": [

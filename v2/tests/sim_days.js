@@ -1,6 +1,6 @@
 // sim_days.js — 甜品店多天模拟（node，无浏览器、无参数，秒级）。P-20261126-maths-game 迁移第 1 步（script_framework_v2.md §E-1）。
 // 用真实的 mq_events.js（导演、选事件、结果动作）+ 真实内容 JSON，按页面的一天流程走：进货 1 题 → 每单做蛋糕 1 题、收钱 1 题（每单前问导演要不要出节拍）→ 高峰 → 晚上结账 1 题。
-// 假设（写在这里，便于以后对照）：每题一次答对率 75%（只影响打怪轮数）；事件都按“赢”结算（物品、前因照常流转）；不计重试。
+// 假设（写在这里，便于以后对照）：每题一次答对率 75%（只影响打怪轮数）；事件都按“赢”结算（物品、前因照常流转）；集市一半时候买一件带物品的货；不计重试。
 // 输出：每天平均题数、纯算式占比、节拍、换场景次数与最长间隔、怪兽、每个事件第几天第一次出现；写入 tests/sim_report.json。
 // 被 check_requirements.js 调用（module.exports.simulate）。
 const fs = require('fs'), path = require('path'), vm = require('vm');
@@ -21,16 +21,17 @@ function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Ma
 async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
   const rnd = mulberry(seed), ctx = makeCtx(null); ctx.ST.seed = seed; const GD = C('game_data.json'), ED = C('events.json');
   await ctx.MQEv.load();
-  const P = id => (GD.events.find(e => e.id === id) || {}).p || 0, roll = p => rnd() * 100 < p;
+  const D = C('tuning.json').day, P = id => D[id] || 0, roll = p => rnd() * 100 < p, MD = C('market.json');
   const famPure = f => { const g = GD.families[f].gens.filter(x => MQ.G[x]); return g.filter(x => MQ.isPure(x)).length / Math.max(1, g.length); };
   const rushPure = GD.rush.gens.filter(x => MQ.isPure(x)).length / GD.rush.gens.length;
   const tot = { q: 0, pure: 0, beats: 0, events: 0, trips: 0, monsters: 0, daysNoTrip: 0 }, first = {}, catN = {};
-  let sinceTrip = 0, maxTripGap = 0, sinceMon = 0, maxMonGap = 0, sinceBeatQ = 0, maxBeatGapQ = 0, prevCat = null, rep = 0;
+  let sinceTrip = 0, maxTripGap = 0, sinceMon = 0, maxMonGap = 0, sinceBeatQ = 0, maxBeatGapQ = 0, prevCat = null, rep = 0, prevCaused = false; const repD = {};
   const perDay = [];
   for (let d = 1; d <= days; d++) {
     const ST = ctx.ST; ST.day = d; ctx.T = { inBeat: false }; const T = ctx.T;
     const dc = ctx.MQEv.tick(); let nCust = Math.max(2, 5 + dc), day = { q: 0, pure: 0, trips: 0, events: 0, monsters: 0 };
     if (roll(P('helper')) && rnd() < 1 / GD.helpers.length) nCust++;   // 帮手 extra（6 种之一）
+    T.orders = Array(nCust).fill(0); T.idx = 0;   // 导演的每天保底要看剩几单
     const rush = roll(P('rush'));
     const word = (n = 1) => { for (let i = 0; i < n; i++) { day.q++; ctx.MQEv.count(); sinceBeatQ++; } };
     const pureQ = (n, share) => { day.q += n; day.pure += n * share; };   // 节拍内的题不计导演
@@ -42,18 +43,19 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
         let hp = 2 * (1 + Math.floor(rnd() * 3)), turns = 0; while (hp > 0 && turns < 12) { turns++; if (rnd() < acc) hp -= 2 * (rnd() < 1 / 3 ? 2 : 1); }
         pureQ(turns, famPure(fam)); ctx.MQEv.on('battle'); T.inBeat = false;
       } else {
-        sinceMon++; maxMonGap = Math.max(maxMonGap, sinceMon);
+        if (!T.sev.forced) { sinceMon++; maxMonGap = Math.max(maxMonGap, sinceMon); }   // 保底加出的节拍不算
         const sev = T.sev, e = sev.e; day.events++; catN[e.cat] = (catN[e.cat] || 0) + 1; if (!(e.id in first)) first[e.id] = d;
-        if (!e.needs) { if (e.cat === prevCat) rep++; prevCat = e.cat; }
+        if (!e.needs && e.cat === prevCat) { rep++; const k = e.cat + (T.sev.forced ? ':保底' : '') + (prevCaused ? ':前因后' : ''); repD[k] = (repD[k] || 0) + 1; } prevCat = e.cat; prevCaused = !!e.needs;   // 前因事件（任务链）可接同类；无前因事件不得与上一个事件同类
         if (e.cat === 'trip') { day.trips++; sinceTrip = 0; } else { sinceTrip++; maxTripGap = Math.max(maxTripGap, sinceTrip); }
         for (const s of e.steps || []) pureQ(1, s.gen || s.calc ? 1 : 0);
-        if (e.market) pureQ(1, 1);
+        if (e.market) { pureQ(1, 1); const g = MD.goods.filter(x => x.item && x.price <= Math.max(ST.cash, 15)); if (g.length && rnd() < 0.5) { const x = g[Math.floor(rnd() * g.length)]; ST.items[x.item] = (ST.items[x.item] || 0) + 1; } }   // 一半时候买一件带物品的货（物品链可达）
         ctx.MQEv.act((e.win || {}).do, sev.v); sev.done = true; T.inBeat = false;
       }
       return true;
     };
     word(1);                                         // 早上进货
-    for (let i = 0; i < nCust; i++) { while (beat()); word(2); }   // 每单前问导演；做蛋糕 + 收钱
+    for (let i = 0; i < nCust; i++) { T.idx = i; while (beat()); word(2); }
+    T.idx = nCust;   // 每单前问导演；做蛋糕 + 收钱
     while (beat());
     if (rush) pureQ(10, rushPure);                   // 60 秒高峰约 10 题
     word(1);                                         // 晚上结账
@@ -75,10 +77,10 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
     max_trip_gap_events: maxTripGap,
     max_monster_gap_beats: maxMonGap,
     max_beat_gap_questions: maxBeatGapQ,
-    same_cat_repeats: rep,
+    same_cat_repeats: rep, repeat_detail: repD,
     cat_share: Object.fromEntries(Object.entries(catN).map(([k, n]) => [k, +(n / tot.events).toFixed(3)])),
     free_events: free.length, never_seen: never,
-    last_first_seen_day: Math.max(0, ...Object.values(first)),
+    last_first_seen_day: Math.max(0, ...ED.events.filter(e => !e.needs && !e.needsItem && !e.needsPantry).map(e => first[e.id] ?? days + 1)),   // 不靠道具/水果篮的事件；靠道具的看 never_seen（取决于孩子买不买） late_events: Object.entries(first).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k, d]) => k + '@' + d),
   };
   return r;
 }

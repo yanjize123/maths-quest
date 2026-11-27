@@ -1,6 +1,6 @@
 {
- "date": "2026-11-27T22:10:54.823Z",
- "hard": 8,
+ "date": "2026-11-27T22:14:53.440Z",
+ "hard": 1,
  "rows": [
   {
    "id": "R1",
@@ -15,7 +15,7 @@
    "id": "R2a",
    "ok": true,
    "target": false,
-   "got": "[0.298,0.316,0.299]",
+   "got": "[0.187,0.186,0.182]",
    "want": "between [0.15,0.35]",
    "note": "",
    "said": "怪兽要有，但不压过场景（比例差不多）"
@@ -33,61 +33,61 @@
    "id": "R3a",
    "ok": true,
    "target": false,
-   "got": "0.302",
+   "got": "0.48",
    "want": ">= 0.3",
    "note": "",
    "said": "特殊场景要经常出现——孩子不烦的关键"
   },
   {
    "id": "R3b",
-   "ok": false,
+   "ok": true,
    "target": false,
-   "got": "5",
+   "got": "3",
    "want": "<= 3",
    "note": "",
    "said": "特殊场景保底：最多隔 3 个事件"
   },
   {
    "id": "R3c",
-   "ok": false,
+   "ok": true,
    "target": false,
-   "got": "0.77",
+   "got": "2.01",
    "want": ">= 2",
    "note": "",
    "said": "特殊场景保底：每天都有、每天几次"
   },
   {
    "id": "R3d",
-   "ok": false,
+   "ok": true,
    "target": false,
-   "got": "64",
+   "got": "0",
    "want": "<= 0",
    "note": "",
    "said": "不能有一天一次特殊场景都没有"
   },
   {
    "id": "R4a",
-   "ok": false,
+   "ok": true,
    "target": false,
-   "got": "175",
+   "got": "49",
    "want": "<= 60",
    "note": "",
-   "said": "各类新奇事件都要轮到"
+   "said": "各类新奇事件都要轮到（不靠道具的事件 60 天内都出现过）"
   },
   {
    "id": "R4b",
-   "ok": false,
+   "ok": true,
    "target": false,
-   "got": "compassTrip,fireCake,digTreasure",
+   "got": "[]",
    "want": "empty \"\"",
    "note": "",
    "said": "每个无前因事件都能出现"
   },
   {
    "id": "R4c",
-   "ok": false,
+   "ok": true,
    "target": false,
-   "got": "18",
+   "got": "0",
    "want": "<= 0",
    "note": "",
    "said": "不连续同类"
@@ -105,7 +105,7 @@
    "id": "R6a",
    "ok": false,
    "target": false,
-   "got": "0.219",
+   "got": "0.239",
    "want": ">= 0.33",
    "note": "",
    "said": "纯算式至少 1/3（底线，按实际答题数）"
@@ -114,7 +114,7 @@
    "id": "R6b",
    "ok": false,
    "target": true,
-   "got": "0.219",
+   "got": "0.239",
    "want": ">= 0.65",
    "note": "",
    "said": "纯算式目标 65–70%"
@@ -211,11 +211,11 @@
   },
   {
    "id": "R17",
-   "ok": false,
+   "ok": true,
    "target": false,
    "got": "",
    "want": "static_tuning",
-   "note": "content/pacing.json 仍在；缺 content/tuning.json；index.html EVENTS；game_data.json events 概率",
+   "note": "ok",
    "said": "调节参数只在一处，不到处乱动"
   }
  ],
@@ -224,97 +224,88 @@
    "days": 200,
    "seed": 7,
    "acc": 0.75,
-   "q_per_day": 21.4,
-   "pure_share": 0.226,
-   "beats_per_day": 3.58,
-   "events_per_day": 2.51,
-   "trips_per_day": 0.79,
-   "monsters_per_day": 1.06,
-   "monster_share": 0.298,
-   "trip_share": 0.315,
-   "days_without_trip": 63,
-   "max_trip_gap_events": 5,
+   "q_per_day": 24,
+   "pure_share": 0.239,
+   "beats_per_day": 5.07,
+   "events_per_day": 4.12,
+   "trips_per_day": 2.02,
+   "monsters_per_day": 0.95,
+   "monster_share": 0.187,
+   "trip_share": 0.49,
+   "days_without_trip": 0,
+   "max_trip_gap_events": 3,
    "max_monster_gap_beats": 5,
    "max_beat_gap_questions": 4,
-   "same_cat_repeats": 17,
+   "same_cat_repeats": 0,
+   "repeat_detail": {},
    "cat_share": {
-    "cake": 0.143,
-    "drill": 0.12,
-    "trip": 0.315,
-    "story": 0.333,
-    "market": 0.09
+    "cake": 0.109,
+    "drill": 0.117,
+    "trip": 0.49,
+    "market": 0.062,
+    "story": 0.222
    },
    "free_events": 38,
-   "never_seen": [
-    "compassTrip",
-    "fireCake",
-    "digTreasure"
-   ],
-   "last_first_seen_day": 71
+   "never_seen": [],
+   "last_first_seen_day": 41
   },
   {
    "days": 200,
    "seed": 11,
    "acc": 0.75,
-   "q_per_day": 21.7,
-   "pure_share": 0.219,
-   "beats_per_day": 3.71,
-   "events_per_day": 2.54,
-   "trips_per_day": 0.77,
-   "monsters_per_day": 1.17,
-   "monster_share": 0.316,
-   "trip_share": 0.302,
-   "days_without_trip": 64,
-   "max_trip_gap_events": 5,
+   "q_per_day": 25.1,
+   "pure_share": 0.252,
+   "beats_per_day": 5.13,
+   "events_per_day": 4.17,
+   "trips_per_day": 2.01,
+   "monsters_per_day": 0.95,
+   "monster_share": 0.186,
+   "trip_share": 0.482,
+   "days_without_trip": 0,
+   "max_trip_gap_events": 3,
    "max_monster_gap_beats": 5,
    "max_beat_gap_questions": 4,
-   "same_cat_repeats": 15,
+   "same_cat_repeats": 0,
+   "repeat_detail": {},
    "cat_share": {
-    "trip": 0.302,
-    "market": 0.069,
-    "drill": 0.12,
-    "cake": 0.16,
-    "story": 0.349
+    "trip": 0.482,
+    "market": 0.062,
+    "drill": 0.11,
+    "story": 0.255,
+    "cake": 0.09
    },
    "free_events": 38,
-   "never_seen": [
-    "compassTrip",
-    "fireCake",
-    "digTreasure"
-   ],
-   "last_first_seen_day": 175
+   "never_seen": [],
+   "last_first_seen_day": 46
   },
   {
    "days": 200,
    "seed": 13,
    "acc": 0.75,
-   "q_per_day": 21.9,
-   "pure_share": 0.25,
-   "beats_per_day": 3.6,
-   "events_per_day": 2.52,
-   "trips_per_day": 0.81,
-   "monsters_per_day": 1.07,
-   "monster_share": 0.299,
-   "trip_share": 0.319,
-   "days_without_trip": 60,
-   "max_trip_gap_events": 5,
+   "q_per_day": 24.7,
+   "pure_share": 0.255,
+   "beats_per_day": 5.13,
+   "events_per_day": 4.2,
+   "trips_per_day": 2.02,
+   "monsters_per_day": 0.94,
+   "monster_share": 0.182,
+   "trip_share": 0.48,
+   "days_without_trip": 0,
+   "max_trip_gap_events": 3,
    "max_monster_gap_beats": 5,
    "max_beat_gap_questions": 4,
-   "same_cat_repeats": 18,
+   "same_cat_repeats": 0,
+   "repeat_detail": {},
    "cat_share": {
-    "story": 0.31,
-    "trip": 0.319,
-    "drill": 0.163,
-    "cake": 0.137,
-    "market": 0.071
+    "story": 0.241,
+    "trip": 0.48,
+    "cake": 0.092,
+    "drill": 0.132,
+    "market": 0.055
    },
    "free_events": 38,
-   "never_seen": [
-    "compassTrip",
-    "fireCake",
-    "digTreasure"
-   ],
-   "last_first_seen_day": 114
+   "never_seen": [],
+   "last_first_seen_day": 49
   }
  ]
 }

@@ -1,7 +1,7 @@
 // mq_play.js — 甜品店随机事件层 v1（2026-11-27，P-20261126-maths-game）：怪兽来抢（选武器打怪、怪兽卡图鉴）、换店员（动物加成）、顾客高峰（限时）、多层蛋糕订单。
 // 依赖 index.html 里的全局（ST、T、C、LANG、panel、actors、hud、record、save、serveNext、evening、PG、R、money、$），以及 MQ（../engine.js 题目生成）、MQGen（mq_gen.js 画图）。
 // 数据在 content/game_data.json（武器、题型族、店员、事件概率）。版本写在文件内。
-const PLAY_VERSION = 8;   // v8：随机走 MQRng；打怪每轮的题进入时冻结在 T.monster.q、答完结果存 .last，打赢/跑掉只结算一次（.won/.fled），画面可重画（切换语言不换题）；askMQ 可传入冻结的题与作答次数；v7：怪兽交给导演（不再按天掷），打完回到当前订单（原来重置 idx=0）； v6：每天 2–3 个场景事件（MQEv.pickDay）； v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
+const PLAY_VERSION = 9;   // v9：概率改读 tuning.json（day、monster），game_data.json 不再有 events；v8：随机走 MQRng；打怪每轮的题进入时冻结在 T.monster.q、答完结果存 .last，打赢/跑掉只结算一次（.won/.fled），画面可重画（切换语言不换题）；askMQ 可传入冻结的题与作答次数；v7：怪兽交给导演（不再按天掷），打完回到当前订单（原来重置 idx=0）； v6：每天 2–3 个场景事件（MQEv.pickDay）； v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
 let GD = null;
 const TX2 = {
   en: { book: '🃏 Monster cards', back: '← Back', bookIntro: (n, m) => `You have caught <b>${n}</b> of ${m} monsters. Defeat monsters with maths to collect their cards!`, unknown: '???',
@@ -38,10 +38,10 @@ function bookSpec(i) {
   const m = GD.monsters[i], s = MQGen.monsterSpec(MQGen.hashStr(m.id), { ...m });
   s.weakFam = m.weak; s.move = m.move; return s;
 }
-function pickMonster() {   // 普通 60%、稀有 30%、传说 10%（Codex #196 规则 1）；没收集过的优先一点
-  const r = MQRng.r(), want = r < 0.6 ? 'common' : r < 0.9 ? 'rare' : 'legend';
+function pickMonster() {   // 稀有度与“没收集过的优先”按 tuning.json monster（Codex #196 规则 1）
+  const M = MQEv.tuning().monster, R0 = M.rarity, r = MQRng.r() * (R0.common + R0.rare + R0.legend), want = r < R0.common ? 'common' : r < R0.common + R0.rare ? 'rare' : 'legend';
   const ids = GD.monsters.map((m, i) => i).filter(i => GD.monsters[i].rarity === want), fresh = ids.filter(i => !ST.cards[i]);
-  const pool = fresh.length && MQRng.r() < 0.6 ? fresh : ids; return pool[R(0, pool.length - 1)];
+  const pool = fresh.length && MQRng.chance(M.freshFirst) ? fresh : ids; return pool[R(0, pool.length - 1)];
 }
 function openBook() {
   const back = CUR; const n = GD.monsters.length, got = Object.keys(ST.cards).length;
@@ -59,7 +59,7 @@ function openBook() {
 // ---------------- 一天的随机安排（在 newDay 末尾调用） ----------------
 function playDay() {
   if (!GD) return;
-  const P = id => (GD.events.find(e => e.id === id) || {}).p || 0, roll = p => MQRng.chance(p);
+  const D = MQEv.tuning().day, P = id => D[id] || 0, roll = p => MQRng.chance(p);
   // 换店员
   if (roll(P('helper'))) {
     const h = GD.helpers[R(0, GD.helpers.length - 1)]; T.helper = h;
@@ -70,7 +70,7 @@ function playDay() {
     if (h.bonus === 'weapon') { const left = GD.weapons.filter(w => !ST.weapons.includes(w.id) && w.rarity !== 'legend'); if (left.length) { const w = left[R(0, left.length - 1)]; ST.weapons.push(w.id); T.newWeapon = w; } }
   }
   // 怪兽或高峰（一天最多一个）
-  // 怪兽与场景事件由导演（mq_events.js due，参数 content/pacing.json）按答题数安排；这里只掷高峰
+  // 怪兽与场景事件由导演（mq_events.js due，参数 content/tuning.json pacing）按答题数安排；这里只掷高峰
   if (roll(P('rush'))) T.rush = true;
   // 场景事件（mq_events.js）：前因成立的事件优先；怪兽日也可出“前因事件”（如墙洞），其余事件只在非怪兽日
   // 多层蛋糕订单：替换一单
@@ -176,7 +176,7 @@ function battleWon() {
   if (!B.won) {   // 结算一次
     ST.cards[B.idx] = (ST.cards[B.idx] || 0) + 1; T.monsterDone = true; MQEv.on('battle');
     const left = GD.weapons.filter(x => !ST.weapons.includes(x.id) && (x.rarity !== 'legend' || s.rarity === 'legend'));
-    let drop = null; if (left.length && MQRng.r() < (s.rarity === 'common' ? 0.35 : 0.6)) { const x = MQRng.pick(left); ST.weapons.push(x.id); drop = x.id; }
+    let drop = null; if (left.length && MQRng.chance(MQEv.tuning().monster.drop[s.rarity === 'common' ? 'common' : 'other'])) { const x = MQRng.pick(left); ST.weapons.push(x.id); drop = x.id; }
     B.won = { k: ST.cards[B.idx], drop }; save();
   }
   CUR = battleWon; const k = B.won.k, x = B.won.drop && GD.weapons.find(w => w.id === B.won.drop);

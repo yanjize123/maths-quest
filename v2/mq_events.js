@@ -1,16 +1,16 @@
 // mq_events.js — 通用场景事件执行器 v1（2026-11-27，P-20261126-maths-game）
-// 读 content/events.json、scenes.json、pacing.json；一个事件 = 前因(needs 标记) → 场景 → 几道题 → 结果动作 → 回店。
+// 读 content/events.json、scenes.json、tuning.json（节奏与保底只在 tuning.json）；一个事件 = 前因(needs 标记) → 场景 → 几道题 → 结果动作 → 回店。
 // 新事件只写 JSON。动作词表（固定，加新词才改本文件）：cash 表达式 | stock 表达式 | flag 名 天数 [概率%] | state 名 天数 | cust 增减 天数 | item 名 | use 名（用掉一件）
 // 依赖 index.html / mq_play.js 的全局：ST、T、LANG、panel、actors、hud、save、askMQ、serveNext、PG、R、read、MQGen、bookSpec、pickMonster；MQ_E = MQEngine.evalExpr。
-const EVENTS_VERSION = 7;   // v7：随机统一走 MQRng（rng.js）；每步的题进入时冻结在 T.sev.bound、答完的结果存 T.sev.res，画面只读 → 切换语言只重画、内容不变；地名/钱名/蛋糕名按当前语言在画面时算（lv）；v6：事件类别 cat + pacing.mix 比例与保底（换场景最多隔 3 拍必来、不连续同类）、奇幻水果篮 pantry（fruit/usefruit、needsPantry、$pantry 蛋糕）、蛋糕图鉴；v5： v5：事件随机蛋糕（MQCake，变量 cakeName/nFruit/tiers）；v4： v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
+const EVENTS_VERSION = 8;   // v8：参数改读 tuning.json（pacing、floors）；每天换场景保底 floors.tripPerDay（剩下的订单不够时提前出）；换场景到期时前因事件让路；v7：随机统一走 MQRng（rng.js）；每步的题进入时冻结在 T.sev.bound、答完的结果存 T.sev.res，画面只读 → 切换语言只重画、内容不变；地名/钱名/蛋糕名按当前语言在画面时算（lv）；v6：事件类别 cat + pacing.mix 比例与保底（换场景最多隔 3 拍必来、不连续同类）、奇幻水果篮 pantry（fruit/usefruit、needsPantry、$pantry 蛋糕）、蛋糕图鉴；v5： v5：事件随机蛋糕（MQCake，变量 cakeName/nFruit/tiers）；v4： v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
 const MQEv = (() => {
-  let ED = null, PD = null, MD = null;
+  let ED = null, PD = null, MD = null, TU = null, FL = {};
   const ev = (x, v) => MQEngine.evalExpr(x, v);
   const fill = (s, v) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m));
   const tx = o => (o && (o[LANG] || o.en)) || '';
   async function load() {
-    const [e, s, p, m, ck] = await Promise.all([read('content/events.json'), read('content/scenes.json'), read('content/pacing.json'), read('content/market.json'), read('content/cakes.json')]);
-    ED = JSON.parse(e); MQScene.load(JSON.parse(s)); PD = JSON.parse(p); MD = JSON.parse(m); if (typeof MQCake !== 'undefined') MQCake.load(JSON.parse(ck));
+    const [e, s, p, m, ck] = await Promise.all([read('content/events.json'), read('content/scenes.json'), read('content/tuning.json'), read('content/market.json'), read('content/cakes.json')]);
+    ED = JSON.parse(e); MQScene.load(JSON.parse(s)); TU = JSON.parse(p); PD = TU.pacing; FL = TU.floors || {}; MD = JSON.parse(m); if (typeof MQCake !== 'undefined') MQCake.load(JSON.parse(ck));
     ST.flags = ST.flags || {}; ST.states = ST.states || {}; ST.cust = ST.cust || []; ST.items = ST.items || {}; ST.pantry = ST.pantry || {}; ST.cakeBook = ST.cakeBook || { shape: {}, fruit: {}, style: {} };
     if (typeof document !== 'undefined' && !document.getElementById('cakeb')) { const bar = document.querySelector('.bar'); if (bar) { bar.insertAdjacentHTML('beforeend', '<button class="alt" id="cakeb" style="font-size:14px;padding:4px 10px"></button>'); document.getElementById('cakeb').onclick = () => cakeBook(); } }
   }
@@ -61,39 +61,44 @@ const MQEv = (() => {
     document.getElementById('bk').onclick = () => { if (typeof CUR === 'function') CUR(); };
   }
   const pantryCount = () => Object.values(ST.pantry || {}).reduce((a, n) => a + n, 0);
-  // ---- 导演（v3）：何时出事，只在这里决定；参数在 content/pacing.json ----
+  // ---- 导演（v3）：何时出事，只在这里决定；参数在 content/tuning.json pacing / floors ----
   // 按答题数计：每答 gap 道题来一次节拍；节拍 = 怪兽或场景事件（按 beats 权重，怪兽最多隔 monsterMaxGap 拍必来）；前因成立的事件优先；最近 3 个不重复。
   const rint = ([lo, hi]) => MQRng.int(lo, hi);
   function count() { if (!PD || (T && T.inBeat)) return; ST.since = (ST.since || 0) + 1; }
   // 选事件（v6）：前因成立的先出；否则先按 pacing.mix 选类别（不连续同类；换场景 trip 最多隔 tripMaxGap 拍必来），再在类别里按 p 选，最近 3 个不重复
   const has = e => (!e.needsItem || (ST.items[e.needsItem] || 0) > 0) && (!e.needsPantry || Object.values(ST.pantry || {}).some(n => n >= 2));
-  function chooseEvent() {
-    const recent = ST.recentEv || [], caused = ED.events.filter(e => e.needs && e.needs in ST.flags && has(e));
-    let e = caused[0];
+  function chooseEvent(forceCat) {
+    const recent = ST.recentEv || [], free = ED.events.filter(x => !x.needs && has(x) && !recent.includes(x.id)), cats = {};
+    free.forEach(x => (cats[x.cat || 'story'] = cats[x.cat || 'story'] || []).push(x));
+    const tripDue = (ST.sinceTrip || 0) >= (PD.tripMaxGap || 99) && cats.trip;   // 换场景到期：前因事件让路
+    const caused = ED.events.filter(e => e.needs && e.needs in ST.flags && has(e));
+    let e = !forceCat && !tripDue ? caused[0] : null;
     if (e) delete ST.flags[e.needs];
     else {
-      const free = ED.events.filter(x => !x.needs && has(x) && !recent.includes(x.id)), cats = {};
-      free.forEach(x => (cats[x.cat || 'story'] = cats[x.cat || 'story'] || []).push(x));
       const mix = PD.mix || { story: 1 }; let names = Object.keys(cats).filter(c => mix[c]);
       if (PD.noRepeat && names.length > 1) names = names.filter(c => c !== ST.lastCat);
-      let cat = (ST.sinceTrip || 0) >= (PD.tripMaxGap || 99) && cats.trip ? 'trip' : null;
+      let cat = forceCat && cats[forceCat] ? forceCat : tripDue ? 'trip' : null;
       if (!cat) { const tot = names.reduce((a, c) => a + mix[c], 0); let r = MQRng.r() * tot; cat = names.find(c => (r -= mix[c]) < 0) || names[0]; }
-      const pool = cats[cat] || free, tot = pool.reduce((a, x) => a + x.p, 0); let r = MQRng.r() * tot, k = 0;
-      while ((r -= pool[k].p) > 0 && k < pool.length - 1) k++; e = pool[k];
+      const pool = cats[cat] || free, FR = TU.freshness || {}, seen = ST.evSeen || {}, wt = x => x.p * (x.needsItem ? (PD.itemBoost || 1) : 1) * (x.id in seen ? 1 + Math.min(FR.ageCap || 0, (ST.evN || 0) - seen[x.id]) / (FR.ageScale || 1e9) : (FR.neverSeen || 1)),   // 类内：没见过的、久没出的优先（tuning.freshness）
+        tot = pool.reduce((a, x) => a + wt(x), 0); let r = MQRng.r() * tot, k = 0;   // 手里有道具的事件加权（买了指南针就快点用上）
+      while ((r -= wt(pool[k])) > 0 && k < pool.length - 1) k++; e = pool[k];
     }
-    ST.lastCat = e.cat; ST.sinceTrip = e.cat === 'trip' ? 0 : (ST.sinceTrip || 0) + 1;
+    ST.lastCat = e.cat; ST.sinceTrip = e.cat === 'trip' ? 0 : (ST.sinceTrip || 0) + 1; if (e.cat === 'trip' && T) T.trips = (T.trips || 0) + 1;
     ST.recentEv = [e.id, ...recent].slice(0, 3);
+    ST.evN = (ST.evN || 0) + 1; ST.evSeen = ST.evSeen || {}; ST.evSeen[e.id] = ST.evN;
     const seed = MQRng.int(0, 1e9), v = vars(e), sev = { e, v, seed, done: false };
     cakeVars(sev); return sev;
   }
   function due() {
     if (!PD || !T || T.inBeat) return null;
     if (ST.gap == null) ST.gap = PD.first;
-    if ((ST.since || 0) < ST.gap) return null;
+    // 每天换场景保底：今天还差 need 次、剩下的订单少于 2×need 时，不等题数，现在就出换场景
+    const need = Math.max(0, (FL.tripPerDay || 0) - (T.trips || 0)), left = Math.max(0, (T.orders || []).length - (T.idx || 0)), force = need > 0 && left < (ST.lastCat === 'trip' ? need : 2 * need);   // 刚出过换场景就再等一单，避免连着两次
+    if (!force && (ST.since || 0) < ST.gap) return null;
     ST.since = 0; ST.gap = rint(PD.gap); T.inBeat = true;
-    const noMon = ST.beatsNoMon || 0, w = PD.beats, mon = noMon >= PD.monsterMaxGap || MQRng.r() * (w.event + w.monster) < w.monster;
+    const noMon = ST.beatsNoMon || 0, w = PD.beats, mon = !force && (noMon >= PD.monsterMaxGap || MQRng.r() * (w.event + w.monster) < w.monster);
     if (mon) { ST.beatsNoMon = 0; T.monster = { idx: pickMonster() }; T.monsterDone = false; return 'monster'; }
-    ST.beatsNoMon = noMon + 1; T.sev = chooseEvent(); return 'event';
+    if (!force) ST.beatsNoMon = noMon + 1; T.sev = chooseEvent(force && ST.lastCat !== 'trip' ? 'trip' : null); T.sev.forced = force; return 'event';   // 刚出过换场景：先插一个别类事件，下一拍再补换场景（不连续同类）   // 保底加出的节拍不算进“多久没怪兽”
   }
   // 当前画面：事件里用事件场景，否则店内 + 持续状态
   function backdrop(shopSvg, shelf) {
@@ -206,5 +211,5 @@ const MQEv = (() => {
     if (e.market) return market(sev);
     finish(sev);
   }
-  return { load, tick, count, due, chooseEvent, cakeVars, noteCake, cakeBook, pantryCount, on, run, pacing: () => PD, backdrop, vars, lv, act, data: () => ED, EVENTS_VERSION };
+  return { load, tick, count, due, chooseEvent, cakeVars, noteCake, cakeBook, pantryCount, on, run, pacing: () => PD, tuning: () => TU, backdrop, vars, lv, act, data: () => ED, EVENTS_VERSION };
 })();

@@ -1,0 +1,123 @@
+{
+ "version": 1,
+ "note": "唯一的调节参数文件（迁移第 3 步，script_framework_v2.md §D）。节奏、比例、保底、每天的随机安排、怪兽稀有度与掉落、宝箱与过夜损耗都只在这里改；代码里不写概率（check_requirements R17 守住）。需求对照：content/requirements.json。百分数一律写 0–100。",
+ "pacing": {
+  "gap": [
+   2,
+   3
+  ],
+  "first": 1,
+  "beats": {
+   "event": 75,
+   "monster": 25
+  },
+  "monsterMaxGap": 5,
+  "mix": {
+   "trip": 40,
+   "story": 20,
+   "drill": 20,
+   "cake": 15,
+   "market": 10
+  },
+  "tripMaxGap": 3,
+  "noRepeat": true,
+  "itemBoost": 5,
+  "note": "gap 按店内答题数；beats 怪兽:事件；mix 事件类别比例；monsterMaxGap/tripMaxGap 保底（拍）；noRepeat 不连续同类；itemBoost 手里有所需道具的事件权重倍数。v009b：gap 2–4→2–3、trip 35→40（基线每天只 3.6 拍，见 requirements）"
+ },
+ "floors": {
+  "tripPerDay": 2,
+  "note": "每天至少几次换场景（Jize 21:55 硬约束）；剩下的订单不够时导演提前出"
+ },
+ "day": {
+  "helper": 22,
+  "rush": 15,
+  "layer": 35,
+  "note": "早上掷：换店员、顾客高峰、多层蛋糕订单（%）"
+ },
+ "morning": [
+  {
+   "id": "drizzle",
+   "p": 6,
+   "bad": 1,
+   "icon": "🌧️",
+   "orders": -1,
+   "en": "Drizzle! One customer stays home today.",
+   "zh": "下小雨了！今天少来一位顾客。"
+  },
+  {
+   "id": "rainbow",
+   "p": 5,
+   "icon": "🌈",
+   "orders": 1,
+   "en": "A rainbow brings an extra customer!",
+   "zh": "彩虹出来了，多来一位顾客！"
+  },
+  {
+   "id": "dearer",
+   "p": 5,
+   "bad": 1,
+   "icon": "📈",
+   "price": 1,
+   "en": "Strawberries cost 1 coin more per punnet today.",
+   "zh": "今天草莓每盒贵 1 金币。"
+  },
+  {
+   "id": "cheaper",
+   "p": 5,
+   "icon": "📉",
+   "price": -1,
+   "en": "Strawberry sale: 1 coin less per punnet today!",
+   "zh": "草莓大减价：今天每盒便宜 1 金币！"
+  },
+  {
+   "id": "fairy",
+   "p": 4,
+   "bad": 1,
+   "icon": "🧚",
+   "steal": 5,
+   "en": "The naughty fairy sneaked in and took some strawberries!",
+   "zh": "坏仙子偷偷溜进来，拿走了一些草莓！"
+  },
+  {
+   "id": "fair",
+   "p": 4,
+   "icon": "🎪",
+   "cake": 1,
+   "en": "Village fair! Cupcakes sell for 1 coin more today.",
+   "zh": "村里赶集！今天每个蛋糕多卖 1 金币。"
+  },
+  {
+   "id": "oven",
+   "p": 4,
+   "bad": 1,
+   "icon": "🔧",
+   "cost": 8,
+   "en": "A screw in the oven came loose. Repair: 8 coins.",
+   "zh": "烤箱螺丝松了，修理花 8 金币。"
+  }
+ ],
+ "monster": {
+  "rarity": {
+   "common": 60,
+   "rare": 30,
+   "legend": 10
+  },
+  "freshFirst": 60,
+  "drop": {
+   "common": 35,
+   "other": 60
+  },
+  "note": "怪兽稀有度（Codex #196 规则 1）、没收集过的优先（%）、打赢掉武器（%）"
+ },
+ "chest": {
+  "silverApron": 50
+ },
+ "spoil": 25,
+ "note2": "game_data.json 原 events.monster=45 已不用（怪兽由导演 pacing.beats 决定）",
+ "freshness": {
+  "neverSeen": 8,
+  "ageScale": 15,
+  "ageCap": 60,
+  "note": "同一类别里选哪个事件：没见过的权重 ×neverSeen；见过的 ×(1 + min(距上次出现的事件数, ageCap)/ageScale)（script_framework_v2 §B 类内久未出现优先）"
+ }
+}
