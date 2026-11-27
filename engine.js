@@ -811,8 +811,9 @@ function pick(st, school, mode, yearSel) {
     const tried = Object.keys(st.topics).filter(g => G[g]);
     return [weightedChoice(st, tried.length ? tried : gensFor(school), true), "mistakes"];
   }
-  if (due.length && Math.random() < 0.8 && mode !== "steps" && mode !== "column" && (mode !== "pure" || isPure(due[0].gen))) { const r = due[0]; st.review.splice(st.review.indexOf(r), 1); return [r.gen, "review"]; }
+  if (due.length && Math.random() < 0.8 && mode !== "steps" && mode !== "column" && mode !== "choice" && (mode !== "pure" || isPure(due[0].gen))) { const r = due[0]; st.review.splice(st.review.indexOf(r), 1); return [r.gen, "review"]; }
   if (mode === "pure") return [weightedChoice(st, purePool(yearSel || school)), "set"];
+  if (mode === "choice") return [st.choiceGen && G[st.choiceGen] ? st.choiceGen : weightedChoice(st, gensFor(school)), "choice"];
   if (mode === "column") return [weightedChoice(st, columnPool(yearSel || school)), "column"];
   if (mode === "steps") return [weightedChoice(st, stepPool(yearSel || school)), "steps"];
   if (yearSel) return [weightedChoice(st, purify(gensFor(yearSel))), "year"];
@@ -942,7 +943,8 @@ function report(st, year, now) {
 // ================================================================ QUANTITY TARGETS (how many questions) and SKILL LEVELS
 // Targets live in st.targets (set by a parent). A written-method or step-by-step problem counts as several
 // questions, because it takes several minutes (weights below).
-const DEFAULT_TARGETS = { weekday: 30, weekend: 50, holiday: 50, week: 300, holidays: "" };
+// Each day: set questions (from the plan) + own-choice questions (the child picks the type). Jize 2026-11-27 16:18.
+const DEFAULT_TARGETS = { weekday: 30, weekdayChoice: 10, weekend: 50, weekendChoice: 25, holiday: 50, holidayChoice: 25, week: 300, holidays: "" };
 const qWeight = g => /^(c\d)/.test(g) ? (/div|mul2/.test(g) ? 3 : 2) : /^(s\d|e\d|i\d|q\d)/.test(g) ? 3 : 1;
 const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 function holidaySet(txt) {           // "2026-12-19..2027-01-04, 2027-02-15" -> Set of yyyy-mm-dd
@@ -951,7 +953,7 @@ function holidaySet(txt) {           // "2026-12-19..2027-01-04, 2027-02-15" -> 
     if (isNaN(d0) || isNaN(d1)) continue; for (let d = new Date(d0); d <= d1 && out.size < 2000; d.setDate(d.getDate() + 1)) out.add(ymd(d)); }
   return out;
 }
-function dayTarget(T, d, hol) { const k = ymd(d); if (hol.has(k)) return { type: "holiday", n: T.holiday }; const w = d.getDay(); return w === 0 || w === 6 ? { type: "weekend", n: T.weekend } : { type: "weekday", n: T.weekday }; }
+function dayTarget(T, d, hol) { const k = ymd(d), w = d.getDay(); const ty = hol.has(k) ? "holiday" : w === 0 || w === 6 ? "weekend" : "weekday"; const set = +T[ty] || 0, ch = +T[ty + "Choice"] || 0; return { type: ty, set, choice: ch, n: set + ch }; }
 function quota(st, now) {
   const T = Object.assign({}, DEFAULT_TARGETS, st.targets || {}), hol = holidaySet(T.holidays), t0 = now ? new Date(now) : new Date();
   const done = {}; for (const e of st.events || []) { if (!e || !e.gen || e.skip) continue; const k = ymd(new Date(e.t)); done[k] = (done[k] || 0) + qWeight(e.gen); }
@@ -967,12 +969,27 @@ function quota(st, now) {
   const topUp = (sp) => Math.max(sp.target, Math.round(T.week * sp.days / 7));   // the weekly target spread over the days
   const row = (label, got, target) => ({ label, got, target, gap: target ? Math.round(100 * (got - target) / target) : 0 });
   const dt = dayTarget(T, today, hol);
+  const doneSet = {}, doneCh = {}, mins = {}, expMins = {};
+  for (const e of st.events || []) { if (!e || !e.gen || e.skip) continue; const k = ymd(new Date(e.t)), w = qWeight(e.gen); (e.mode === "choice" ? doneCh : doneSet)[k] = ((e.mode === "choice" ? doneCh : doneSet)[k] || 0) + w; mins[k] = (mins[k] || 0) + (+e.secs || 0) / 60; expMins[k] = (expMins[k] || 0) + speedTarget(e.gen) / 60; }
+  const evs0 = (st.events || []).filter(e => e && e.t); const startDay = evs0.length ? new Date(new Date(Math.min(...evs0.map(e => Date.parse(e.t)))).toDateString() + " 12:00") : today;
+  let credit = 0, weekDebt = 0, due = dt.n, missed = [];
+  for (let d = new Date(startDay); d <= today; d.setDate(d.getDate() + 1)) {
+    const k = ymd(d), t = dayTarget(T, d, hol), wd = d.getDay();
+    if (wd === 1) weekDebt = 0;
+    let need = t.n - credit; if (wd === 6) need += Math.ceil(weekDebt / 2); if (wd === 0) need += weekDebt; need = Math.max(0, need);
+    const got = done[k] || 0;
+    if (k === ymd(today)) { due = need; break; }
+    if (got >= need) { credit = Math.min(got - need, t.n); if (wd === 6) weekDebt -= Math.ceil(weekDebt / 2); if (wd === 0) weekDebt = 0; }
+    else { credit = 0; const short = need - got; if (wd === 6 || wd === 0) { missed.push({ day: k, short }); weekDebt = wd === 6 ? Math.max(0, weekDebt - Math.ceil(weekDebt / 2)) : 0; } else weekDebt += short; }
+  }
+  const tk = ymd(today);
+  const todayPlan = { type: dt.type, set: dt.set, choice: dt.choice, due, gotSet: doneSet[tk] || 0, gotChoice: doneCh[tk] || 0, mins: Math.round(mins[tk] || 0), expMins: Math.round(expMins[tk] || 0), weekDebt, missed: missed.slice(-10) };
   // whole-year plan: every day's minimum, and the weekly target if it is larger
   const yEnd = new Date(today.getFullYear(), 11, 31, 12), yAll = span(y0, yEnd), yearPlan = Math.max(yAll.target, Math.round(T.week * yAll.days / 7));
   const last8 = []; for (let w = 7; w >= 0; w--) { const a = new Date(wk0); a.setDate(a.getDate() - 7 * w); const b = new Date(a); b.setDate(b.getDate() + 6); const sp = span(a, b < today ? b : today); last8.push({ from: ymd(a), got: sp.got, target: Math.max(sp.target, Math.round(T.week * sp.days / 7)) }); }
-  return { targets: T, today: Object.assign(row("Today", done[ymd(today)] || 0, dt.n), { type: dt.type }),
+  return { targets: T, plan: todayPlan, today: Object.assign(row("Today", done[ymd(today)] || 0, due), { type: dt.type }),
     week: row("This week (so far)", wk.got, weekSoFar), weekFull: weekTarget, month: row("This month (so far)", mo.got, topUp(mo)), year: row("This year (so far)", yr.got, topUp(yr)), yearPlan, weeks: last8,
-    minWeek: 5 * T.weekday + 2 * T.weekend };
+    minWeek: 5 * (T.weekday + T.weekdayChoice) + 2 * (T.weekend + T.weekendChoice) };
 }
 // Skill level per question type: accuracy over the last 10 and speed against a target time.
 function speedTarget(g) { if (/^(a1|a2|f2|f3|y1|y2|a3_divfacts|y3_times|y4_tables)/.test(g)) return 6; if (/^c\d/.test(g)) return /div|mul2/.test(g) ? 150 : 90; if (/^(s\d|e\d|i\d|q\d)/.test(g)) return 150; if (/^(t\d|k\d|l\d|f5|r4)/.test(g)) return 25; return 45; }
@@ -991,6 +1008,6 @@ function skillLevels(st, now) {
   }).sort((a, b) => a.year - b.year || a.level - b.level);
 }
 
-const API = { quota, skillLevels, LEVELS, DEFAULT_TARGETS, qWeight, report, SLIP_NAMES, isPure, PURE_SHARE, STEP_GENS, COLUMN_GENS, makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
+const API = { speedTarget, quota, skillLevels, LEVELS, DEFAULT_TARGETS, qWeight, report, SLIP_NAMES, isPure, PURE_SHARE, STEP_GENS, COLUMN_GENS, makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
 if (typeof module !== "undefined" && module.exports) module.exports = API; else root.MQ = API;
 })(typeof window !== "undefined" ? window : globalThis);

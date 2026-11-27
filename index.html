@@ -43,7 +43,7 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
 <div id="play" class="hide">
  <div class="bar"><b id="nm"></b><span class="pill" id="yr"></span><span class="pill" id="lv"></span><div class="xp"><i id="xpb"></i></div><span class="pill" id="stk"></span><span class="pill" id="tdy"></span>
  <button class="ghost" id="backbtn" onclick="backBtn()">⇦</button></div>
- <div class="tabs"><button id="t1" onclick="tab(1)">⚔️ Practice</button><button id="t5" onclick="tab(5)">🧮 Sets of 10</button><button id="t6" onclick="tab(6)">✍️ Step by step</button><button id="t7" onclick="tab(7)">🔢 Column</button><button id="t2" onclick="tab(2)">🧭 Placement test</button><button id="t3" onclick="tab(3)">🎯 Fix my mistakes</button><button id="t4" onclick="tab(4)">📒 Progress</button></div>
+ <div class="tabs"><button id="t1" onclick="tab(1)">⚔️ Practice</button><button id="t5" onclick="tab(5)">🧮 Sets of 10</button><button id="t6" onclick="tab(6)">✍️ Step by step</button><button id="t7" onclick="tab(7)">🔢 Column</button><button id="t8" onclick="tab(8)">🎲 My choice</button><button id="t2" onclick="tab(2)">🧭 Placement test</button><button id="t3" onclick="tab(3)">🎯 Fix my mistakes</button><button id="t4" onclick="tab(4)">📒 Progress</button></div>
  <div id="ysel" class="row hide" style="margin:0 0 12px"><span class="mut">Question bank:</span><select id="year" onchange="nextQ()"></select></div>
  <div id="qbox" class="q hide"><span class="emo" id="emo"></span><span class="tag" id="tp"></span><span class="tag rev hide" id="rv"></span>
   <div class="qt" id="qt"></div><div id="qsvg"></div><div class="fmt" id="fmt"></div>
@@ -118,7 +118,8 @@ function start(i){L=DB.players[i];ST=stOf(L);show0('play');const s=MQ.summary(L,
  tab(s.overall==null&&!s.count?2:1)}
 function bar(s){SUM=s;$('nm').textContent=s.name;$('yr').textContent=s.year_label;$('lv').textContent=`Lv ${s.level} ${s.title}`;$('xpb').style.width=s.xp_in_level+'%';$('stk').textContent=`🔥 ${s.streak}`;$('tdy').textContent=`Today ${s.today}/${s.goal}`}
 function show(id){['qbox','pbox','bookbox','sbox','cbox'].forEach(k=>$(k).classList.toggle('hide',k!=id))}
-function tab(n){[1,2,3,4,5,6,7].forEach(k=>$('t'+k).classList.toggle('on',k==n));$('ysel').classList.toggle('hide',![1,5,6,7].includes(n));
+function tab(n){[1,2,3,4,5,6,7,8].forEach(k=>$('t'+k).classList.toggle('on',k==n));
+ if(n==8){$('ysel').classList.add('hide');choiceMenu();return}$('ysel').classList.toggle('hide',![1,5,6,7].includes(n));
  if(n==7){mode='column';nextQ();return}
  if(n==5){mode='pure';SET={n:0,ok:0,t0:Date.now()};nextQ();return}
  if(n==6){mode='steps';nextQ();return}
@@ -137,7 +138,8 @@ function nextQ(){if(mode=='pure'&&SET&&SET.n>=10){setDone();return}
  const ys=$('year').value;Q=MQ.nextQuestion(L,ST,goalToday(),mode,['mixed','pure','steps','column'].includes(mode)&&ys?+ys:null);save();
  if(Q.placement_done){placementResult(Q);return}
  if(mode=='steps'&&Q.step){stepShow();return}
- if(mode=='column'&&Q.column){colShowQ();return}
+ if((mode=='column'||mode=='choice')&&Q.column){colShowQ();return}
+ if(mode=='choice'&&Q.step){stepShow();return}
  show('qbox');done=false;$('tp').textContent=Q.why=='placement'?Q.strand:`Y${Q.year} · ${Q.topic}`;$('emo').textContent=Q.emoji;
  const lab={set:`🧮 Set · ${SET?SET.n+1:1}/10`,review:'🎯 Bonus mission',gap:'🧩 Gap filler',challenge:'⚡ Challenge',placement:'🧭 Placement'+(Q.progress?` · ${Q.progress.strands_done}/${Q.progress.strands} areas done · Q${Q.progress.asked+1}`:'')}[Q.why];
  $('rv').textContent=lab||'';$('rv').classList.toggle('hide',!lab);
@@ -159,16 +161,25 @@ function levelRows(strands,year){return '<table><tr><th>Area</th><th style="widt
 function placementResult(d){show('pbox');bar(d.summary);const s=d.summary;
  $('pbox').innerHTML=`<h2>🧭 Placement result</h2><p style="font-size:20px">Overall: secure up to <b>Year ${s.overall}</b> <span class="mut">(school year ${s.year})</span></p>${levelRows(d.strands,s.year)}
  <div class="row"><button class="go" onclick="tab(1)">Start practising ➜</button></div>`}
-function goalToday(){try{return MQ.quota(ST||{}).today.target}catch(e){return DB.goal||30}}
+// ------------------------------------------------------------ 🎲 own choice: the child picks the type (counts as own-choice questions)
+function choiceMenu(){show('pbox');const lv={};try{for(const x of MQ.skillLevels(ST))lv[x.gen]=x}catch(e){}const p=MQ.quota(ST).plan;
+ let h=`<h2>🎲 My choice</h2><p>Pick any type you like — hard ones or easy ones. Today: <b>${p.gotChoice}/${p.choice}</b> own-choice questions.</p>`;
+ for(let y=1;y<=Math.min(11,L.year+2);y++){const gs=MQ.YEARS[y]||[];if(!gs.length)continue;h+=`<h3>${MQ.YEAR_LABEL[y]}</h3><div>`+gs.map(g=>{const x=lv[g];let t;try{t=MQ.G[g]().topic}catch(e){t=g}return `<button class="ghost" style="margin:3px;font-size:14px;padding:7px 10px" onclick="pickChoice('${g}')">${esc(t)}${x?' '+'●'.repeat(x.level):''}</button>`}).join('')+'</div>'}
+ $('pbox').innerHTML=h}
+function pickChoice(g){ST.choiceGen=g;mode='choice';save();nextQ()}
+function goalToday(){try{return MQ.quota(ST||{}).plan.due}catch(e){return DB.goal||30}}
 function quotaHtml(){const q=MQ.quota(ST),T=q.targets;const g=x=>`<span style="color:${x.gap>=0?'var(--ok)':x.gap>-15?'var(--acc)':'var(--bad)'}">${x.gap>=0?'+':''}${x.gap}%</span>`;
  const dtype={weekday:'school day',weekend:'weekend',holiday:'holiday'}[q.today.type];
- let h=`<h3>🎯 How much practice</h3><p class="mut">Targets: ${T.weekday} a school day · ${T.weekend} a weekend day · ${T.holiday} a holiday · ${T.week} a week. A column or step-by-step problem counts as 2–3. Today is a ${dtype}.</p>`;
+ const P=q.plan;let h=`<h3>🎯 How much practice</h3><p class="mut">Targets: ${T.weekday}+${T.weekdayChoice} a school day · ${T.weekend}+${T.weekendChoice} a weekend day · ${T.holiday}+${T.holidayChoice} a holiday · ${T.week} a week. A column or step-by-step problem counts as 2–3. Today is a ${dtype}.</p>`;
+ h+=`<div class="w" style="font-size:17px">Today: set questions <b>${P.gotSet}/${P.set}</b> · own choice <b>${P.gotChoice}/${P.choice}</b> · due today (after carry-over) <b>${P.due}</b>${P.weekDebt?` · this week still owed: ${P.weekDebt} (added to Saturday and Sunday)`:''}
+Time today: ${P.mins} min (expected about ${P.expMins} min for these questions)${P.missed.length?`
+Missed (recorded): `+P.missed.map(m=>`${m.day} −${m.short}`).join(', '):''}</div><p class="mut">Extra questions count towards the next day. Questions missed on school days are added to the weekend.</p>`;
  h+='<table><tr><th></th><th>Done</th><th>Target</th><th>Gap</th></tr>'+[q.today,q.week,q.month,q.year].map(r=>`<tr><td>${r.label}</td><td>${r.got}</td><td>${r.target}</td><td>${g(r)}</td></tr>`).join('')+`</table><p class="mut">Plan for the whole year: ${q.yearPlan.toLocaleString()} questions. The daily minimums add up to ${q.minWeek} a week${q.minWeek<T.week?` — ${T.week-q.minWeek} short of the weekly target, so some days need more than the minimum`:''}.</p>`;
  h+=`<p class="mut">Last 8 weeks (done / target)</p><div style="display:flex;gap:6px;align-items:flex-end;height:70px">`+q.weeks.map(w=>`<div title="${w.from}: ${w.got}/${w.target}" style="flex:1;background:${w.got>=w.target?'var(--ok)':'var(--blue)'};height:${Math.max(4,Math.min(64,Math.round(64*w.got/Math.max(1,w.target))))}px;border-radius:4px"></div>`).join('')+`</div><div style="display:flex;gap:6px" class="mut">`+q.weeks.map(w=>`<div style="flex:1;text-align:center;font-size:12px">${w.got}</div>`).join('')+'</div>';
- h+=`<details style="margin-top:8px"><summary class="mut">⚙️ Change targets (parents)</summary><div class="prow"><span class="mut">School day</span><input id="tg_wd" type="number" value="${T.weekday}" style="max-width:90px"><span class="mut">Weekend day</span><input id="tg_we" type="number" value="${T.weekend}" style="max-width:90px"><span class="mut">Holiday</span><input id="tg_ho" type="number" value="${T.holiday}" style="max-width:90px"><span class="mut">Week</span><input id="tg_wk" type="number" value="${T.week}" style="max-width:100px"></div>
+ h+=`<details style="margin-top:8px"><summary class="mut">⚙️ Change targets (parents)</summary><div class="prow"><span class="mut">School day set + own choice</span><input id="tg_wd" type="number" value="${T.weekday}" style="max-width:80px"><input id="tg_wdc" type="number" value="${T.weekdayChoice}" style="max-width:80px"><span class="mut">Weekend</span><input id="tg_we" type="number" value="${T.weekend}" style="max-width:80px"><input id="tg_wec" type="number" value="${T.weekendChoice}" style="max-width:80px"><span class="mut">Holiday</span><input id="tg_ho" type="number" value="${T.holiday}" style="max-width:80px"><input id="tg_hoc" type="number" value="${T.holidayChoice}" style="max-width:80px"><span class="mut">Week</span><input id="tg_wk" type="number" value="${T.week}" style="max-width:100px"></div>
  <div class="prow"><span class="mut">Holidays</span><input id="tg_hd" value="${esc(T.holidays||'')}" placeholder="2026-12-19..2027-01-04, 2027-02-15..2027-02-19"></div><div class="row"><button class="go" onclick="saveTargets()">Save targets</button></div></details>`;
  return h}
-function saveTargets(){const n=id=>Math.max(0,parseInt($(id).value,10)||0);ST.targets={weekday:n('tg_wd'),weekend:n('tg_we'),holiday:n('tg_ho'),week:n('tg_wk'),holidays:$('tg_hd').value.trim()};save();book()}
+function saveTargets(){const n=id=>Math.max(0,parseInt($(id).value,10)||0);ST.targets={weekday:n('tg_wd'),weekdayChoice:n('tg_wdc'),weekend:n('tg_we'),weekendChoice:n('tg_wec'),holiday:n('tg_ho'),holidayChoice:n('tg_hoc'),week:n('tg_wk'),holidays:$('tg_hd').value.trim()};save();book()}
 function skillsHtml(){const S=MQ.skillLevels(ST);if(!S.length)return '<h3>🌱 My skills</h3><p class="mut">Skills appear after a few answers.</p>';
  const col=['#6b7299','#ff6b6b','#ffcc4d','#5aa9ff','#3ddc97'];const dots=l=>[1,2,3,4].map(i=>`<span style="display:inline-block;width:10px;height:10px;border-radius:5px;margin-right:2px;background:${i<=l?col[l]:'#28316a'}"></span>`).join('');
  let h='<h3>🌱 My skills</h3><p class="mut">Learning → Nearly there (7/10 right) → Fluent (9/10 right and quick enough) → Secure (fluent and kept up over 2 weeks).</p><table><tr><th>Year</th><th>Skill</th><th>Level</th><th>Last 10</th><th>Time</th><th>Next step</th><th>Usual mistake</th></tr>';
@@ -194,7 +205,7 @@ const BACKEND=(window.MQ_BACKEND||'').trim();
 const CKEY='mathsquest_cred',QKEY='mathsquest_queue';
 let SESSION=null,flushing=false,saveMsg='';
 function backBtn(){if(BACKEND)logout();else home()}
-const PAGE_VERSION='classic page v8 · engine v7 · steps v2 · column v1 · 中文 v1 (2026-11-27)';
+const PAGE_VERSION='classic page v9 · engine v8 · steps v2 · column v1 · 中文 v1 (2026-11-27)';
 function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device · <span title="version">'+PAGE_VERSION+'</span>'}
 function footBackend(){const n=queueGet().filter(e=>SESSION&&e.user===SESSION.name).length;
  $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'} · ${PAGE_VERSION}`:''}
@@ -246,7 +257,7 @@ function stepGiveUp(){if(SDONE)return;const lines=SLINES.slice();for(let i=0;i<1
  SLINES=lines;stepDraw();stepFinish(false)}
 function stepFinish(solved){SDONE=true;$('sin').disabled=true;$('sck').disabled=true;const segs=(SLINES[SLINES.length-1]||'').split('='),last=Q.step.type=='ineq'?(SLINES[SLINES.length-1]||''):Q.step.type=='sys'?SLINES.join(', '):Q.step.type=='eq'&&/^\s*x\s*$/i.test(segs[segs.length-1])?segs[0]:segs[segs.length-1];
  const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10,ans=solved?last:'';
- const r=MQ.answerQuestion(L,ST,goalToday(),Q,ans,!solved);logEvent(Q,{mode:'steps',ok:r.correct,secs,hint:!!Q.hintUsed,slips:SSLIPC.slice(),skip:!solved,ans:SLINES.join(' | ')});save();record(Q,SLINES.join(' | ')+(SSLIPS?` [${SSLIPS} slip${SSLIPS>1?'s':''}]`:''),!solved,r.correct,secs);
+ const r=MQ.answerQuestion(L,ST,goalToday(),Q,ans,!solved);logEvent(Q,{mode:mode=='choice'?'choice':'steps',ok:r.correct,secs,hint:!!Q.hintUsed,slips:SSLIPC.slice(),skip:!solved,ans:SLINES.join(' | ')});save();record(Q,SLINES.join(' | ')+(SSLIPS?` [${SSLIPS} slip${SSLIPS>1?'s':''}]`:''),!solved,r.correct,secs);
  stepMsg(r.correct?'ok':'bad',`<b>${esc(solved?(SSLIPS?`Solved! (${SSLIPS} line${SSLIPS>1?'s':''} needed fixing)`:'Solved with every line right! 🎉'):'Here is one way to do it.')}</b>${r.gained?`  +${r.gained} XP`:''}`+(r.badges.length?'<br>'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):''));
  $('snx').classList.remove('hide');bar(r.summary)}
 // ------------------------------------------------------------ 🔢 column methods (竖式), digit by digit
@@ -297,7 +308,7 @@ function colHint(){if(CDONE)return;Q.hintUsed=true;const fl=CFLOW.find(([r,k])=>
 function colShow(){if(CDONE)return;CV=MQC.solution(CL);colFinish(false)}
 function colFinish(solved){CDONE=true;colDraw();$('cck').disabled=true;const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10;
  const ans=solved?(Q.kind=='rem'?`${CL.value} r ${CL.rem}`:String(CL.value)):'';
- const r=MQ.answerQuestion(L,ST,goalToday(),Q,ans,!solved);logEvent(Q,{mode:'column',ok:r.correct,secs,slips:CSLIPS.slice(),hint:!!Q.hintUsed});save();record(Q,(solved?ans:'(shown)')+(CSLIPS.length?` [${CSLIPS.join(', ')}]`:''),!solved,r.correct,secs);
+ const r=MQ.answerQuestion(L,ST,goalToday(),Q,ans,!solved);logEvent(Q,{mode:mode=='choice'?'choice':'column',ok:r.correct,secs,slips:CSLIPS.slice(),hint:!!Q.hintUsed});save();record(Q,(solved?ans:'(shown)')+(CSLIPS.length?` [${CSLIPS.join(', ')}]`:''),!solved,r.correct,secs);
  const m=$('cmsg');m.className='fb '+(r.correct?'ok':'bad');m.innerHTML=`<b>${solved?(CSLIPS.length?`Done! (${CSLIPS.length} fix${CSLIPS.length>1?'es':''} on the way)`:'Perfect — every digit right first time! 🎉'):'Here is the full working.'}</b>${r.gained?`  +${r.gained} XP`:''}`+(r.badges.length?'<br>'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):'');
  $('cnx').classList.remove('hide');bar(r.summary)}
 // ------------------------------------------------------------ detailed event log (every question, every mode)
