@@ -46,23 +46,22 @@
  </div>
 </div>
 
-<script src="rng.js?b=010b"></script>
-<script src="config.js?b=010b"></script>
-<script src="rules.js?b=010b"></script>
-<script src="mq_engine.js?b=010b"></script>
-<script src="mq_store.js?b=010b"></script>
-<script src="mq_art.js?b=010b"></script>
-<script src="../engine.js?b=010b"></script>
-<script src="mq_gen.js?b=010b"></script>
-<script src="mq_play.js?b=010b"></script>
-<script src="mq_scene.js?b=010b"></script>
-<script src="mq_cake.js?b=010b"></script>
-<script src="mq_events.js?b=010b"></script>
-<script src="mq_shop.js?b=010b"></script>
+<script src="rng.js?b=010c"></script>
+<script src="config.js?b=010c"></script>
+<script src="rules.js?b=010c"></script>
+<script src="mq_engine.js?b=010c"></script>
+<script src="mq_store.js?b=010c"></script>
+<script src="mq_art.js?b=010c"></script>
+<script src="../engine.js?b=010c"></script>
+<script src="mq_gen.js?b=010c"></script>
+<script src="mq_play.js?b=010c"></script>
+<script src="mq_scene.js?b=010c"></script>
+<script src="mq_cake.js?b=010c"></script>
+<script src="mq_events.js?b=010c"></script>
+<script src="mq_shop.js?b=010c"></script>
 <script>
 const PAGE_VERSION = 7, E = MQEngine, A = MQArt, $ = id => document.getElementById(id), QKEY = 'mq_v2_queue';
 const DRAGONS = ['Pink Fluffy Unicorn', 'Yummy', 'Sprinkle'];
-const PUNNET = 10;                 // 每盒草莓 10 颗
 const UPGRADES = [
   { id: 'sign', name: '🌈 Rainbow sign', cost: 15, info: 'Customers smile more.' },
   { id: 'oven', name: '🔥 Bigger oven', cost: 25, info: 'One more customer every day.' },
@@ -138,7 +137,7 @@ $('lang2').onclick = () => { setLang(LANG === 'zh' ? 'en' : 'zh'); hud(); if ($(
 renderLogin();
 $('ll').onclick = () => { S = { name: 'guest', local: true }; ST = fixShop(MQStore.loadProgress('guest') || newShop()); boot(); };
 
-const BUILD = '010b';   // 与 content/build.json 一致；不一致说明浏览器用了旧缓存
+const BUILD = '010c';   // 与 content/build.json 一致；不一致说明浏览器用了旧缓存
 async function boot() {
   try { const b = JSON.parse(await read('content/build.json')).build; if (b !== BUILD) document.body.insertAdjacentHTML('afterbegin', `<div style="background:#ffd23f;padding:8px;text-align:center">${LANG === 'zh' ? '有新版本，请按 Ctrl+F5（手机下拉）刷新' : 'New version available — please refresh (Ctrl+F5)'}（${BUILD} → ${b}）</div>`); } catch (e) {}
   C = await E.loadContent(read, [1, 'level01biz']); SHOP = JSON.parse(await read('content/shop_A.json')).items;
@@ -205,23 +204,7 @@ function newDay() {
 }
 function showMorning() { MQShop.morning(); }   // v010a：订单板 + 进货链在 mq_shop.js
 
-function pay(n) {
-  CUR = () => pay(n); T.paySeed = T.paySeed || R(1, 1e9);
-  const correct = n * T.price; T.punnets = n;
-  actors(PG(), '', '<div style="font-size:70px">🧑‍🌾</div>');
-  ask('IT.L1.BIZ.BUY', { n, k: T.price }, { seed: T.paySeed,
-    speaker: t('farmer'), button: t('pay'),
-    onAnswer: v => {
-      if (v < correct) { $('msg').innerHTML = `<span class="bad">${t('notenough')}</span>`; return 'reject'; }
-      $('msg').innerHTML = `<span class="bad">${t('kept')(v - correct)}</span>`; return 'accept';
-    },
-    onDone: v => {
-      ST.cash -= v; T.spent += v; ST.stock += n * PUNNET; hud(); CUR = serveNext; T.paySeed = null;
-      if (v === correct) $('msg').innerHTML = `<span class="good">${t('exact')}</span>`;
-      $('msg').innerHTML += `<div class="row"><button id="nx">${t('opennow')}</button></div>`; $('nx').onclick = serveNext;
-    }
-  });
-}
+// 旧的早上买草莓 pay(n) 已删：v010a 起进货在 mq_shop.js（迁移第 7 步清理）
 
 // ---------------- 2 营业：做蛋糕、收钱 ----------------
 // serveNext 只做决定（下一步是节拍、订单还是关门）；画面函数只画，可重画

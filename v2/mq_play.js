@@ -1,7 +1,7 @@
 // mq_play.js — 甜品店随机事件层 v1（2026-11-27，P-20261126-maths-game）：怪兽来抢（选武器打怪、怪兽卡图鉴）、换店员（动物加成）、顾客高峰（限时）、多层蛋糕订单。
 // 依赖 index.html 里的全局（ST、T、C、LANG、panel、actors、hud、record、save、serveNext、evening、PG、R、money、$），以及 MQ（../engine.js 题目生成）、MQGen（mq_gen.js 画图）。
 // 数据在 content/game_data.json（武器、题型族、店员、事件概率）。版本写在文件内。
-const PLAY_VERSION = 10;   // v10：早上“多层蛋糕”改为把一单换成多层组合库蛋糕（MQShop.tierUp）；店员加价改为每单 +1；v9：概率改读 tuning.json（day、monster），game_data.json 不再有 events；v8：随机走 MQRng；打怪每轮的题进入时冻结在 T.monster.q、答完结果存 .last，打赢/跑掉只结算一次（.won/.fled），画面可重画（切换语言不换题）；askMQ 可传入冻结的题与作答次数；v7：怪兽交给导演（不再按天掷），打完回到当前订单（原来重置 idx=0）； v6：每天 2–3 个场景事件（MQEv.pickDay）； v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
+const PLAY_VERSION = 11;   // v11：删旧多层蛋糕流程 serveLayer/layerCharge；v10：早上“多层蛋糕”改为把一单换成多层组合库蛋糕（MQShop.tierUp）；店员加价改为每单 +1；v9：概率改读 tuning.json（day、monster），game_data.json 不再有 events；v8：随机走 MQRng；打怪每轮的题进入时冻结在 T.monster.q、答完结果存 .last，打赢/跑掉只结算一次（.won/.fled），画面可重画（切换语言不换题）；askMQ 可传入冻结的题与作答次数；v7：怪兽交给导演（不再按天掷），打完回到当前订单（原来重置 idx=0）； v6：每天 2–3 个场景事件（MQEv.pickDay）； v5：接场景事件（打完怪 → MQEv.on('battle')；怪兽日不出场景事件，否则掷 MQEv.pick）； v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
 let GD = null;
 const TX2 = {
   en: { book: '🃏 Monster cards', back: '← Back', bookIntro: (n, m) => `You have caught <b>${n}</b> of ${m} monsters. Defeat monsters with maths to collect their cards!`, unknown: '???',
@@ -198,26 +198,4 @@ function rushRun() {
     panel(`<div class="say good">${t2('rushEnd')(right, right)}</div><div class="row"><button id="nx">${t2('toEvening')}</button></div>`); $('nx').onclick = evening; };
   next();
 }
-
-// ---------------- 多层蛋糕订单（层数 × 每层草莓） ----------------
-function serveLayer(o) {
-  CUR = () => serveLayer(o); const { n, k, fl } = o.p, need = n * k, f = MQGen.FLAVOURS[fl];
-  actors(PG(), MQGen.cake({ type: 'layer', tiers: n, per: 0, flavour: fl }), A.dragon(o.who));
-  if (need > ST.stock) { panel(`<div class="say bad">${t('short')(ST.stock, need)}</div><div class="row"><button id="restock">${t('restock')}</button><button class="alt" id="nx">${t('letgo')}</button></div>`); $('restock').onclick = () => pay(Math.ceil((need - ST.stock) / PUNNET)); $('nx').onclick = () => { T.lost++; T.idx++; serveNext(); }; return; }
-  panel('<div id="qbox"></div>');
-  askMQ({ text: t2('layer')(o.who, n, k, nm(f)), answer: need, family: 'MD.MUL.01', id: 'LAYER.MUL', button: t('bake'), reward: 'layer', onResult: (ok, q, att) => {
-    if (!ok) { const v = Number($('ans2').value); if (v < need) { $('msg2').innerHTML = `<span class="bad">${t('toofew')(o.who)}</span>`; return 'retry'; } $('msg2').innerHTML = `<span class="bad">${t('toomany')(o.who, v - need)}</span>`; ST.stock -= Math.min(v - need, ST.stock); }
-    ST.stock -= need; hud(); actors(PG(), MQGen.cake({ type: 'layer', tiers: n, per: k, flavour: fl, candles: n >= 4 ? 3 : 0 }), A.dragon(o.who)); dance($('right'), ok && att === 1);
-    $('msg2').innerHTML += `${ok ? `<span class="good">${t('perfect')(o.who)}</span>` : ''}<div class="row"><button id="nx2">${t('takemoney')}</button></div>`;
-    $('nx2').onclick = () => layerCharge(o); return 'done';
-  } });
-}
-function layerCharge(o) {
-  CUR = () => layerCharge(o); const price = o.p.n * T.cakePrice; panel('<div id="qbox"></div>');
-  askMQ({ text: t2('layerPrice')(o.p.n, T.cakePrice), answer: price, family: 'MD.MONEY.01', id: 'LAYER.CHARGE', button: t('charge'), reward: 'layer', onResult: ok => {
-    if (!ok) { const v = Number($('ans2').value); if (v > price) { $('msg2').innerHTML = `<span class="bad">${t('toomuch')(o.who)}</span>`; return 'retry'; } $('msg2').innerHTML = `<span class="bad">${t('toolittle')(o.who, price - v)}</span>`; ST.cash += v; T.income += v; }
-    else { ST.cash += price; T.income += price; $('msg2').innerHTML = `<span class="good">${t('kaching')(price)}</span>`; }
-    T.served++; hud(); $('msg2').innerHTML += `<div class="row"><button id="nx2">${T.idx + 1 < T.orders.length ? t('nextc') : t('close')}</button></div>`;
-    $('nx2').onclick = () => { T.idx++; serveNext(); }; return 'done';
-  } });
-}
+// 多层蛋糕订单（旧 serveLayer/layerCharge）已删：v010a 起多层蛋糕是组合库订单（MQShop.tierUp），走主线（迁移第 7 步清理）
