@@ -1,7 +1,7 @@
 // mq_play.js — 甜品店随机事件层 v1（2026-11-27，P-20261126-maths-game）：怪兽来抢（选武器打怪、怪兽卡图鉴）、换店员（动物加成）、顾客高峰（限时）、多层蛋糕订单。
 // 依赖 index.html 里的全局（ST、T、C、LANG、panel、actors、hud、record、save、serveNext、evening、PG、R、money、$），以及 MQ（../engine.js 题目生成）、MQGen（mq_gen.js 画图）。
 // 数据在 content/game_data.json（武器、题型族、店员、事件概率）。版本写在文件内。
-const PLAY_VERSION = 3;   // v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
+const PLAY_VERSION = 4;   // v4：怪兽 28%→45%，且连续 2 天没来第 3 天必来（Jize 2026-11-27 20:43 四天没见到）； v3：不问年级，按作答自动定难度（每个题型族一个水平值）；v2：怪兽 30、武器 40 来自数据表；克制按题型族
 let GD = null;
 const TX2 = {
   en: { book: '🃏 Monster cards', back: '← Back', bookIntro: (n, m) => `You have caught <b>${n}</b> of ${m} monsters. Defeat monsters with maths to collect their cards!`, unknown: '???',
@@ -70,7 +70,9 @@ function playDay() {
     if (h.bonus === 'weapon') { const left = GD.weapons.filter(w => !ST.weapons.includes(w.id) && w.rarity !== 'legend'); if (left.length) { const w = left[R(0, left.length - 1)]; ST.weapons.push(w.id); T.newWeapon = w; } }
   }
   // 怪兽或高峰（一天最多一个）
-  if (roll(P('monster'))) T.monster = { idx: pickMonster() }; else if (roll(P('rush'))) T.rush = true;
+  ST.noMonster = ST.noMonster || 0;
+  if (ST.noMonster >= 2 || roll(P('monster'))) { T.monster = { idx: pickMonster() }; ST.noMonster = 0; }
+  else { ST.noMonster++; if (roll(P('rush'))) T.rush = true; }
   // 多层蛋糕订单：替换一单
   if (roll(P('layer')) && T.orders.length > 1) {
     const i = R(1, T.orders.length - 1), fl = ['vanilla', 'chocolate', 'strawberry', 'lemon', 'blueberry', 'mint'][R(0, 5)];

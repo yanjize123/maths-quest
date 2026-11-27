@@ -649,7 +649,7 @@
  "events": [
   {
    "id": "monster",
-   "p": 28,
+   "p": 45,
    "where": "open"
   },
   {
