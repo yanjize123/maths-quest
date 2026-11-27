@@ -8,7 +8,7 @@
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}.lc{background:var(--card);border-radius:18px;padding:22px;cursor:pointer;border:2px solid transparent;transition:.15s}
 .lc:hover{border-color:var(--acc);transform:translateY(-2px)}.lc .big{font-size:44px}.lc h2{margin:.2em 0}.mut{color:var(--mut)}
 .add{display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--mut);border:2px dashed #3a4590}
-.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--card);border-radius:14px;padding:10px 14px;margin-bottom:14px}
+.bar{margin-right:70px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;background:var(--card);border-radius:14px;padding:10px 14px;margin-bottom:14px}
 .pill{background:#28316a;border-radius:999px;padding:5px 12px;font-size:14px}.xp{flex:1;min-width:120px;height:10px;background:#28316a;border-radius:9px;overflow:hidden}
 .xp i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),#ff9f43)}
 .q{background:var(--card);border-radius:20px;padding:24px;box-shadow:0 10px 30px #0006}.tag{display:inline-block;background:#323d85;border-radius:8px;padding:3px 10px;font-size:13px;color:#cfd6ff;margin:0 4px 4px 0}
@@ -77,6 +77,7 @@ table{width:100%;border-collapse:collapse;margin-top:8px}td,th{padding:7px 6px;b
 <script src="engine.js"></script>
 <script src="steps.js"></script>
 <script src="column.js"></script>
+<script src="i18n.js"></script>
 <script>
 const KEY='mathsquest_v1';
 const YL=MQ.YEAR_LABEL;
@@ -179,7 +180,7 @@ const BACKEND=(window.MQ_BACKEND||'').trim();
 const CKEY='mathsquest_cred',QKEY='mathsquest_queue';
 let SESSION=null,flushing=false,saveMsg='';
 function backBtn(){if(BACKEND)logout();else home()}
-const PAGE_VERSION='classic page v5 · engine v5 · steps v2 · column v1 (2026-11-27)';
+const PAGE_VERSION='classic page v6 · engine v5 · steps v2 · column v1 · 中文 v1 (2026-11-27)';
 function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device · <span title="version">'+PAGE_VERSION+'</span>'}
 function footBackend(){const n=queueGet().filter(e=>SESSION&&e.user===SESSION.name).length;
  $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'} · ${PAGE_VERSION}`:''}
