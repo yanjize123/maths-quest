@@ -939,6 +939,58 @@ function report(st, year, now) {
   return { periods, topics, weak, strong, slips, areas, weeks };
 }
 
-const API = { report, SLIP_NAMES, isPure, PURE_SHARE, STEP_GENS, COLUMN_GENS, makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
+// ================================================================ QUANTITY TARGETS (how many questions) and SKILL LEVELS
+// Targets live in st.targets (set by a parent). A written-method or step-by-step problem counts as several
+// questions, because it takes several minutes (weights below).
+const DEFAULT_TARGETS = { weekday: 30, weekend: 50, holiday: 50, week: 300, holidays: "" };
+const qWeight = g => /^(c\d)/.test(g) ? (/div|mul2/.test(g) ? 3 : 2) : /^(s\d|e\d|i\d|q\d)/.test(g) ? 3 : 1;
+const ymd = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+function holidaySet(txt) {           // "2026-12-19..2027-01-04, 2027-02-15" -> Set of yyyy-mm-dd
+  const out = new Set(); for (const part of String(txt || "").split(/[,;\n]/).map(x => x.trim()).filter(Boolean)) {
+    const [a, b] = part.split(/\.\.|\s+to\s+|～|~/).map(x => x.trim()); const d0 = new Date(a + "T12:00:00"), d1 = new Date((b || a) + "T12:00:00");
+    if (isNaN(d0) || isNaN(d1)) continue; for (let d = new Date(d0); d <= d1 && out.size < 2000; d.setDate(d.getDate() + 1)) out.add(ymd(d)); }
+  return out;
+}
+function dayTarget(T, d, hol) { const k = ymd(d); if (hol.has(k)) return { type: "holiday", n: T.holiday }; const w = d.getDay(); return w === 0 || w === 6 ? { type: "weekend", n: T.weekend } : { type: "weekday", n: T.weekday }; }
+function quota(st, now) {
+  const T = Object.assign({}, DEFAULT_TARGETS, st.targets || {}), hol = holidaySet(T.holidays), t0 = now ? new Date(now) : new Date();
+  const done = {}; for (const e of st.events || []) { if (!e || !e.gen || e.skip) continue; const k = ymd(new Date(e.t)); done[k] = (done[k] || 0) + qWeight(e.gen); }
+  const span = (from, to) => { let target = 0, got = 0, days = 0; for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) { const dt = dayTarget(T, d, hol); target += dt.n; got += done[ymd(d)] || 0; days++; } return { target, got, days }; };
+  const today = new Date(t0.getFullYear(), t0.getMonth(), t0.getDate(), 12);
+  const wk0 = new Date(today); wk0.setDate(wk0.getDate() - ((wk0.getDay() + 6) % 7));          // Monday
+  const wk = span(wk0, today); const wkFull = span(wk0, new Date(wk0.getFullYear(), wk0.getMonth(), wk0.getDate() + 6, 12));
+  const weekTarget = Math.max(wkFull.target, T.week), weekSoFar = Math.max(wk.target, Math.round(T.week * wk.days / 7));
+  // counting starts on the first day of practice (so a child who started in November is not 90% behind for the year)
+  const evs = (st.events || []).filter(e => e && e.t), first = evs.length ? new Date(new Date(evs[0].t).toDateString() + " 12:00") : today, from = d => (first > d ? first : d);
+  const m0 = new Date(today.getFullYear(), today.getMonth(), 1, 12), mo = span(from(m0), today);
+  const y0 = new Date(today.getFullYear(), 0, 1, 12), yr = span(from(y0), today);
+  const topUp = (sp) => Math.max(sp.target, Math.round(T.week * sp.days / 7));   // the weekly target spread over the days
+  const row = (label, got, target) => ({ label, got, target, gap: target ? Math.round(100 * (got - target) / target) : 0 });
+  const dt = dayTarget(T, today, hol);
+  // whole-year plan: every day's minimum, and the weekly target if it is larger
+  const yEnd = new Date(today.getFullYear(), 11, 31, 12), yAll = span(y0, yEnd), yearPlan = Math.max(yAll.target, Math.round(T.week * yAll.days / 7));
+  const last8 = []; for (let w = 7; w >= 0; w--) { const a = new Date(wk0); a.setDate(a.getDate() - 7 * w); const b = new Date(a); b.setDate(b.getDate() + 6); const sp = span(a, b < today ? b : today); last8.push({ from: ymd(a), got: sp.got, target: Math.max(sp.target, Math.round(T.week * sp.days / 7)) }); }
+  return { targets: T, today: Object.assign(row("Today", done[ymd(today)] || 0, dt.n), { type: dt.type }),
+    week: row("This week (so far)", wk.got, weekSoFar), weekFull: weekTarget, month: row("This month (so far)", mo.got, topUp(mo)), year: row("This year (so far)", yr.got, topUp(yr)), yearPlan, weeks: last8,
+    minWeek: 5 * T.weekday + 2 * T.weekend };
+}
+// Skill level per question type: accuracy over the last 10 and speed against a target time.
+function speedTarget(g) { if (/^(a1|a2|f2|f3|y1|y2|a3_divfacts|y3_times|y4_tables)/.test(g)) return 6; if (/^c\d/.test(g)) return /div|mul2/.test(g) ? 150 : 90; if (/^(s\d|e\d|i\d|q\d)/.test(g)) return 150; if (/^(t\d|k\d|l\d|f5|r4)/.test(g)) return 25; return 45; }
+const LEVELS = [["new", "New"], ["learning", "Learning"], ["nearly", "Nearly there"], ["fluent", "Fluent"], ["secure", "Secure"]];
+function skillLevels(st, now) {
+  const t0 = now || Date.now(), by = {}; for (const e of st.events || []) if (e && e.gen && !e.skip) (by[e.gen] = by[e.gen] || []).push(e);
+  return Object.entries(by).map(([g, l]) => {
+    const last = l.slice(-10), acc = last.filter(e => e.ok).length / last.length, okT = last.filter(e => e.ok).map(e => +e.secs || 0).sort((a, b) => a - b);
+    const med = okT.length ? okT[Math.floor(okT.length / 2)] : null, tgt = speedTarget(g), fast = med != null && med <= tgt;
+    const spanDays = (Date.parse(last[last.length - 1].t) - Date.parse(last[0].t)) / 864e5;
+    let lv = l.length < 3 ? 0 : acc < 0.7 ? 1 : acc < 0.9 || !fast ? 2 : spanDays >= 7 && l.length >= 15 ? 4 : 3;
+    const next = lv <= 1 ? `${Math.max(7 - last.filter(e => e.ok).length, 1)} more right in the last 10` : lv === 2 ? (acc < 0.9 ? "9 out of 10 right" : `faster: about ${tgt}s each (now ${Math.round(med)}s)`) : lv === 3 ? "keep it up over 2 weeks" : "";
+    const slips = {}; for (const e of l.slice(-30)) for (const c of e.slips || []) slips[c] = (slips[c] || 0) + 1;
+    const lastWrong = l.slice().reverse().find(e => !e.ok);
+    return { gen: g, topic: l[l.length - 1].topic, year: YEAR_OF[g] || l[0].year, strand: STRAND_NAME[STRAND[g]] || l[0].strand, n: l.length, acc, med, tgt, level: lv, levelName: LEVELS[lv][1], next, slips: Object.entries(slips).sort((a, b) => b[1] - a[1]).slice(0, 2).map(([c, n]) => ({ code: c, n, name: SLIP_NAMES[c] || c })), lastWrong: lastWrong ? { t: lastWrong.t, ans: lastWrong.ans } : null, ago: Math.round((t0 - Date.parse(l[l.length - 1].t)) / 864e5) };
+  }).sort((a, b) => a.year - b.year || a.level - b.level);
+}
+
+const API = { quota, skillLevels, LEVELS, DEFAULT_TARGETS, qWeight, report, SLIP_NAMES, isPure, PURE_SHARE, STEP_GENS, COLUMN_GENS, makeQuestion, STRAND_NAME, stars, G, YEARS, STRAND, YEAR_OF, YEAR_LABEL, STRANDS, check, parseNum, Fr, F, sfrac, newState, fixState, nextQuestion, answerQuestion, progress, summary, strandYears, gensFor, placementInit };
 if (typeof module !== "undefined" && module.exports) module.exports = API; else root.MQ = API;
 })(typeof window !== "undefined" ? window : globalThis);

@@ -113,7 +113,7 @@ function exportDB(){const b=new Blob([JSON.stringify(DB,null,1)],{type:'applicat
 function importDB(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(!Array.isArray(d.players))throw new Error('not a Maths Quest backup');
  if(!confirm('Replace the progress on this device with this backup?'))return;DB=d;DB.states=DB.states||{};save();home()}catch(e){alert('Could not read backup: '+e.message)}};r.readAsText(f)}
 
-function start(i){L=DB.players[i];ST=stOf(L);show0('play');const s=MQ.summary(L,ST,DB.goal);bar(s);
+function start(i){L=DB.players[i];ST=stOf(L);show0('play');const s=MQ.summary(L,ST,goalToday());bar(s);
  $('year').innerHTML='<option value="">My plan (Year '+L.year+' + gaps)</option>'+Object.keys(YL).map(y=>`<option value="${y}">${YL[y]}</option>`).join('');
  tab(s.overall==null&&!s.count?2:1)}
 function bar(s){SUM=s;$('nm').textContent=s.name;$('yr').textContent=s.year_label;$('lv').textContent=`Lv ${s.level} ${s.title}`;$('xpb').style.width=s.xp_in_level+'%';$('stk').textContent=`🔥 ${s.streak}`;$('tdy').textContent=`Today ${s.today}/${s.goal}`}
@@ -125,7 +125,7 @@ function tab(n){[1,2,3,4,5,6,7].forEach(k=>$('t'+k).classList.toggle('on',k==n))
  if(n==4){show('bookbox');book();return}
  if(n==2){mode='placement';placementIntro();return}
  mode=n==3?'mistakes':'mixed';nextQ()}
-function placementIntro(){show('pbox');const s=MQ.summary(L,ST,DB.goal);
+function placementIntro(){show('pbox');const s=MQ.summary(L,ST,goalToday());
  $('pbox').innerHTML=`<h2>🧭 Placement test</h2><p>About 20–40 questions across 7 areas of maths, from Year 1 up to GCSE. Questions get harder when you are right and easier when you are not, to find where you are secure. No hints. You can stop at any time and carry on later.</p>
  ${s.overall!=null?`<p class="mut">Last result (${s.placed}): secure up to <b>Year ${s.overall}</b>.</p>`:''}
  <div class="row"><button class="go" onclick="nextQ()">${s.placement_active?'Continue ➜':'Start ➜'}</button>${s.placement_active?'<button class="ghost" onclick="restartP()">Start again</button>':''}</div>`}
@@ -134,7 +134,7 @@ const KEYS=['/','√','^2','^','(',')','x','n','−',',',':','.'];
 $('keys').innerHTML=KEYS.map(k=>`<button type="button" onclick="ins('${k}')">${k=='^2'?'x²':k}</button>`).join('');
 function ins(k){const a=$('ans');if(a.disabled)return;const v=k=='−'?'-':k;const p=a.selectionStart??a.value.length;a.value=a.value.slice(0,p)+v+a.value.slice(a.selectionEnd??p);a.focus();a.selectionStart=a.selectionEnd=p+v.length}
 function nextQ(){if(mode=='pure'&&SET&&SET.n>=10){setDone();return}
- const ys=$('year').value;Q=MQ.nextQuestion(L,ST,DB.goal,mode,['mixed','pure','steps','column'].includes(mode)&&ys?+ys:null);save();
+ const ys=$('year').value;Q=MQ.nextQuestion(L,ST,goalToday(),mode,['mixed','pure','steps','column'].includes(mode)&&ys?+ys:null);save();
  if(Q.placement_done){placementResult(Q);return}
  if(mode=='steps'&&Q.step){stepShow();return}
  if(mode=='column'&&Q.column){colShowQ();return}
@@ -146,7 +146,7 @@ function nextQ(){if(mode=='pure'&&SET&&SET.n>=10){setDone();return}
 function hint(){$('hn').classList.remove('hide');if(Q)Q.hintUsed=true}
 function submit(skip){if(done||!Q)return;const a=$('ans').value;if(!a.trim()&&!skip)return;done=true;
  const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10;
- const r=MQ.answerQuestion(L,ST,DB.goal,Q,a,!!skip);logEvent(Q,{ok:r.correct,secs,hint:!!Q.hintUsed,skip:!!skip,ans:a});save();record(Q,a,!!skip,r.correct,secs);
+ const r=MQ.answerQuestion(L,ST,goalToday(),Q,a,!!skip);logEvent(Q,{ok:r.correct,secs,hint:!!Q.hintUsed,skip:!!skip,ans:a});save();record(Q,a,!!skip,r.correct,secs);
  if(mode=='pure'&&SET){SET.n++;if(r.correct)SET.ok++}
  const f=$('fb');f.className='fb '+(r.correct?'ok':'bad');
  f.innerHTML=`<b>${esc(r.msg)}</b>${r.gained?`  +${r.gained} XP`:''}\n${r.correct?'':'Answer: <b>'+esc(r.show)+'</b>\n'}<span class="mut">${esc(r.sol)}</span>`+(r.badges.length?'\n'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):'');
@@ -159,6 +159,20 @@ function levelRows(strands,year){return '<table><tr><th>Area</th><th style="widt
 function placementResult(d){show('pbox');bar(d.summary);const s=d.summary;
  $('pbox').innerHTML=`<h2>🧭 Placement result</h2><p style="font-size:20px">Overall: secure up to <b>Year ${s.overall}</b> <span class="mut">(school year ${s.year})</span></p>${levelRows(d.strands,s.year)}
  <div class="row"><button class="go" onclick="tab(1)">Start practising ➜</button></div>`}
+function goalToday(){try{return MQ.quota(ST||{}).today.target}catch(e){return DB.goal||30}}
+function quotaHtml(){const q=MQ.quota(ST),T=q.targets;const g=x=>`<span style="color:${x.gap>=0?'var(--ok)':x.gap>-15?'var(--acc)':'var(--bad)'}">${x.gap>=0?'+':''}${x.gap}%</span>`;
+ const dtype={weekday:'school day',weekend:'weekend',holiday:'holiday'}[q.today.type];
+ let h=`<h3>🎯 How much practice</h3><p class="mut">Targets: ${T.weekday} a school day · ${T.weekend} a weekend day · ${T.holiday} a holiday · ${T.week} a week. A column or step-by-step problem counts as 2–3. Today is a ${dtype}.</p>`;
+ h+='<table><tr><th></th><th>Done</th><th>Target</th><th>Gap</th></tr>'+[q.today,q.week,q.month,q.year].map(r=>`<tr><td>${r.label}</td><td>${r.got}</td><td>${r.target}</td><td>${g(r)}</td></tr>`).join('')+`</table><p class="mut">Plan for the whole year: ${q.yearPlan.toLocaleString()} questions. The daily minimums add up to ${q.minWeek} a week${q.minWeek<T.week?` — ${T.week-q.minWeek} short of the weekly target, so some days need more than the minimum`:''}.</p>`;
+ h+=`<p class="mut">Last 8 weeks (done / target)</p><div style="display:flex;gap:6px;align-items:flex-end;height:70px">`+q.weeks.map(w=>`<div title="${w.from}: ${w.got}/${w.target}" style="flex:1;background:${w.got>=w.target?'var(--ok)':'var(--blue)'};height:${Math.max(4,Math.min(64,Math.round(64*w.got/Math.max(1,w.target))))}px;border-radius:4px"></div>`).join('')+`</div><div style="display:flex;gap:6px" class="mut">`+q.weeks.map(w=>`<div style="flex:1;text-align:center;font-size:12px">${w.got}</div>`).join('')+'</div>';
+ h+=`<details style="margin-top:8px"><summary class="mut">⚙️ Change targets (parents)</summary><div class="prow"><span class="mut">School day</span><input id="tg_wd" type="number" value="${T.weekday}" style="max-width:90px"><span class="mut">Weekend day</span><input id="tg_we" type="number" value="${T.weekend}" style="max-width:90px"><span class="mut">Holiday</span><input id="tg_ho" type="number" value="${T.holiday}" style="max-width:90px"><span class="mut">Week</span><input id="tg_wk" type="number" value="${T.week}" style="max-width:100px"></div>
+ <div class="prow"><span class="mut">Holidays</span><input id="tg_hd" value="${esc(T.holidays||'')}" placeholder="2026-12-19..2027-01-04, 2027-02-15..2027-02-19"></div><div class="row"><button class="go" onclick="saveTargets()">Save targets</button></div></details>`;
+ return h}
+function saveTargets(){const n=id=>Math.max(0,parseInt($(id).value,10)||0);ST.targets={weekday:n('tg_wd'),weekend:n('tg_we'),holiday:n('tg_ho'),week:n('tg_wk'),holidays:$('tg_hd').value.trim()};save();book()}
+function skillsHtml(){const S=MQ.skillLevels(ST);if(!S.length)return '<h3>🌱 My skills</h3><p class="mut">Skills appear after a few answers.</p>';
+ const col=['#6b7299','#ff6b6b','#ffcc4d','#5aa9ff','#3ddc97'];const dots=l=>[1,2,3,4].map(i=>`<span style="display:inline-block;width:10px;height:10px;border-radius:5px;margin-right:2px;background:${i<=l?col[l]:'#28316a'}"></span>`).join('');
+ let h='<h3>🌱 My skills</h3><p class="mut">Learning → Nearly there (7/10 right) → Fluent (9/10 right and quick enough) → Secure (fluent and kept up over 2 weeks).</p><table><tr><th>Year</th><th>Skill</th><th>Level</th><th>Last 10</th><th>Time</th><th>Next step</th><th>Usual mistake</th></tr>';
+ h+=S.map(x=>`<tr><td>Y${x.year}</td><td>${esc(x.topic)}</td><td>${dots(x.level)} ${esc(x.levelName)}</td><td>${pct(x.acc)}</td><td>${x.med==null?'–':Math.round(x.med)+'s'}<span class="mut"> / ${x.tgt}s</span></td><td class="mut">${esc(x.next)}</td><td class="mut">${x.slips.map(c=>esc(c.name)+' ×'+c.n).join('<br>')}</td></tr>`).join('')+'</table>';return h}
 function pct(x){return x==null?'–':Math.round(100*x)+'%'}
 function reportHtml(){const R=MQ.report(ST,L.year);const P=R.periods;let h='<h3>📊 Report</h3>';
  h+=`<table><tr><th></th><th>Questions</th><th>Right</th><th>Minutes</th><th>Pure calculation</th><th>Hints</th></tr>`+[['Last 7 days',P.d7],['Last 30 days',P.d30],['All',P.all]].map(([n,p])=>`<tr><td>${n}</td><td>${p.n}</td><td>${pct(p.acc)}</td><td>${p.mins}</td><td>${pct(p.pure)}</td><td>${pct(p.hints)}</td></tr>`).join('')+'</table>';
@@ -168,8 +182,8 @@ function reportHtml(){const R=MQ.report(ST,L.year);const P=R.periods;let h='<h3>
  h+='<h3>📈 Level by area (last 60 days)</h3><table><tr><th>Area</th><th>Answers</th><th>Right</th><th>Practising securely at</th><th>Placement</th><th>Next target</th></tr>'+R.areas.map(a=>`<tr><td>${esc(a.name)}</td><td>${a.n}</td><td>${pct(a.acc)}</td><td>${a.level?'Year '+a.level:'<span class=mut>–</span>'}</td><td>${a.placed!=null?'Year '+a.placed:'<span class=mut>–</span>'}</td><td>Year ${a.target}</td></tr>`).join('')+'</table><p class="mut">“Securely” = at least 5 answers at that year with 80% right.</p>';
  if(R.strong.length)h+='<h3>⭐ Secure</h3><p>'+R.strong.map(t=>`<span class="tag">Y${t.year} · ${esc(t.topic)}</span>`).join('')+'</p>';
  return h}
-function book(){const b=MQ.progress(L,ST,DB.goal);bar(b.summary);const s=b.summary;
- let h=`<h2>📒 ${esc(s.name)}'s progress</h2>`+reportHtml();
+function book(){const b=MQ.progress(L,ST,goalToday());bar(b.summary);const s=b.summary;
+ let h=`<h2>📒 ${esc(s.name)}'s progress</h2>`+quotaHtml()+skillsHtml()+reportHtml();
  h+=s.overall!=null?`<h3>🧭 Placement (${s.placed}): secure up to Year ${s.overall}</h3>${levelRows(b.strands,s.year)}`:'<p class="mut">No placement result yet — try the 🧭 Placement test.</p>';
  h+=`<h3>Topics</h3><p class="mut">Bonus missions waiting: ${s.review_left} · Answered ${s.count} · Correct ${s.correct}</p><table><tr><th>Year</th><th>Topic</th><th>Stars</th><th>Accuracy</th><th></th></tr>`;
  h+=b.topics.map(t=>`<tr><td>Y${t.year}</td><td>${esc(t.topic)}</td><td>${'⭐'.repeat(t.stars)||'<span class=mut>new</span>'}</td><td><div class="acc"><i style="width:${t.a?Math.round(100*t.c/t.a):0}%"></i></div></td><td class="mut">${t.c}/${t.a}</td></tr>`).join('')+'</table><h3>Recent mistakes</h3>';
@@ -180,7 +194,7 @@ const BACKEND=(window.MQ_BACKEND||'').trim();
 const CKEY='mathsquest_cred',QKEY='mathsquest_queue';
 let SESSION=null,flushing=false,saveMsg='';
 function backBtn(){if(BACKEND)logout();else home()}
-const PAGE_VERSION='classic page v7 · engine v6 · steps v2 · column v1 · 中文 v1 (2026-11-27)';
+const PAGE_VERSION='classic page v8 · engine v7 · steps v2 · column v1 · 中文 v1 (2026-11-27)';
 function footLocal(){$('foot').innerHTML='<a href="#" onclick="openSetup();return false">⚙️ Players &amp; backup</a> · progress is saved on this device · <span title="version">'+PAGE_VERSION+'</span>'}
 function footBackend(){const n=queueGet().filter(e=>SESSION&&e.user===SESSION.name).length;
  $('foot').innerHTML=SESSION?`Logged in as <b>${esc(SESSION.name)}</b> · <a href="#" onclick="logout();return false">Log out</a> · ${n?('⏳ '+n+' answer(s) waiting to upload'):'✓ all answers saved'} · ${PAGE_VERSION}`:''}
@@ -202,7 +216,7 @@ async function doLogin(auto){const user=auto?auto.user:$('lu').value.trim(),pass
   DB.states[r.name]=ST;save();$('lp').value='';$('lb').disabled=false;startSession();flush();
  }catch(e){$('lb').disabled=false;$('lm').textContent='Cannot reach the server. Check the internet connection and try again.';show0('login')}}
 function startSession(){L={name:SESSION.name,year:SESSION.year};ST=DB.states[L.name]=MQ.fixState(DB.states[L.name]);show0('play');$('backbtn').textContent='Log out';
- const s=MQ.summary(L,ST,DB.goal);bar(s);
+ const s=MQ.summary(L,ST,goalToday());bar(s);
  $('year').innerHTML='<option value="">My plan (Year '+L.year+' + gaps)</option>'+Object.keys(YL).map(y=>`<option value="${y}">${YL[y]}</option>`).join('');
  footBackend();tab(s.overall==null&&!s.count?2:1)}
 // ------------------------------------------------------------ 🧮 sets of 10 (pure calculation)
@@ -232,7 +246,7 @@ function stepGiveUp(){if(SDONE)return;const lines=SLINES.slice();for(let i=0;i<1
  SLINES=lines;stepDraw();stepFinish(false)}
 function stepFinish(solved){SDONE=true;$('sin').disabled=true;$('sck').disabled=true;const segs=(SLINES[SLINES.length-1]||'').split('='),last=Q.step.type=='ineq'?(SLINES[SLINES.length-1]||''):Q.step.type=='sys'?SLINES.join(', '):Q.step.type=='eq'&&/^\s*x\s*$/i.test(segs[segs.length-1])?segs[0]:segs[segs.length-1];
  const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10,ans=solved?last:'';
- const r=MQ.answerQuestion(L,ST,DB.goal,Q,ans,!solved);logEvent(Q,{mode:'steps',ok:r.correct,secs,hint:!!Q.hintUsed,slips:SSLIPC.slice(),skip:!solved,ans:SLINES.join(' | ')});save();record(Q,SLINES.join(' | ')+(SSLIPS?` [${SSLIPS} slip${SSLIPS>1?'s':''}]`:''),!solved,r.correct,secs);
+ const r=MQ.answerQuestion(L,ST,goalToday(),Q,ans,!solved);logEvent(Q,{mode:'steps',ok:r.correct,secs,hint:!!Q.hintUsed,slips:SSLIPC.slice(),skip:!solved,ans:SLINES.join(' | ')});save();record(Q,SLINES.join(' | ')+(SSLIPS?` [${SSLIPS} slip${SSLIPS>1?'s':''}]`:''),!solved,r.correct,secs);
  stepMsg(r.correct?'ok':'bad',`<b>${esc(solved?(SSLIPS?`Solved! (${SSLIPS} line${SSLIPS>1?'s':''} needed fixing)`:'Solved with every line right! 🎉'):'Here is one way to do it.')}</b>${r.gained?`  +${r.gained} XP`:''}`+(r.badges.length?'<br>'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):''));
  $('snx').classList.remove('hide');bar(r.summary)}
 // ------------------------------------------------------------ 🔢 column methods (竖式), digit by digit
@@ -283,7 +297,7 @@ function colHint(){if(CDONE)return;Q.hintUsed=true;const fl=CFLOW.find(([r,k])=>
 function colShow(){if(CDONE)return;CV=MQC.solution(CL);colFinish(false)}
 function colFinish(solved){CDONE=true;colDraw();$('cck').disabled=true;const secs=Math.round((Date.now()-(Q.shownAt||Date.now()))/100)/10;
  const ans=solved?(Q.kind=='rem'?`${CL.value} r ${CL.rem}`:String(CL.value)):'';
- const r=MQ.answerQuestion(L,ST,DB.goal,Q,ans,!solved);logEvent(Q,{mode:'column',ok:r.correct,secs,slips:CSLIPS.slice(),hint:!!Q.hintUsed});save();record(Q,(solved?ans:'(shown)')+(CSLIPS.length?` [${CSLIPS.join(', ')}]`:''),!solved,r.correct,secs);
+ const r=MQ.answerQuestion(L,ST,goalToday(),Q,ans,!solved);logEvent(Q,{mode:'column',ok:r.correct,secs,slips:CSLIPS.slice(),hint:!!Q.hintUsed});save();record(Q,(solved?ans:'(shown)')+(CSLIPS.length?` [${CSLIPS.join(', ')}]`:''),!solved,r.correct,secs);
  const m=$('cmsg');m.className='fb '+(r.correct?'ok':'bad');m.innerHTML=`<b>${solved?(CSLIPS.length?`Done! (${CSLIPS.length} fix${CSLIPS.length>1?'es':''} on the way)`:'Perfect — every digit right first time! 🎉'):'Here is the full working.'}</b>${r.gained?`  +${r.gained} XP`:''}`+(r.badges.length?'<br>'+r.badges.map(b=>`<span class="badge">${esc(b)}</span>`).join(''):'');
  $('cnx').classList.remove('hide');bar(r.summary)}
 // ------------------------------------------------------------ detailed event log (every question, every mode)
