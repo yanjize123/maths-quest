@@ -2,15 +2,15 @@
 // 读 content/events.json、scenes.json、tuning.json（节奏与保底只在 tuning.json）；一个事件 = 前因(needs 标记) → 场景 → 几道题 → 结果动作 → 回店。
 // 新事件只写 JSON。动作词表（固定，加新词才改本文件）：cash 表达式 | stock 表达式 | flag 名 天数 [概率%] | state 名 天数 | cust 增减 天数 | item 名 | use 名（用掉一件）
 // 依赖 index.html / mq_play.js 的全局：ST、T、LANG、panel、actors、hud、save、askMQ、serveNext、PG、R、read、MQGen、bookSpec、pickMonster；MQ_E = MQEngine.evalExpr。
-const EVENTS_VERSION = 9;   // v9：每天开始导演排好全天节拍表 T.plan（planDay：按预计题数定拍点，怪兽/事件、换场景均匀分布且保底、其余类别按欠账轮转），due 按表出；关门前换场景不足补出；无 T.plan（旧存档当天）用旧逻辑；v8：参数改读 tuning.json（pacing、floors）；每天换场景保底 floors.tripPerDay（剩下的订单不够时提前出）；换场景到期时前因事件让路；v7：随机统一走 MQRng（rng.js）；每步的题进入时冻结在 T.sev.bound、答完的结果存 T.sev.res，画面只读 → 切换语言只重画、内容不变；地名/钱名/蛋糕名按当前语言在画面时算（lv）；v6：事件类别 cat + pacing.mix 比例与保底（换场景最多隔 3 拍必来、不连续同类）、奇幻水果篮 pantry（fruit/usefruit、needsPantry、$pantry 蛋糕）、蛋糕图鉴；v5： v5：事件随机蛋糕（MQCake，变量 cakeName/nFruit/tiers）；v4： v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
+const EVENTS_VERSION = 10;   // v10：故事线 content/arcs.json（每条线 2–3 拍，按 at 分放早中晚，可跨天；题型取自 UKMT JMC 归纳的套路；数在开线时抽一次存 ST.arc.v；角色 {who}/{who2} 按语言在画面时补；tuning.arcs 管多少拍顶替原有拍、多少拍新增、多久不重复）；v9：每天开始导演排好全天节拍表 T.plan（planDay：按预计题数定拍点，怪兽/事件、换场景均匀分布且保底、其余类别按欠账轮转），due 按表出；关门前换场景不足补出；无 T.plan（旧存档当天）用旧逻辑；v8：参数改读 tuning.json（pacing、floors）；每天换场景保底 floors.tripPerDay（剩下的订单不够时提前出）；换场景到期时前因事件让路；v7：随机统一走 MQRng（rng.js）；每步的题进入时冻结在 T.sev.bound、答完的结果存 T.sev.res，画面只读 → 切换语言只重画、内容不变；地名/钱名/蛋糕名按当前语言在画面时算（lv）；v6：事件类别 cat + pacing.mix 比例与保底（换场景最多隔 3 拍必来、不连续同类）、奇幻水果篮 pantry（fruit/usefruit、needsPantry、$pantry 蛋糕）、蛋糕图鉴；v5： v5：事件随机蛋糕（MQCake，变量 cakeName/nFruit/tiers）；v4： v4：纯算式步（calc、gen 按水平出题）、蛋糕画面（show.cake）、needsItem/use 物品链、集市 market（买武器与怪东西要算找零）；v3： v3：导演按答题数出节拍（pacing.json），怪兽也归导演管（Jize 21:05 场景出得太少）；v2： v2：每天 2–3 个事件，分散在营业中（Jize 2026-11-27 21:00）
 const MQEv = (() => {
-  let ED = null, PD = null, MD = null, TU = null, FL = {};
+  let ED = null, PD = null, MD = null, TU = null, FL = {}, AR = null;
   const ev = (x, v) => MQEngine.evalExpr(x, v);
   const fill = (s, v) => String(s).replace(/\{(\w+)\}/g, (m, k) => (k in v ? v[k] : m));
   const tx = o => (o && (o[LANG] || o.en)) || '';
   async function load() {
     const [e, s, p, m, ck] = await Promise.all([read('content/events.json'), read('content/scenes.json'), read('content/tuning.json'), read('content/market.json'), read('content/cakes.json')]);
-    ED = JSON.parse(e); MQScene.load(JSON.parse(s)); TU = JSON.parse(p); PD = TU.pacing; FL = TU.floors || {}; MD = JSON.parse(m); if (typeof MQCake !== 'undefined') MQCake.load(JSON.parse(ck));
+    ED = JSON.parse(e); try { AR = JSON.parse(await read('content/arcs.json')); } catch (x) { AR = null; } MQScene.load(JSON.parse(s)); TU = JSON.parse(p); PD = TU.pacing; FL = TU.floors || {}; MD = JSON.parse(m); if (typeof MQCake !== 'undefined') MQCake.load(JSON.parse(ck));
     ST.flags = ST.flags || {}; ST.states = ST.states || {}; ST.cust = ST.cust || []; ST.items = ST.items || {}; ST.pantry = ST.pantry || {}; ST.cakeBook = ST.cakeBook || { shape: {}, fruit: {}, style: {} };
     if (typeof document !== 'undefined' && !document.getElementById('cakeb')) { const bar = document.querySelector('.bar'); if (bar) { bar.insertAdjacentHTML('beforeend', '<button class="alt" id="cakeb" style="font-size:14px;padding:4px 10px"></button>'); document.getElementById('cakeb').onclick = () => cakeBook(); } }
   }
@@ -93,16 +93,57 @@ const MQEv = (() => {
   function planDay() {
     if (!PD || !T) return; const ML = TU.mainline || {}, n = (T.orders || []).length, Q = 4 + n * (2 + (ML.drillPerOrder || 0)) + 1;
     const slots = []; for (let q = PD.first || 1; q <= Q; q += rint(PD.gap)) slots.push({ q });
+    placeArc(slots);   // v10：先放故事线的拍（新增，cat = 'arc'），再在全部拍上排怪兽与换场景，保底间隔把故事拍也算在内
     let noMon = ST.beatsNoMon || 0; const w = PD.beats;
-    slots.forEach(x => { const mon = noMon >= PD.monsterMaxGap || MQRng.r() * (w.event + w.monster) < w.monster; x.kind = mon ? 'monster' : 'event'; noMon = mon ? 0 : noMon + 1; });
-    const floor = FL.tripPerDay || 0, mix = PD.mix, tot = Object.values(mix).reduce((a, b) => a + b, 0);
-    for (let k = slots.length - 1; slots.filter(x => x.kind === 'event').length < 2 * floor - 1 && k >= 0; k--) if (slots[k].kind === 'monster') slots[k].kind = 'event';   // 事件拍不够放保底：怪兽让位
-    const ev = slots.filter(x => x.kind === 'event'); let nTrip = Math.min(Math.ceil(ev.length / 2), Math.max(floor, Math.round(ev.length * (mix.trip || 0) / tot)));
-    for (let k = 0; k < nTrip; k++) ev[Math.min(ev.length - 1, Math.floor((k + 0.5) * ev.length / nTrip))].cat = 'trip';   // 换场景均匀分布在一天里
+    slots.forEach((x, i) => { if (x.cat === 'arc') { x.kind = 'event'; noMon++; return; } const nx = slots[i + 1], mon = noMon >= PD.monsterMaxGap || (noMon >= PD.monsterMaxGap - 1 && nx && nx.cat === 'arc') || MQRng.r() * (w.event + w.monster) < w.monster; x.kind = mon ? 'monster' : 'event'; noMon = mon ? 0 : noMon + 1; });
+    const floor = FL.tripPerDay || 0, mix = PD.mix, tot = Object.values(mix).reduce((a, b) => a + b, 0), free = () => slots.filter(x => x.kind === 'event' && x.cat !== 'arc');
+    for (let k = slots.length - 1; (slots.filter(x => x.kind === 'event').length < 2 * floor - 1 || free().length < floor) && k >= 0; k--) if (slots[k].kind === 'monster') slots[k].kind = 'event';   // 事件拍不够放保底：怪兽让位
+    { const e0 = slots.find(x => x.kind === 'event'), y = slots.find(x => x.kind === 'event' && x.cat !== 'arc'); if (e0 && e0.cat === 'arc' && ST.lastCat === 'arc' && y) { [e0.q, y.q] = [y.q, e0.q]; slots.sort((p, q) => p.q - q.q); const ar = slots.filter(x => x.cat === 'arc'), ks = ar.map(x => x.arc).sort((a, b) => a - b); ar.forEach((x, j) => x.arc = ks[j]); } }   // 昨天最后一个事件是故事拍：今天第一个事件不放故事拍（不连续同类）
+    const all = slots.filter(x => x.kind === 'event'), ev = free(); let nTrip = Math.min(Math.ceil(all.length / 2), ev.length, Math.max(floor, Math.round(all.length * (mix.trip || 0) / tot)));
+    const mg = PD.tripMaxGap || 3, sp = Math.max(1, Math.min(mg, Math.round(all.length / Math.max(1, nTrip)) - 1)); let g = ST.sinceTrip || 0;
+    all.forEach((x, i) => { let na = 0; while (all[i + 1 + na] && all[i + 1 + na].cat === 'arc') na++; if (x.cat !== 'arc' && (g >= sp || g + na >= mg)) { x.cat = 'trip'; g = 0; } else g++; });   // 换场景：接着昨天的间隔数，每隔 sp 个事件一次（故事拍算在间隔里、不占换场景），保证最多隔 tripMaxGap
     const others = Object.keys(mix).filter(c => c !== 'trip'), sub = others.reduce((a, c) => a + mix[c], 0), d = ST.catDebt || {}; let prev = ST.lastCat;
-    for (const x of ev) { if (x.cat) { prev = x.cat; continue; } others.forEach(c => d[c] = (d[c] || 0) + mix[c] / sub); const c = others.filter(c => c !== prev).sort((a, b) => d[b] - d[a])[0]; d[c] -= 1; x.cat = prev = c; }   // 其余类别按欠账轮转、不连续同类
+    for (const x of all) { if (x.cat) { prev = x.cat; continue; } others.forEach(c => d[c] = (d[c] || 0) + mix[c] / sub); const c = others.filter(c => c !== prev).sort((a, b) => d[b] - d[a])[0]; d[c] -= 1; x.cat = prev = c; }   // 其余类别按欠账轮转、不连续同类
     ST.catDebt = d; T.plan = { slots, i: 0 }; T.qn = 0;
   }
+  // ---- 故事线（v10，content/arcs.json）：一条线 = 共享的数 + 2–3 拍（每拍是一个事件），at = 放在一天的哪个位置（0 早 … 1 晚），day = 第几天（跨天的线） ----
+  const arcById = id => AR && AR.arcs.find(a => a.id === id);
+  function arcToday() {
+    if (!AR || !AR.arcs || !AR.arcs.length) return [];
+    const AT = TU.arcs || {}; let A = ST.arc && arcById(ST.arc.id);
+    if (A) {
+      const left = A.beats.map((b, k) => k).filter(k => !ST.arc.done.includes(k));
+      if (left.length) { const d = Math.min(...left.map(k => A.beats[k].day || 0)); ST.arc.day = d; return left.filter(k => (A.beats[k].day || 0) === d); }
+      ST.arcRecent = [A.id, ...(ST.arcRecent || [])].slice(0, AT.recent ?? 8); ST.arc = null;
+    }
+    const recent = ST.arcRecent || [], seen = ST.arcSeen || {}, now = ST.day || 0;
+    let pool = AR.arcs.filter(a => !recent.includes(a.id)); if (!pool.length) pool = AR.arcs;
+    const wt = a => (a.p || 1) * (a.id in seen ? 1 + Math.min(AT.ageCap ?? 60, now - seen[a.id]) / (AT.ageScale ?? 15) : (AT.neverSeen ?? 4));   // 没讲过的、久没讲的优先
+    let r = MQRng.r() * pool.reduce((t, a) => t + wt(a), 0), k = 0; while ((r -= wt(pool[k])) > 0 && k < pool.length - 1) k++;
+    A = pool[k]; const v = vars(A), nc = (AR.cast || []).length, nn = (AR.names || []).length;
+    if (nc) { v.c1 = MQRng.int(0, nc - 1); v.c2 = (v.c1 + MQRng.int(1, Math.max(1, nc - 1))) % nc; }
+    if (nn) { v.n1 = MQRng.int(0, nn - 1); v.n2 = (v.n1 + MQRng.int(1, Math.max(1, nn - 1))) % nn; }
+    ST.arc = { id: A.id, day: 0, v, done: [] }; ST.arcSeen = { ...seen, [A.id]: now };
+    return A.beats.map((b, k) => k).filter(k => !(A.beats[k].day || 0));
+  }
+  // 今天的拍放进节拍表：每拍新增一个节拍（不挤掉原有类别），插在离 at 最近的两拍之间；按 q 排序后依次编号，保证顺序
+  function placeArc(slots) {
+    const ks = arcToday(); if (!ks.length) return; const A = arcById(ST.arc.id), mine = [];
+    for (const k of ks) {
+      const at = A.beats[k].at ?? 0.5, i = Math.max(0, Math.min(slots.length - 1, Math.floor(at * slots.length))), x = { q: slots[i].q + 1, kind: 'event', cat: 'arc' };
+      if (slots.some(y => y.q === x.q)) slots.forEach(y => { if (y.q >= x.q) y.q++; });   // 两拍之间有空就插在中间，不推后后面的拍
+      slots.push(x); slots.sort((p, q) => p.q - q.q); mine.push(x);
+    }
+    mine.sort((p, q) => p.q - q.q).forEach((x, j) => x.arc = ks[j]);
+  }
+  function arcSev(k) {
+    const A = arcById(ST.arc.id), b = A.beats[k], D = AR.defaults || {};
+    if (!ST.arc.done.includes(k)) ST.arc.done.push(k);
+    const e = { scene: 'shop', show: { who: true }, ...b, id: 'arc_' + A.id + '_' + k, cat: 'arc', arc: A.id, needs: k ? 'arc' : undefined, steps: b.steps || [], win: b.win || D.win || {}, lose: b.lose || D.lose || {} };
+    const v = { ...ST.arc.v }; for (const [key, d] of Object.entries(b.vars || {})) v[key] = Array.isArray(d) ? MQRng.int(d[0], d[1]) : ev(d, v);
+    const sev = { e, v, seed: MQRng.int(0, 1e9), done: false }; cakeVars(sev); return sev;
+  }
+  const castName = (v, n) => { const c = (AR.cast || [])[v['c' + n]], nm = (AR.names || [])[v['n' + n]]; if (!c || !nm) return ''; return LANG === 'zh' ? c.zh + nm.zh : `${nm.en} the ${c.en}`; };
   function due() {
     if (!PD || !T || T.inBeat) return null;
     if (T.plan) {
@@ -111,9 +152,12 @@ const MQEv = (() => {
       if (!fire && closing && (T.trips || 0) < (FL.tripPerDay || 0)) {   // 关门前换场景还不够：跳到下一个换场景拍，没有就补一拍
         const k = P.slots.findIndex((x, j) => j >= P.i && x.cat === 'trip'); if (k < 0) P.slots.push({ q: T.qn || 0, kind: 'event', cat: 'trip' }); P.i = k < 0 ? P.slots.length - 1 : k; fire = true;
       }
+      if (!fire && closing && P.slots.slice(P.i).some(y => y.cat === 'arc')) fire = true;
+      if (!fire && closing && (ST.beatsNoMon || 0) >= PD.monsterMaxGap - 1) { const k = P.slots.findIndex((y, j) => j >= P.i && y.kind === 'monster'); if (k >= 0) { P.i = k; fire = true; } }   // 关门前怪兽快到保底了：把表里剩下的怪兽拍出掉（不让间隔跨到明天变长）   // 关门前故事线还有没讲的拍：按顺序把剩下的拍出完（不跳过中间的怪兽，一条线不断在半截）
       if (!fire) return null;
       const x = P.slots[P.i++]; T.inBeat = true; ST.since = 0;
       if (x.kind === 'monster') { ST.beatsNoMon = 0; T.monster = { idx: pickMonster() }; T.monsterDone = false; return 'monster'; }
+      if (x.cat === 'arc') { ST.beatsNoMon = (ST.beatsNoMon || 0) + 1; ST.lastCat = 'arc'; ST.sinceTrip = (ST.sinceTrip || 0) + 1; T.sev = arcSev(x.arc); return 'event'; }
       let cat = x.cat;
       if (cat === ST.lastCat) { if (cat === 'trip') { const nx = P.slots.slice(P.i).find(y => y.kind === 'event' && y.cat !== 'trip'); if (nx) nx.cat = 'trip'; } cat = null; }   // 前因事件改变了上一个类别：这拍换别类（换场景挪到下一拍），不连续同类
       ST.beatsNoMon = (ST.beatsNoMon || 0) + 1; T.sev = chooseEvent(cat, cat !== 'trip'); return 'event';
@@ -138,6 +182,7 @@ const MQEv = (() => {
   // 画面中间：群怪（show.grid/boss）或蛋糕（show.cake，字段值可写变量名）
   function crowd(e, v, sev) {
     const sh = e.show; if (!sh) return '';
+    if (sh.who && AR && typeof MQGen !== 'undefined') return `<div style="display:flex;align-items:flex-end;gap:6px">${[1, 2].slice(0, sh.who === 2 ? 2 : 1).map(n => box(MQGen.animal((AR.cast[v['c' + n]] || {}).k || 'bunny', '#ffd27f'), 90)).join('')}</div>`;
     if (sh.cake && T.sev && T.sev.cake) return box(MQCake.draw(T.sev.cake), 170);
     if (sh.cake) { const c = {}; for (const [k, x] of Object.entries(sh.cake)) c[k] = typeof x === 'string' && x in v ? v[x] : x; return box(MQGen.cake(c), 150); }
     const [r, c] = sh.grid.map(k => v[k]), one = box(MQGen.monster(bookSpec(sev.crowd[0]), 'idle'), 40);
@@ -148,7 +193,7 @@ const MQEv = (() => {
   // 语言相关的变量在画面时才算（切换语言只重画、不重抽）
   function lv(sev) {
     const v = { ...sev.v }, sc = MQScene.data().scenes[sev.e.scene] || {};
-    v.place = sc[LANG] || sc.en || ''; v.money = tx(sc.money) || (LANG === 'zh' ? '金币' : 'coins');
+    v.place = sc[LANG] || sc.en || ''; if (sev.e.arc && AR) { v.who = castName(v, 1); v.who2 = castName(v, 2); } v.money = tx(sc.money) || (LANG === 'zh' ? '金币' : 'coins');
     if (sev.cake && typeof MQCake !== 'undefined') v.cakeName = MQCake.name(sev.cake, LANG);
     if (sev.fruitKey && typeof MQCake !== 'undefined') v.fruitName = MQCake.data().fruits[sev.fruitKey][LANG] || sev.fruitKey;
     return v;
@@ -238,5 +283,5 @@ const MQEv = (() => {
     if (e.market) return market(sev);
     finish(sev);
   }
-  return { load, tick, count, due, chooseEvent, cakeVars, noteCake, cakeBook, pantryCount, on, run, planDay, pacing: () => PD, tuning: () => TU, backdrop, vars, lv, act, data: () => ED, EVENTS_VERSION };
+  return { load, tick, count, due, chooseEvent, cakeVars, noteCake, cakeBook, pantryCount, on, run, planDay, arcs: () => AR, arcToday, arcSev, pacing: () => PD, tuning: () => TU, backdrop, vars, lv, act, data: () => ED, EVENTS_VERSION };
 })();

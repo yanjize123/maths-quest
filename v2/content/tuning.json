@@ -227,5 +227,12 @@
    "mixed": 1
   },
   "morningChain": true
+ },
+ "arcs": {
+  "recent": 10,
+  "neverSeen": 4,
+  "ageScale": 15,
+  "ageCap": 60,
+  "note": "故事线（arcs.json）：每天一条线的 2–3 拍，全部新增为节拍（不挤掉原有类别；v010d 模拟中顶替原有拍使 drill/cake/market 降到约一半，已改）；怪兽与换场景保底把故事拍也算在内；recent = 最近几条线不重复；没讲过的线权重 ×neverSeen，讲过的 ×(1+min(隔了几天,ageCap)/ageScale)"
  }
 }

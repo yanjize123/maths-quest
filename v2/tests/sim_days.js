@@ -26,13 +26,14 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
   const rushPure = GD.rush.gens.filter(x => MQ.isPure(x)).length / GD.rush.gens.length;
   const tot = { q: 0, pure: 0, beats: 0, events: 0, trips: 0, monsters: 0, daysNoTrip: 0 }, first = {}, catN = {};
   let sinceTrip = 0, maxTripGap = 0, sinceMon = 0, maxMonGap = 0, sinceBeatQ = 0, maxBeatGapQ = 0, prevCat = null, rep = 0, prevCaused = false; const repD = {};
-  const perDay = [];
+  const perDay = [], arcDays = [], arcBeatsDay = []; let arcStarted = 0;
   for (let d = 1; d <= days; d++) {
     const ST = ctx.ST; ST.day = d; ctx.T = { inBeat: false }; const T = ctx.T;
     const dc = ctx.MQEv.tick(); let nCust = Math.max(2, 5 + dc), day = { q: 0, pure: 0, trips: 0, events: 0, monsters: 0 };
     if (roll(P('helper')) && rnd() < 1 / GD.helpers.length) nCust++;   // 帮手 extra（6 种之一）
     T.orders = Array(nCust).fill(0); T.idx = 0;   // 导演的每天保底要看剩几单
     ctx.MQEv.planDay();   // v010b：全天节拍表
+    if (process.env.DBG == d) console.log('plan', d, 'beatsNoMon@start', JSON.stringify(T.plan.slots.map(x => x.q + (x.kind === 'monster' ? 'M' : x.cat))));
     const rush = roll(P('rush'));
     const word = (n = 1) => { for (let i = 0; i < n; i++) { while (beat()); day.q++; ctx.MQEv.count(); sinceBeatQ++; } };
     const pureQ = (n, share) => { day.q += n; day.pure += n * share; };   // 节拍内的题不计导演
@@ -40,12 +41,12 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
       const b = ctx.MQEv.due(); if (!b) return false;
       tot.beats++; maxBeatGapQ = Math.max(maxBeatGapQ, sinceBeatQ); sinceBeatQ = 0;
       if (b === 'monster') {
-        day.monsters++; sinceMon = 0; const fam = Object.keys(GD.families)[Math.floor(rnd() * Object.keys(GD.families).length)];
+        day.monsters++; sinceMon = 0; (day.seq = day.seq || []).push('M'); const fam = Object.keys(GD.families)[Math.floor(rnd() * Object.keys(GD.families).length)];
         let hp = 2 * (1 + Math.floor(rnd() * 3)), turns = 0; while (hp > 0 && turns < 12) { turns++; if (rnd() < acc) hp -= 2 * (rnd() < 1 / 3 ? 2 : 1); }
         pureQ(turns, famPure(fam)); ctx.MQEv.on('battle'); T.inBeat = false;
       } else {
         if (!T.sev.forced) { sinceMon++; maxMonGap = Math.max(maxMonGap, sinceMon); }   // 保底加出的节拍不算
-        const sev = T.sev, e = sev.e; day.events++; catN[e.cat] = (catN[e.cat] || 0) + 1; if (!(e.id in first)) first[e.id] = d;
+        const sev = T.sev, e = sev.e; day.events++; (day.seq = day.seq || []).push(e.cat + (T.sev.forced ? '!' : '') + (e.needs && e.cat !== 'arc' ? '*' : '')); if (e.cat === 'arc') { day.arcB = (day.arcB || 0) + 1; if (/_0$/.test(e.id)) arcStarted++; } catN[e.cat] = (catN[e.cat] || 0) + 1; if (!(e.id in first)) first[e.id] = d;
         if (!e.needs && e.cat === prevCat) { rep++; const k = e.cat + (T.sev.forced ? ':保底' : '') + (prevCaused ? ':前因后' : ''); repD[k] = (repD[k] || 0) + 1; } prevCat = e.cat; prevCaused = !!e.needs;   // 前因事件（任务链）可接同类；无前因事件不得与上一个事件同类
         if (e.cat === 'trip') { day.trips++; sinceTrip = 0; } else { sinceTrip++; maxTripGap = Math.max(maxTripGap, sinceTrip); }
         for (const s of e.steps || []) pureQ(1, s.gen || s.calc ? 1 : 0);
@@ -63,7 +64,7 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
     if (rush) pureQ(10, rushPure);                   // 60 秒高峰约 10 题
     word(1);                                         // 晚上结账
     tot.q += day.q; tot.pure += day.pure; tot.events += day.events; tot.trips += day.trips; tot.monsters += day.monsters; if (!day.trips) tot.daysNoTrip++;
-    perDay.push(day);
+    perDay.push(day); arcDays.push(ctx.ST.arc ? ctx.ST.arc.id : (ctx.ST.arcRecent || [])[0]); arcBeatsDay.push(day.arcB || 0);
   }
   const free = ED.events.filter(e => !e.needs).map(e => e.id), never = free.filter(id => !(id in first));
   const r = {
@@ -82,10 +83,14 @@ async function simulate({ days = 200, seed = 7, acc = 0.75 } = {}) {
     max_beat_gap_questions: maxBeatGapQ,
     same_cat_repeats: rep, repeat_detail: repD,
     cat_share: Object.fromEntries(Object.entries(catN).map(([k, n]) => [k, +(n / tot.events).toFixed(3)])),
+    arc_beats_per_day: +(arcBeatsDay.reduce((a, b) => a + b, 0) / days).toFixed(2), arc_days_with_beat: arcBeatsDay.filter(Boolean).length, arcs_started: arcStarted,
+    arc_distinct_per_30d: +(Array.from({ length: Math.floor(days / 30) }, (_, i) => new Set(arcDays.slice(i * 30, i * 30 + 30)).size).reduce((a, b) => a + b, 0) / Math.max(1, Math.floor(days / 30))).toFixed(1),
+    arc_same_as_yesterday_days: arcDays.filter((x, i) => i && x === arcDays[i - 1]).length,
     free_events: free.length, never_seen: never,
     last_first_seen_day: Math.max(0, ...ED.events.filter(e => !e.needs && !e.needsItem && !e.needsPantry).map(e => first[e.id] ?? days + 1)),   // 不靠道具/水果篮的事件；靠道具的看 never_seen（取决于孩子买不买） late_events: Object.entries(first).sort((a, b) => b[1] - a[1]).slice(0, 6).map(([k, d]) => k + '@' + d),
   };
+  r.perDay = perDay;
   return r;
 }
 module.exports = { simulate, makeCtx, mulberry };
-if (require.main === module) simulate().then(r => { fs.writeFileSync(path.join(__dirname, 'sim_report.json'), JSON.stringify(r, null, 1)); console.log(JSON.stringify(r, null, 1)); });
+if (require.main === module) simulate().then(r => { delete r.perDay; fs.writeFileSync(path.join(__dirname, 'sim_report.json'), JSON.stringify(r, null, 1)); console.log(JSON.stringify(r, null, 1)); });

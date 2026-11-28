@@ -1,0 +1,2516 @@
+{
+ "version": 1,
+ "note": "故事线库（P-20261126-maths-game 迁移第 6 步）。每条线 = vars（开线时抽一次，全线共用）+ beats（每拍是一个事件：at = 放在一天的位置 0 早…1 晚，day = 第几天，scene 默认 shop，show.who 画角色 1 或 2 个）。题型套路取自 UKMT JMC 2020–2023（src 只记套路，题面与数是自编的）。加一条线：照抄一条改文字与 vars，跑 node tests/test_events.js。{who}/{who2} 是开线时抽的角色（cast × names），画面时按语言拼名字。",
+ "defaults": {
+  "win": {
+   "text": {
+    "zh": "{who}满意地点点头。",
+    "en": "{who} nods happily."
+   },
+   "do": [
+    [
+     "cash",
+     "2"
+    ]
+   ]
+  },
+  "lose": {
+   "text": {
+    "zh": "{who}帮你把答案算了出来，下次再试！",
+    "en": "{who} works it out with you. Next time!"
+   }
+  }
+ },
+ "cast": [
+  {
+   "k": "bunny",
+   "en": "Bunny",
+   "zh": "兔子"
+  },
+  {
+   "k": "cat",
+   "en": "Cat",
+   "zh": "小猫"
+  },
+  {
+   "k": "bear",
+   "en": "Bear",
+   "zh": "小熊"
+  },
+  {
+   "k": "frog",
+   "en": "Frog",
+   "zh": "青蛙"
+  },
+  {
+   "k": "fox",
+   "en": "Fox",
+   "zh": "狐狸"
+  },
+  {
+   "k": "owl",
+   "en": "Owl",
+   "zh": "猫头鹰"
+  },
+  {
+   "k": "panda",
+   "en": "Panda",
+   "zh": "熊猫"
+  },
+  {
+   "k": "hedgehog",
+   "en": "Hedgehog",
+   "zh": "刺猬"
+  }
+ ],
+ "names": [
+  {
+   "en": "Pip",
+   "zh": "皮皮"
+  },
+  {
+   "en": "Momo",
+   "zh": "默默"
+  },
+  {
+   "en": "Lulu",
+   "zh": "露露"
+  },
+  {
+   "en": "Bobo",
+   "zh": "波波"
+  },
+  {
+   "en": "Kiki",
+   "zh": "琪琪"
+  },
+  {
+   "en": "Dudu",
+   "zh": "嘟嘟"
+  },
+  {
+   "en": "Nana",
+   "zh": "娜娜"
+  },
+  {
+   "en": "Tao",
+   "zh": "桃桃"
+  },
+  {
+   "en": "Coco",
+   "zh": "可可"
+  },
+  {
+   "en": "Mimi",
+   "zh": "咪咪"
+  },
+  {
+   "en": "Rory",
+   "zh": "乐乐"
+  },
+  {
+   "en": "Beans",
+   "zh": "豆豆"
+  }
+ ],
+ "arcs": [
+  {
+   "id": "riddle_order",
+   "src": "JMC 2020 Q5 / 2022 Q3：想一个数，运算链逆推",
+   "p": 1,
+   "vars": {
+    "n": [
+     3,
+     9
+    ],
+    "a": [
+     2,
+     3
+    ],
+    "b": [
+     2,
+     9
+    ],
+    "r": "n*a+b",
+    "x": [
+     3,
+     7
+    ],
+    "s": [
+     1,
+     9
+    ],
+    "h": "n*x",
+    "coins": "2*h+s"
+   },
+   "beats": [
+    {
+     "at": 0.2,
+     "icon": "🧩",
+     "intro": {
+      "zh": "{who}走进店里，眨眨眼：“我要的蛋糕个数，乘 {a} 再加 {b}，正好是 {r}。猜猜我要几个？”",
+      "en": "{who} winks: “Take the number of cakes I want, multiply by {a}, then add {b}. You get {r}. How many do I want?”"
+     },
+     "steps": [
+      {
+       "calc": "{r} − {b}",
+       "a": "r-b",
+       "q": {
+        "zh": "倒着走：先把加上的 {b} 去掉。",
+        "en": "Work backwards: first take away the {b}."
+       }
+      },
+      {
+       "q": {
+        "zh": "再除以 {a}：{who}要几个蛋糕？",
+        "en": "Now divide by {a}. How many cakes?"
+       },
+       "a": "n",
+       "fam": "reverse"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你把 {n} 个蛋糕装进盒子。{who}笑着说：“晚点来取，顺便付钱！”",
+       "en": "You box {n} cakes. “I'll pick them up later and pay then!”"
+      }
+     },
+     "lose": {
+      "text": {
+       "zh": "{who}说：“是 {n} 个啦！”还是很高兴地下了单。",
+       "en": "“It's {n}!” says {who}, and orders anyway."
+      }
+     }
+    },
+    {
+     "at": 0.65,
+     "icon": "💰",
+     "intro": {
+      "zh": "{who}来取蛋糕，掏出钱包又出一题：“我钱包里的钱减去 {s}，再除以 2，正好是 {h}。”",
+      "en": "{who} comes back for the cakes with another riddle: “My money minus {s}, then halved, is exactly {h}.”"
+     },
+     "steps": [
+      {
+       "calc": "{h} × 2",
+       "a": "2*h",
+       "q": {
+        "zh": "倒回去：先乘 2。",
+        "en": "Undo the halving first."
+       }
+      },
+      {
+       "q": {
+        "zh": "钱包里原来有多少{money}？",
+        "en": "How much money is in the wallet?"
+       },
+       "a": "coins",
+       "fam": "reverse"
+      },
+      {
+       "q": {
+        "zh": "{n} 个蛋糕每个 {x}{money}，要找零多少？",
+        "en": "{n} cakes at {x} each. How much change?"
+       },
+       "a": "coins-n*x",
+       "fam": "money"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "找零正确！{who}留下 1 枚小费。",
+       "en": "Right change! {who} leaves a 1-coin tip."
+      },
+      "do": [
+       [
+        "cash",
+        "n*x+1"
+       ]
+      ]
+     },
+     "lose": {
+      "text": {
+       "zh": "{who}自己数了一遍，付了 {x} × {n}。",
+       "en": "{who} counts it out themselves."
+      },
+      "do": [
+       [
+        "cash",
+        "n*x"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "party_fraction",
+   "src": "JMC 2020 Q9 / 2022 Q10：一个数的几分之几的几分之几",
+   "p": 1,
+   "vars": {
+    "k": [
+     1,
+     4
+    ],
+    "g": "24*k",
+    "m": [
+     3,
+     4
+    ],
+    "s": "2*m"
+   },
+   "beats": [
+    {
+     "at": 0.25,
+     "icon": "🦉",
+     "intro": {
+      "zh": "{who}要给爷爷办生日会：“客人的一半里的三分之一里的四分之一，是 {k} 位会跳舞的长颈鹿。”到底请了几位客人？",
+      "en": "{who} is planning Grandpa's party: “Half of a third of a quarter of the guests is {k} dancing giraffe(s).” How many guests?"
+     },
+     "steps": [
+      {
+       "calc": "{k} × 4 × 3 × 2",
+       "a": "24*k",
+       "q": {
+        "zh": "倒着乘回去：",
+        "en": "Multiply back up:"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "一共 {g} 位客人！{who}订了生日会蛋糕。",
+       "en": "{g} guests! {who} orders the party cakes."
+      }
+     }
+    },
+    {
+     "at": 0.55,
+     "icon": "🎂",
+     "intro": {
+      "zh": "每位客人一块蛋糕。一个大蛋糕能切 {s} 块。",
+      "en": "Each guest gets one slice. One big cake cuts into {s} slices."
+     },
+     "steps": [
+      {
+       "calc": "{g} ÷ {s}",
+       "a": "g/s",
+       "q": {
+        "zh": "要做几个大蛋糕？",
+        "en": "How many big cakes?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你烤好了蛋糕，香味飘满了街。",
+       "en": "The cakes are baked and the whole street smells sweet."
+      },
+      "do": [
+       [
+        "cash",
+        "g/s*3"
+       ]
+      ]
+     }
+    },
+    {
+     "at": 0.85,
+     "icon": "🎉",
+     "intro": {
+      "zh": "生日会上，三分之二的客人还想要第二块！",
+      "en": "At the party, two thirds of the guests want a second slice!"
+     },
+     "steps": [
+      {
+       "calc": "{g} ÷ 3 × 2",
+       "a": "g/3*2",
+       "q": {
+        "zh": "多少位客人要第二块？",
+        "en": "How many want seconds?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "{who}又追加了一单，爷爷笑得胡子都翘起来了。",
+       "en": "{who} orders more. Grandpa is delighted."
+      },
+      "do": [
+       [
+        "cash",
+        "k*4"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "piggy_bank",
+   "src": "JMC 2021 Q2 / Q15：硬币计数与一半换成另一种硬币",
+   "p": 1,
+   "vars": {
+    "f": [
+     6,
+     20
+    ],
+    "t": [
+     5,
+     20
+    ],
+    "tot": "f*5+t*2",
+    "m": [
+     1,
+     3
+    ],
+    "c": [
+     4,
+     9
+    ],
+    "h": [
+     3,
+     15
+    ]
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "🐷",
+     "intro": {
+      "zh": "{who}抱着存钱罐来买蛋糕：里面有 {f} 枚 5{money}硬币和 {t} 枚 2{money}硬币。",
+      "en": "{who} brings a piggy bank: {f} five-coin pieces and {t} two-coin pieces."
+     },
+     "steps": [
+      {
+       "calc": "{f} × 5 + {t} × 2",
+       "a": "tot",
+       "q": {
+        "zh": "存钱罐里一共多少？",
+        "en": "How much is in the piggy bank?"
+       }
+      },
+      {
+       "calc": "{m} × {c}",
+       "a": "m*c",
+       "q": {
+        "zh": "买 {m} 个蛋糕，每个 {c}：",
+        "en": "{m} cakes at {c} each:"
+       }
+      },
+      {
+       "q": {
+        "zh": "还剩多少？",
+        "en": "How much is left?"
+       },
+       "a": "tot-m*c",
+       "fam": "money"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "{who}抱着蛋糕和剩下的硬币，蹦蹦跳跳地走了。",
+       "en": "{who} hops away happy."
+      },
+      "do": [
+       [
+        "cash",
+        "m*c"
+       ]
+      ]
+     }
+    },
+    {
+     "at": 0.7,
+     "icon": "🔁",
+     "intro": {
+      "zh": "{who}的哥哥{who2}有一堆 2{money}硬币。他把其中一半换成同样个数的 10{money}硬币，现在一共有 {now}。",
+      "en": "{who2} had a pile of two-coin pieces. Half of them were swapped for the same number of ten-coin pieces. Now there are {now} coins in all."
+     },
+     "steps": [
+      {
+       "q": {
+        "zh": "每一对（一枚 2 加一枚 10）是 12。换了几枚？",
+        "en": "Each pair (one 2 + one 10) is 12. How many were swapped?"
+       },
+       "a": "h",
+       "fam": "reverse"
+      },
+      {
+       "q": {
+        "zh": "他原来有多少{money}？",
+        "en": "How much did he have at first?"
+       },
+       "a": "4*h",
+       "fam": "money"
+      }
+     ],
+     "show": {
+      "who": 2
+     },
+     "win": {
+      "text": {
+       "zh": "{who2}拿钱买了一个大蛋糕。",
+       "en": "{who2} buys a big cake with it."
+      },
+      "do": [
+       [
+        "cash",
+        "6"
+       ]
+      ]
+     },
+     "vars": {
+      "now": "12*h"
+     }
+    }
+   ]
+  },
+  {
+   "id": "icing_race",
+   "src": "JMC 2021 Q12：两人工作效率比较",
+   "p": 1,
+   "vars": {
+    "ra": [
+     3,
+     6
+    ],
+    "d": [
+     1,
+     2
+    ],
+    "rb": "ra-d",
+    "k": [
+     2,
+     5
+    ],
+    "N": "ra*rb*k",
+    "j": [
+     2,
+     6
+    ],
+    "N2": "(ra+rb)*j"
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "🧁",
+     "intro": {
+      "zh": "新帮手{who2}说自己比{who}快。{who}每分钟裱 {ra} 个杯子蛋糕，{who2}每分钟裱 {rb} 个。今天要裱 {N} 个。",
+      "en": "New helper {who2} says they are faster than {who}. {who} ices {ra} cupcakes a minute, {who2} ices {rb}. Today there are {N} to ice."
+     },
+     "steps": [
+      {
+       "calc": "{N} ÷ {ra}",
+       "a": "N/ra",
+       "q": {
+        "zh": "{who}一个人要几分钟？",
+        "en": "Minutes for {who} alone?"
+       }
+      },
+      {
+       "calc": "{N} ÷ {rb}",
+       "a": "N/rb",
+       "q": {
+        "zh": "{who2}一个人要几分钟？",
+        "en": "Minutes for {who2} alone?"
+       }
+      },
+      {
+       "q": {
+        "zh": "{who2}比{who}慢几分钟？",
+        "en": "How many minutes slower is {who2}?"
+       },
+       "a": "N/rb-N/ra",
+       "fam": "rate"
+      }
+     ],
+     "show": {
+      "who": 2
+     },
+     "win": {
+      "text": {
+       "zh": "{who2}不好意思地挠挠头：“原来我慢！”",
+       "en": "{who2} blushes: “So I'm the slow one!”"
+      }
+     }
+    },
+    {
+     "at": 0.7,
+     "icon": "🤝",
+     "intro": {
+      "zh": "下午来了 {N2} 个杯子蛋糕的大单，两人一起裱。",
+      "en": "A big order of {N2} cupcakes. They ice together."
+     },
+     "steps": [
+      {
+       "calc": "{ra} + {rb}",
+       "a": "ra+rb",
+       "q": {
+        "zh": "两人一分钟一共裱几个？",
+        "en": "Together, how many per minute?"
+       }
+      },
+      {
+       "q": {
+        "zh": "要几分钟裱完？",
+        "en": "How many minutes to finish?"
+       },
+       "a": "j",
+       "fam": "rate"
+      }
+     ],
+     "show": {
+      "who": 2
+     },
+     "win": {
+      "text": {
+       "zh": "合作真快！客人多给了小费。",
+       "en": "Teamwork! The customer tips well."
+      },
+      "do": [
+       [
+        "cash",
+        "j*2"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "honey_jar",
+   "src": "JMC 2022 Q12：半满与四分之一满推容器重量",
+   "p": 1,
+   "vars": {
+    "jj": [
+     1,
+     5
+    ],
+    "qq": [
+     2,
+     6
+    ],
+    "j": "100*jj",
+    "q": "100*qq",
+    "wh": "j+2*q",
+    "wq": "j+q",
+    "full": "j+4*q",
+    "hon": "4*q",
+    "s": [
+     1,
+     2
+    ],
+    "u": "200*s"
+   },
+   "beats": [
+    {
+     "at": 0.25,
+     "icon": "🍯",
+     "intro": {
+      "zh": "蜂蜜商{who}送来一罐蜂蜜。罐子半满时称重 {wh} 克，四分之一满时称重 {wq} 克。",
+      "en": "{who} the honey seller says: half full, the jar weighs {wh} g; a quarter full, {wq} g."
+     },
+     "steps": [
+      {
+       "calc": "{wh} − {wq}",
+       "a": "q",
+       "q": {
+        "zh": "四分之一罐蜂蜜重多少克？",
+        "en": "How heavy is a quarter of the honey?"
+       }
+      },
+      {
+       "q": {
+        "zh": "满满一罐（连罐子）重多少克？",
+        "en": "How heavy is the full jar?"
+       },
+       "a": "full",
+       "fam": "measure"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你买下了这罐蜂蜜。",
+       "en": "You buy the jar."
+      },
+      "do": [
+       [
+        "cash",
+        "-qq"
+       ]
+      ]
+     }
+    },
+    {
+     "at": 0.65,
+     "icon": "🍰",
+     "intro": {
+      "zh": "做蜂蜜蛋糕，每个用 {u} 克蜂蜜。",
+      "en": "Each honey cake uses {u} g of honey."
+     },
+     "steps": [
+      {
+       "q": {
+        "zh": "空罐子本身多重？",
+        "en": "How heavy is the empty jar?"
+       },
+       "a": "j",
+       "fam": "measure"
+      },
+      {
+       "calc": "{hon} ÷ {u}",
+       "a": "hon/u",
+       "q": {
+        "zh": "一满罐蜂蜜能做几个蛋糕？",
+        "en": "How many cakes from a full jar?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "蜂蜜蛋糕卖光了！",
+       "en": "The honey cakes sell out!"
+      },
+      "do": [
+       [
+        "cash",
+        "hon/u*4"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "apples_pears",
+   "src": "JMC 2022 Q19：吃掉一部分后比例改变",
+   "p": 1,
+   "vars": {
+    "m": [
+     2,
+     6
+    ],
+    "e": "5*m",
+    "per": [
+     1,
+     2
+    ]
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "🍎",
+     "intro": {
+      "zh": "松鼠{who}早上带来的苹果是梨的 3 倍。路上饿了吃掉 {e} 个苹果，到店时梨变成了苹果的 2 倍。",
+      "en": "{who} brought three times as many apples as pears. After eating {e} apples on the way, there are twice as many pears as apples."
+     },
+     "steps": [
+      {
+       "calc": "{e} ÷ 5",
+       "a": "m",
+       "q": {
+        "zh": "吃掉的苹果正好是 5 份。一份是几个？（= 现在的苹果数）",
+        "en": "The eaten apples are exactly 5 parts. One part is? (= apples now)"
+       }
+      },
+      {
+       "q": {
+        "zh": "到店时梨有几个？",
+        "en": "How many pears now?"
+       },
+       "a": "2*m",
+       "fam": "ratio"
+      },
+      {
+       "q": {
+        "zh": "早上一共带了多少个水果？",
+        "en": "How many fruits at the start?"
+       },
+       "a": "8*m",
+       "fam": "ratio"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "{who}擦擦嘴：“对，就是这么多！”",
+       "en": "{who} wipes their mouth: “Exactly right!”"
+      }
+     }
+    },
+    {
+     "at": 0.7,
+     "icon": "🥧",
+     "intro": {
+      "zh": "你买下所有的梨做梨挞，每个梨挞用 {per} 个梨。",
+      "en": "You buy all the pears for pear tarts, {per} pear(s) per tart."
+     },
+     "steps": [
+      {
+       "calc": "{p2} ÷ {per}",
+       "a": "p2/per",
+       "q": {
+        "zh": "能做几个梨挞？",
+        "en": "How many tarts?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "梨挞出炉，金黄酥脆。",
+       "en": "Golden pear tarts!"
+      },
+      "do": [
+       [
+        "cash",
+        "p2/per*3"
+       ]
+      ]
+     },
+     "vars": {
+      "p2": "2*m"
+     }
+    }
+   ]
+  },
+  {
+   "id": "penguin_school",
+   "src": "JMC 2023 Q21：连续倍数关系与差",
+   "p": 1,
+   "vars": {
+    "x": [
+     2,
+     6
+    ],
+    "d": "5*x",
+    "t": [
+     0,
+     1
+    ],
+    "bx": "3+8*t",
+    "all": "33*x"
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "🐧",
+     "intro": {
+      "zh": "企鹅学校订杯子蛋糕：巧克力的是香草的 2 倍，草莓的是巧克力的 3 倍，彩虹的是草莓的 4 倍。草莓比香草多 {d} 个。",
+      "en": "The penguin school orders: chocolate is twice vanilla, strawberry three times chocolate, rainbow four times strawberry. There are {d} more strawberry than vanilla."
+     },
+     "steps": [
+      {
+       "calc": "{d} ÷ 5",
+       "a": "x",
+       "q": {
+        "zh": "草莓是 6 份香草，多出的 {d} 个是 5 份。香草要几个？",
+        "en": "Strawberry is 6 parts, vanilla 1, so {d} is 5 parts. How many vanilla?"
+       }
+      },
+      {
+       "q": {
+        "zh": "四种一共要几个？",
+        "en": "How many cupcakes in all?"
+       },
+       "a": "all",
+       "fam": "ratio"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "企鹅老师在订单上盖了个小鱼图章。",
+       "en": "The penguin teacher stamps the order with a fish."
+      }
+     }
+    },
+    {
+     "at": 0.75,
+     "icon": "📦",
+     "intro": {
+      "zh": "每个盒子装 {bx} 个杯子蛋糕。",
+      "en": "Each box holds {bx} cupcakes."
+     },
+     "steps": [
+      {
+       "calc": "{all} ÷ {bx}",
+       "a": "all/bx",
+       "q": {
+        "zh": "要几个盒子？",
+        "en": "How many boxes?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "企鹅们排成一队把盒子抬走了。",
+       "en": "The penguins carry the boxes off in a line."
+      },
+      "do": [
+       [
+        "cash",
+        "x*8"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tasting_contest",
+   "src": "JMC 2022 Q17：赢 +3 输 −1 的计分",
+   "p": 1,
+   "vars": {
+    "s0": [
+     8,
+     12
+    ],
+    "a": [
+     3,
+     8
+    ],
+    "b": [
+     1,
+     3
+    ],
+    "A": "s0+3*a-b",
+    "Bv": "s0+3*b-a",
+    "s2": "2*s0"
+   },
+   "beats": [
+    {
+     "at": 0.25,
+     "icon": "🏆",
+     "intro": {
+      "zh": "下午有试吃比赛！{who}和{who2}各从 {s0} 枚代币开始；每轮赢的人 +3，输的人 −1。",
+      "en": "Tasting contest! {who} and {who2} each start with {s0} tokens; each round the winner gets 3 and the loser loses 1."
+     },
+     "steps": [
+      {
+       "q": {
+        "zh": "如果{who}先连赢 2 轮，{who2}还剩几枚？",
+        "en": "If {who} wins the first 2 rounds, how many does {who2} have?"
+       },
+       "a": "s0-2",
+       "fam": "add"
+      },
+      {
+       "q": {
+        "zh": "这时{who}有几枚？",
+        "en": "And {who}?"
+       },
+       "a": "s0+6",
+       "fam": "add"
+      }
+     ],
+     "show": {
+      "who": 2
+     },
+     "win": {
+      "text": {
+       "zh": "比赛开始了，大家都围过来看。",
+       "en": "The contest begins; everyone gathers round."
+      }
+     }
+    },
+    {
+     "at": 0.75,
+     "icon": "🥇",
+     "intro": {
+      "zh": "比赛结束：{who}有 {A} 枚，{who2}有 {Bv} 枚。",
+      "en": "Final: {who} has {A}, {who2} has {Bv}."
+     },
+     "steps": [
+      {
+       "calc": "{A} + {Bv} − {s2}",
+       "a": "2*a+2*b",
+       "q": {
+        "zh": "每轮两人一共多 2 枚。比赛中一共多出几枚？",
+        "en": "Each round adds 2 tokens in total. How many were added?"
+       }
+      },
+      {
+       "q": {
+        "zh": "一共比了几轮？",
+        "en": "How many rounds?"
+       },
+       "a": "a+b",
+       "fam": "algebra"
+      },
+      {
+       "q": {
+        "zh": "{who}赢了几轮？（每轮差距变化 4）",
+        "en": "How many did {who} win? (each round changes the gap by 4)"
+       },
+       "a": "a",
+       "fam": "algebra"
+      }
+     ],
+     "show": {
+      "who": 2
+     },
+     "win": {
+      "text": {
+       "zh": "{who}捧着奖杯，请大家每人吃一块蛋糕。",
+       "en": "{who} lifts the cup and buys cake for everyone."
+      },
+      "do": [
+       [
+        "cash",
+        "a+b"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "flour_price",
+   "src": "JMC 2022 Q23：先涨价再打折的百分数",
+   "p": 1,
+   "vars": {
+    "k": [
+     1,
+     5
+    ],
+    "P": "20*k",
+    "P2": "24*k"
+   },
+   "beats": [
+    {
+     "at": 0.2,
+     "icon": "📈",
+     "intro": {
+      "zh": "面粉商{who}说：“面粉涨价 20%！”原来每袋 {P}{money}。",
+      "en": "{who} the miller: “Flour is up 20%!” It used to be {P} a bag."
+     },
+     "steps": [
+      {
+       "calc": "{P} ÷ 10 × 2",
+       "a": "4*k",
+       "q": {
+        "zh": "20% 是多少？",
+        "en": "What is 20%?"
+       }
+      },
+      {
+       "q": {
+        "zh": "现在每袋多少？",
+        "en": "New price per bag?"
+       },
+       "a": "P2",
+       "fam": "percent"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你只买了一袋，打算等等再说。",
+       "en": "You buy just one bag and wait."
+      },
+      "do": [
+       [
+        "cash",
+        "-P2"
+       ],
+       [
+        "stock",
+        "1"
+       ]
+      ]
+     }
+    },
+    {
+     "at": 0.7,
+     "icon": "📉",
+     "intro": {
+      "zh": "傍晚{who}又跑来：“打折啦！现价再降 25%。”",
+      "en": "In the evening {who} is back: “Sale! 25% off the new price.”"
+     },
+     "steps": [
+      {
+       "calc": "{P2} ÷ 4",
+       "a": "6*k",
+       "q": {
+        "zh": "25% 是多少？",
+        "en": "What is 25%?"
+       }
+      },
+      {
+       "q": {
+        "zh": "打折后每袋多少？",
+        "en": "Sale price per bag?"
+       },
+       "a": "18*k",
+       "fam": "percent"
+      },
+      {
+       "q": {
+        "zh": "比早上涨价前还便宜多少？",
+        "en": "How much cheaper than the original price?"
+       },
+       "a": "2*k",
+       "fam": "percent"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你趁打折多进了面粉。",
+       "en": "You stock up at the sale price."
+      },
+      "do": [
+       [
+        "stock",
+        "2"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bag_reuse",
+   "src": "JMC 2023 Q11：重复利用的递减链",
+   "p": 1,
+   "vars": {
+    "m": [
+     5,
+     30
+    ],
+    "N": "4*m",
+    "j": [
+     3,
+     12
+    ],
+    "want": "7*j"
+   },
+   "beats": [
+    {
+     "at": 0.35,
+     "icon": "♻️",
+     "intro": {
+      "zh": "节俭的{who}买了 {N} 个新糖霜袋：新袋子一袋裱一个蛋糕；用过一次的两袋才够裱一个；用过两次的四袋才够一个，然后扔掉。",
+      "en": "Thrifty {who} buys {N} new icing bags. A new bag ices 1 cake; once-used bags need 2 per cake; twice-used need 4 per cake, then they're thrown away."
+     },
+     "steps": [
+      {
+       "calc": "{N} ÷ 2",
+       "a": "N/2",
+       "q": {
+        "zh": "用过一次的袋子能裱几个？",
+        "en": "Cakes from once-used bags?"
+       }
+      },
+      {
+       "calc": "{N} ÷ 4",
+       "a": "N/4",
+       "q": {
+        "zh": "用过两次的能裱几个？",
+        "en": "Cakes from twice-used bags?"
+       }
+      },
+      {
+       "q": {
+        "zh": "{N} 个袋子一共能裱几个蛋糕？",
+        "en": "Total cakes from {N} bags?"
+       },
+       "a": "N+N/2+N/4",
+       "fam": "add"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "{who}得意地说：“一个袋子都不浪费！”",
+       "en": "“Not one bag wasted!”"
+      }
+     }
+    },
+    {
+     "at": 0.75,
+     "icon": "🛒",
+     "intro": {
+      "zh": "{who}想裱 {want} 个蛋糕。每 4 个新袋子能裱 4 + 2 + 1 = 7 个。",
+      "en": "{who} wants to ice {want} cakes. Every 4 new bags make 4 + 2 + 1 = 7."
+     },
+     "steps": [
+      {
+       "calc": "{want} ÷ 7 × 4",
+       "a": "4*j",
+       "q": {
+        "zh": "要买几个新袋子？",
+        "en": "How many new bags?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你把袋子卖给了{who}。",
+       "en": "You sell {who} the bags."
+      },
+      "do": [
+       [
+        "cash",
+        "j"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "snail_courier",
+   "src": "JMC 2023 Q12：匀速运动倒推出发时间",
+   "p": 1,
+   "vars": {
+    "r": [
+     2,
+     5
+    ],
+    "s0": [
+     0,
+     25
+    ],
+    "w1": [
+     15,
+     25
+    ],
+    "g": [
+     5,
+     9
+    ],
+    "u": [
+     5,
+     12
+    ],
+    "t1": "s0+w1",
+    "t2": "s0+w1+g",
+    "d1": "r*w1",
+    "d2": "r*(w1+g)",
+    "dd": "r*g",
+    "D": "r*(w1+g+u)",
+    "rem": "r*u"
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "🐌",
+     "intro": {
+      "zh": "快递员蜗牛{who}背着蛋糕盒往店里爬（速度不变）。1 点 {t1} 分时爬了 {d1} 厘米，1 点 {t2} 分时爬了 {d2} 厘米。",
+      "en": "{who} the snail courier crawls at a steady speed. At 1:{t1} it had gone {d1} cm; at 1:{t2}, {d2} cm."
+     },
+     "steps": [
+      {
+       "calc": "{dd} ÷ {g}",
+       "a": "r",
+       "q": {
+        "zh": "{g} 分钟爬了 {dd} 厘米。每分钟几厘米？",
+        "en": "{dd} cm in {g} minutes. Centimetres per minute?"
+       }
+      },
+      {
+       "q": {
+        "zh": "爬 {d1} 厘米用了几分钟？",
+        "en": "Minutes to crawl {d1} cm?"
+       },
+       "a": "w1",
+       "fam": "rate"
+      },
+      {
+       "q": {
+        "zh": "它是 1 点几分出发的？（写分钟数）",
+        "en": "At 1:?? it set off. Write the minutes."
+       },
+       "a": "s0",
+       "fam": "time"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你在门口挂了个牌子：“蜗牛快递，耐心等待”。",
+       "en": "You hang a sign: “Snail delivery — please be patient.”"
+      }
+     }
+    },
+    {
+     "at": 0.75,
+     "icon": "📦",
+     "intro": {
+      "zh": "出发点到店门一共 {D} 厘米。",
+      "en": "It is {D} cm from the start to the shop door."
+     },
+     "steps": [
+      {
+       "calc": "{rem} ÷ {r}",
+       "a": "u",
+       "q": {
+        "zh": "从 1 点 {t2} 分起，还要几分钟到？",
+        "en": "From 1:{t2}, how many more minutes?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "蛋糕送到了，一点没压坏！",
+       "en": "The cake arrives without a scratch!"
+      },
+      "do": [
+       [
+        "cash",
+        "4"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "late_train",
+   "src": "JMC 2023 Q15：晚点且路上用时加倍",
+   "p": 1,
+   "vars": {
+    "dep": [
+     5,
+     25
+    ],
+    "dur": [
+     12,
+     20
+    ],
+    "arr": "dep+dur",
+    "late": [
+     2,
+     9
+    ],
+    "pp": [
+     1,
+     3
+    ]
+   },
+   "beats": [
+    {
+     "at": 0.2,
+     "icon": "🚂",
+     "intro": {
+      "zh": "原料火车本该 9 点 {dep} 分开、9 点 {arr} 分到。今天晚开了 {late} 分钟，路上又用了原定的 2 倍时间。",
+      "en": "The supply train should leave at 9:{dep} and arrive at 9:{arr}. Today it left {late} minutes late and took twice as long."
+     },
+     "steps": [
+      {
+       "calc": "{arr} − {dep}",
+       "a": "dur",
+       "q": {
+        "zh": "原定路上几分钟？",
+        "en": "Planned journey time?"
+       }
+      },
+      {
+       "q": {
+        "zh": "今天路上用了几分钟？",
+        "en": "Today's journey time?"
+       },
+       "a": "2*dur",
+       "fam": "time"
+      },
+      {
+       "q": {
+        "zh": "比原定晚到几分钟？",
+        "en": "How many minutes late did it arrive?"
+       },
+       "a": "late+dur",
+       "fam": "time"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你在等火车时先把能做的都做了。",
+       "en": "You get everything else ready while you wait."
+      }
+     }
+    },
+    {
+     "at": 0.5,
+     "icon": "⏰",
+     "intro": {
+      "zh": "原料晚到期间，每分钟少卖 {pp}{money}。",
+      "en": "While waiting, you lose {pp} coin(s) of sales per minute."
+     },
+     "steps": [
+      {
+       "calc": "{lt} × {pp}",
+       "a": "lt*pp",
+       "q": {
+        "zh": "一共少卖多少？",
+        "en": "Total lost sales?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "下次你决定提前一天进货。",
+       "en": "Next time you'll order a day early."
+      },
+      "do": [
+       [
+        "cash",
+        "-lt*pp"
+       ]
+      ]
+     },
+     "vars": {
+      "lt": "late+dur"
+     }
+    }
+   ]
+  },
+  {
+   "id": "dragon_sleep",
+   "src": "JMC 2022 Q8：星期循环（除以 7 的余数）",
+   "p": 1,
+   "vars": {
+    "x": [
+     1,
+     5
+    ],
+    "r": [
+     1,
+     2
+    ],
+    "q": [
+     5,
+     14
+    ],
+    "N": "7*q+r",
+    "c": [
+     3,
+     6
+    ],
+    "z": [
+     3,
+     8
+    ],
+    "M": "c*z"
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "🐉",
+     "intro": {
+      "zh": "爱睡觉的龙{who}打着哈欠说：“我再过 {N} 天醒来，那天来吃生日蛋糕。”今天是星期 {x}。",
+      "en": "{who} the sleepy dragon yawns: “I'll wake in {N} days and come for birthday cake.” Today is day {x} of the week (Monday = 1)."
+     },
+     "steps": [
+      {
+       "q": {
+        "zh": "{N} = 7 × {q} + ？",
+        "en": "{N} = 7 × {q} + ?"
+       },
+       "a": "r",
+       "fam": "divide"
+      },
+      {
+       "q": {
+        "zh": "那天是星期几？（写数字，星期日写 7）",
+        "en": "Which day of the week? (number, Sunday = 7)"
+       },
+       "a": "x+r",
+       "fam": "divide"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你在日历上画了一条小龙。",
+       "en": "You draw a little dragon on the calendar."
+      }
+     },
+     "lose": {
+      "text": {
+       "zh": "龙嘟囔：“是星期 {xr} 啦…”就睡着了。",
+       "en": "“Day {xr}…” mumbles the dragon, falling asleep."
+      }
+     },
+     "vars": {
+      "xr": "x+r"
+     }
+    },
+    {
+     "at": 0.4,
+     "icon": "🐲",
+     "intro": {
+      "zh": "第二天，龙妹妹{who2}来了：“我每 {c} 天来一次，今天来过了。”",
+      "en": "Next day, {who2} arrives: “I come every {c} days, and I came today.”"
+     },
+     "steps": [
+      {
+       "calc": "{M} ÷ {c}",
+       "a": "z",
+       "q": {
+        "zh": "接下来 {M} 天里她还会来几次？",
+        "en": "How many more visits in the next {M} days?"
+       }
+      }
+     ],
+     "day": 1,
+     "show": {
+      "who": 2
+     },
+     "win": {
+      "text": {
+       "zh": "你给龙妹妹办了张会员卡。",
+       "en": "You give {who2} a loyalty card."
+      },
+      "do": [
+       [
+        "cash",
+        "z"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "penguin_ring",
+   "src": "JMC 2022 Q14：围成一圈，对面的编号",
+   "p": 1,
+   "vars": {
+    "a": [
+     2,
+     15
+    ],
+    "h": [
+     6,
+     25
+    ],
+    "b": "a+h",
+    "n": "2*h",
+    "k": [
+     2,
+     5
+    ]
+   },
+   "beats": [
+    {
+     "at": 0.4,
+     "icon": "💃",
+     "intro": {
+      "zh": "企鹅们手拉手围着大蛋糕跳舞，按顺序编号 1、2、3……{a} 号正对着 {b} 号。",
+      "en": "Penguins dance in a ring around a giant cake, numbered 1, 2, 3, … Number {a} is directly opposite number {b}."
+     },
+     "steps": [
+      {
+       "calc": "{b} − {a}",
+       "a": "h",
+       "q": {
+        "zh": "从 {a} 到 {b} 是半圈，半圈有几只？",
+        "en": "Half the ring is how many penguins?"
+       }
+      },
+      {
+       "q": {
+        "zh": "一共几只企鹅？",
+        "en": "How many penguins?"
+       },
+       "a": "n",
+       "fam": "add"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "音乐响起，企鹅们转得更快了。",
+       "en": "The music speeds up!"
+      }
+     }
+    },
+    {
+     "at": 0.8,
+     "icon": "🍓",
+     "intro": {
+      "zh": "跳完舞，每只企鹅要 {k} 颗草莓。",
+      "en": "After dancing, each penguin wants {k} strawberries."
+     },
+     "steps": [
+      {
+       "calc": "{n} × {k}",
+       "a": "n*k",
+       "q": {
+        "zh": "一共要几颗草莓？",
+        "en": "How many strawberries?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "草莓分完了，企鹅们心满意足。",
+       "en": "Every penguin is happy."
+      },
+      "do": [
+       [
+        "cash",
+        "n"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "chick_bunny_party",
+   "src": "JMC 2021 Q21：头和腿（鸡兔同笼）",
+   "p": 1,
+   "vars": {
+    "r": [
+     2,
+     9
+    ],
+    "c": [
+     2,
+     9
+    ],
+    "H": "r+c",
+    "L": "4*r+2*c",
+    "rc": [
+     1,
+     3
+    ],
+    "cc": [
+     1,
+     2
+    ]
+   },
+   "beats": [
+    {
+     "at": 0.35,
+     "icon": "🐣",
+     "intro": {
+      "zh": "{who}办派对，客人都是小鸡和小兔：一共 {H} 个头、{L} 条腿。",
+      "en": "{who}'s party guests are chicks and bunnies: {H} heads, {L} legs."
+     },
+     "steps": [
+      {
+       "calc": "{H} × 2",
+       "a": "2*H",
+       "q": {
+        "zh": "假设全是小鸡，有几条腿？",
+        "en": "If all were chicks, how many legs?"
+       }
+      },
+      {
+       "q": {
+        "zh": "多出来的腿每只兔子多 2 条。兔子有几只？",
+        "en": "Each bunny adds 2 extra legs. How many bunnies?"
+       },
+       "a": "r",
+       "fam": "algebra"
+      },
+      {
+       "q": {
+        "zh": "小鸡几只？",
+        "en": "How many chicks?"
+       },
+       "a": "c",
+       "fam": "algebra"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "{who}把名单贴在门上。",
+       "en": "{who} pins the guest list on the door."
+      }
+     }
+    },
+    {
+     "at": 0.75,
+     "icon": "🥕",
+     "intro": {
+      "zh": "兔子每只要 {rc} 个胡萝卜蛋糕，小鸡每只要 {cc} 个玉米蛋糕。",
+      "en": "Each bunny wants {rc} carrot cake(s); each chick {cc} corn cake(s)."
+     },
+     "steps": [
+      {
+       "calc": "{r} × {rc} + {c} × {cc}",
+       "a": "r*rc+c*cc",
+       "q": {
+        "zh": "一共要做几个蛋糕？",
+        "en": "How many cakes in all?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "派对蛋糕全做好了！",
+       "en": "All the party cakes are ready!"
+      },
+      "do": [
+       [
+        "cash",
+        "r*rc+c*cc"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "flavour_survey",
+   "src": "JMC 2020 Q15：两种都喜欢的人数（容斥）",
+   "p": 1,
+   "vars": {
+    "Co": [
+     3,
+     12
+    ],
+    "So": [
+     3,
+     12
+    ],
+    "Bo": [
+     2,
+     8
+    ],
+    "T": "Co+So+Bo",
+    "lc": "Co+Bo",
+    "ls": "So+Bo",
+    "pb": [
+     5,
+     8
+    ],
+    "ps": [
+     3,
+     5
+    ],
+    "single": "Co+So"
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "📋",
+     "intro": {
+      "zh": "{who}做口味调查：今天 {T} 位客人，每人喜欢巧克力或草莓，或者两样都喜欢。喜欢巧克力的有 {lc} 位，喜欢草莓的有 {ls} 位。",
+      "en": "{who} surveys {T} customers: each likes chocolate, strawberry, or both. {lc} like chocolate and {ls} like strawberry."
+     },
+     "steps": [
+      {
+       "calc": "{lc} + {ls} − {T}",
+       "a": "Bo",
+       "q": {
+        "zh": "两样都喜欢的有几位？",
+        "en": "How many like both?"
+       }
+      },
+      {
+       "q": {
+        "zh": "只喜欢草莓的有几位？",
+        "en": "How many like only strawberry?"
+       },
+       "a": "So",
+       "fam": "add"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "调查表贴在墙上，大家都来看。",
+       "en": "The survey goes up on the wall."
+      }
+     }
+    },
+    {
+     "at": 0.7,
+     "icon": "🍫",
+     "intro": {
+      "zh": "两样都喜欢的客人买双拼蛋糕（每个 {pb}），只喜欢一种的买单味蛋糕（每个 {ps}）。",
+      "en": "Fans of both buy a duo cake ({pb} each); the others buy single-flavour cakes ({ps} each)."
+     },
+     "steps": [
+      {
+       "calc": "{Bo} × {pb} + {single} × {ps}",
+       "a": "Bo*pb+single*ps",
+       "q": {
+        "zh": "一共收多少？",
+        "en": "Total takings?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "双拼蛋糕成了今天的明星。",
+       "en": "The duo cake is the star of the day."
+      },
+      "do": [
+       [
+        "cash",
+        "Bo*pb+single*ps"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tip_average",
+   "src": "平均数：已知平均求缺的一项",
+   "p": 1,
+   "vars": {
+    "mean": [
+     4,
+     9
+    ],
+    "a": [
+     1,
+     2
+    ],
+    "b": [
+     0,
+     2
+    ],
+    "c": [
+     0,
+     2
+    ],
+    "t1": "mean-a",
+    "t2": "mean+a",
+    "t3": "mean-b",
+    "t4": "mean+b+c",
+    "miss": "mean-c"
+   },
+   "beats": [
+    {
+     "at": 0.5,
+     "icon": "🪙",
+     "intro": {
+      "zh": "今天前 5 位客人给的小费平均是 {mean}。前四位给了 {t1}、{t2}、{t3}、{t4}。",
+      "en": "The first 5 customers' tips average {mean}. The first four gave {t1}, {t2}, {t3}, {t4}."
+     },
+     "steps": [
+      {
+       "calc": "{mean} × 5",
+       "a": "5*mean",
+       "q": {
+        "zh": "5 位一共给了多少？",
+        "en": "Total from all 5?"
+       }
+      },
+      {
+       "q": {
+        "zh": "第五位给了多少？",
+        "en": "What did the fifth give?"
+       },
+       "a": "miss",
+       "fam": "add"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "你把小费放进罐子。",
+       "en": "Into the tip jar it goes."
+      },
+      "do": [
+       [
+        "cash",
+        "5*mean"
+       ]
+      ]
+     }
+    },
+    {
+     "at": 0.85,
+     "icon": "📊",
+     "intro": {
+      "zh": "{who}说：“要是第六位客人来了，6 位的平均能到 {m6}！”",
+      "en": "{who}: “If a sixth customer comes, the average of 6 could be {m6}!”"
+     },
+     "steps": [
+      {
+       "calc": "{m6} × 6",
+       "a": "6*m6",
+       "q": {
+        "zh": "6 位一共要多少？",
+        "en": "Total needed for 6?"
+       }
+      },
+      {
+       "q": {
+        "zh": "第六位要给多少？",
+        "en": "What must the sixth give?"
+       },
+       "a": "mean+6",
+       "fam": "add"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "真的来了第六位客人，还真给了这么多！",
+       "en": "A sixth customer comes and gives exactly that!"
+      },
+      "do": [
+       [
+        "cash",
+        "mean+6"
+       ]
+      ]
+     },
+     "vars": {
+      "m6": "mean+1"
+     }
+    }
+   ]
+  },
+  {
+   "id": "choc_grid",
+   "src": "JMC 2020 Q11：方格网用料的规律",
+   "p": 1,
+   "vars": {
+    "n": [
+     4,
+     9
+    ],
+    "n1": "n+1"
+   },
+   "beats": [
+    {
+     "at": 0.35,
+     "icon": "🍫",
+     "intro": {
+      "zh": "{who}用巧克力棒在方蛋糕上摆格子：3 × 3 的格子用了 24 根。",
+      "en": "{who} lays chocolate sticks in a grid on a square cake: a 3 × 3 grid uses 24 sticks."
+     },
+     "steps": [
+      {
+       "q": {
+        "zh": "2 × 2 的格子要几根？",
+        "en": "How many for a 2 × 2 grid?"
+       },
+       "a": "12",
+       "fam": "pattern"
+      },
+      {
+       "calc": "{n1} × {n} × 2",
+       "a": "2*n*n1",
+       "q": {
+        "zh": "{n} × {n} 的格子：横着 {n1} 行、竖着 {n1} 列，每条 {n} 根。一共几根？",
+        "en": "{n} × {n}: {n1} rows and {n1} columns of {n} sticks. Total?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "格子蛋糕好漂亮！",
+       "en": "What a pretty grid cake!"
+      }
+     }
+    },
+    {
+     "at": 0.75,
+     "icon": "🛒",
+     "intro": {
+      "zh": "巧克力棒 4 根一包。",
+      "en": "Chocolate sticks come in packs of 4."
+     },
+     "steps": [
+      {
+       "calc": "{st} ÷ 4",
+       "a": "st/4",
+       "q": {
+        "zh": "{n} × {n} 的格子要买几包？",
+        "en": "Packs needed for {n} × {n}?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "格子蛋糕卖了个好价钱。",
+       "en": "The grid cake sells well."
+      },
+      "do": [
+       [
+        "cash",
+        "n*2"
+       ]
+      ]
+     },
+     "vars": {
+      "st": "2*n*n1"
+     }
+    }
+   ]
+  },
+  {
+   "id": "sugar_cubes",
+   "src": "JMC 2020 Q20：长方体由小立方体拼成",
+   "p": 1,
+   "vars": {
+    "a": [
+     2,
+     3
+    ],
+    "b": [
+     2,
+     3
+    ],
+    "c": [
+     2,
+     4
+    ],
+    "la": "2*a",
+    "lb": "2*b",
+    "lc": "2*c",
+    "tot": "8*a*b*c"
+   },
+   "beats": [
+    {
+     "at": 0.4,
+     "icon": "🧊",
+     "intro": {
+      "zh": "{who}用 8 块方糖拼成 2 × 2 × 2 的小方块。{who2}要拼一个长是它 {a} 倍、宽 {b} 倍、高 {c} 倍的长方体。",
+      "en": "{who} builds a 2 × 2 × 2 block from 8 sugar cubes. {who2} wants one {a} times as long, {b} times as wide and {c} times as tall."
+     },
+     "steps": [
+      {
+       "calc": "{la} × {lb} × {lc}",
+       "a": "tot",
+       "q": {
+        "zh": "长方体要几块方糖？",
+        "en": "How many cubes?"
+       }
+      },
+      {
+       "q": {
+        "zh": "比 8 块多用几块？",
+        "en": "How many more than 8?"
+       },
+       "a": "tot-8",
+       "fam": "measure"
+      }
+     ],
+     "show": {
+      "who": 2
+     },
+     "win": {
+      "text": {
+       "zh": "糖块城堡立起来了！",
+       "en": "The sugar castle stands!"
+      }
+     }
+    },
+    {
+     "at": 0.8,
+     "icon": "🍬",
+     "intro": {
+      "zh": "每块方糖放在一个小蛋糕上，一盘放 8 个。",
+      "en": "Each cube tops a mini cake; 8 mini cakes per tray."
+     },
+     "steps": [
+      {
+       "calc": "{tot} ÷ 8",
+       "a": "a*b*c",
+       "q": {
+        "zh": "要几盘？",
+        "en": "How many trays?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "方糖小蛋糕排满了柜台。",
+       "en": "Mini cakes fill the counter."
+      },
+      "do": [
+       [
+        "cash",
+        "a*b*c*2"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "kiwi_ribbon",
+   "src": "JMC 2022 Q7 / 2020 Q4：倍数换算与单位换算",
+   "p": 1,
+   "vars": {
+    "k": [
+     1,
+     6
+    ],
+    "W": "500*k",
+    "m": [
+     2,
+     9
+    ],
+    "d": [
+     1,
+     9
+    ]
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "🥝",
+     "intro": {
+      "zh": "{who}说：猕猴桃的维生素 C 大约是同样重的橙子的 2.5 倍。做一个橙子蛋糕要 {W} 克橙子。",
+      "en": "{who} says kiwis have about 2.5 times the vitamin C of the same weight of oranges. An orange cake uses {W} g of oranges."
+     },
+     "steps": [
+      {
+       "calc": "{W} ÷ 5 × 2",
+       "a": "2*W/5",
+       "q": {
+        "zh": "换成猕猴桃，要多少克才有一样多的维生素 C？（除以 2.5 = 除以 5 再乘 2）",
+        "en": "Kiwi weight with the same vitamin C? (÷ 2.5 = ÷ 5 then × 2)"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "猕猴桃蛋糕上市了。",
+       "en": "Kiwi cake goes on sale."
+      }
+     }
+    },
+    {
+     "at": 0.7,
+     "icon": "🎀",
+     "intro": {
+      "zh": "包蛋糕的缎带还剩 {m}.{d} 米。",
+      "en": "There is {m}.{d} m of ribbon left."
+     },
+     "steps": [
+      {
+       "q": {
+        "zh": "合多少厘米？",
+        "en": "How many centimetres?"
+       },
+       "a": "m*100+d*10",
+       "fam": "measure"
+      },
+      {
+       "calc": "{cm} ÷ 10",
+       "a": "cm/10",
+       "q": {
+        "zh": "每个蛋糕用 10 厘米，能包几个？",
+        "en": "10 cm per cake. How many cakes?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "每个蛋糕都系上了蝴蝶结。",
+       "en": "Every cake gets a bow."
+      },
+      "do": [
+       [
+        "cash",
+        "m"
+       ]
+      ]
+     },
+     "vars": {
+      "cm": "m*100+d*10"
+     }
+    }
+   ]
+  },
+  {
+   "id": "cookie_remainder",
+   "src": "JMC 2020 Q23：除以几个数都余 1（最小公倍数）",
+   "p": 1,
+   "vars": {
+    "t": [
+     0,
+     1
+    ],
+    "q": "5+2*t",
+    "L": "6*q"
+   },
+   "beats": [
+    {
+     "at": 0.35,
+     "icon": "🍪",
+     "intro": {
+      "zh": "{who}数饼干：两块两块装、三块三块装、{q} 块 {q} 块装，每次都剩 1 块。饼干不止 1 块。",
+      "en": "{who} packs cookies in 2s, 3s and {q}s: always 1 left over. There is more than 1 cookie."
+     },
+     "steps": [
+      {
+       "calc": "2 × 3 × {q}",
+       "a": "L",
+       "q": {
+        "zh": "2、3、{q} 都能整除的最小数是：",
+        "en": "Smallest number divisible by 2, 3 and {q}:"
+       }
+      },
+      {
+       "q": {
+        "zh": "饼干最少有几块？",
+        "en": "Fewest possible cookies?"
+       },
+       "a": "L+1",
+       "fam": "divide"
+      },
+      {
+       "q": {
+        "zh": "第二少可能是几块？",
+        "en": "Next possible number?"
+       },
+       "a": "2*L+1",
+       "fam": "divide"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "{who}把多出来的那 1 块给了你。",
+       "en": "{who} gives you the extra cookie."
+      }
+     }
+    },
+    {
+     "at": 0.75,
+     "icon": "🍬",
+     "intro": {
+      "zh": "第二批糖果：两颗、三颗、四颗一装都剩 1 颗，数量在 20 到 30 之间。",
+      "en": "Second batch of sweets: in 2s, 3s or 4s, always 1 left; between 20 and 30 sweets."
+     },
+     "steps": [
+      {
+       "q": {
+        "zh": "2、3、4 都能整除的最小数是？",
+        "en": "Smallest number divisible by 2, 3 and 4?"
+       },
+       "a": "12",
+       "fam": "divide"
+      },
+      {
+       "q": {
+        "zh": "糖果有几颗？",
+        "en": "How many sweets?"
+       },
+       "a": "25",
+       "fam": "divide"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "糖果正好装满一罐。",
+       "en": "The sweets fill one jar exactly."
+      },
+      "do": [
+       [
+        "cash",
+        "3"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "basket_swap",
+   "src": "JMC 2022 Q21：两组各换一个使和相等",
+   "p": 1,
+   "vars": {
+    "y": [
+     1,
+     5
+    ],
+    "dd": [
+     1,
+     4
+    ],
+    "x": "y+dd",
+    "p": [
+     5,
+     9
+    ],
+    "q": [
+     5,
+     9
+    ],
+    "r": [
+     1,
+     5
+    ],
+    "s": "p+q-dd-r",
+    "sa": "x+p+q",
+    "sb": "y+r+s",
+    "f": [
+     1,
+     2
+    ]
+   },
+   "beats": [
+    {
+     "at": 0.4,
+     "icon": "🧺",
+     "intro": {
+      "zh": "{who}和{who2}各提一个外卖篮。篮 A 里的盒子重 {p}、{x}、{q}（百克），篮 B 里重 {y}、{r}、{s}。两人想各拿出一个盒子交换，让两篮一样重。",
+      "en": "{who} and {who2} each carry a basket. Basket A has boxes of {p}, {x}, {q} (×100 g); basket B has {y}, {r}, {s}. They want to swap one box each so the baskets weigh the same."
+     },
+     "steps": [
+      {
+       "calc": "{p} + {x} + {q}",
+       "a": "sa",
+       "q": {
+        "zh": "篮 A 多重？",
+        "en": "Basket A?"
+       }
+      },
+      {
+       "calc": "{y} + {r} + {s}",
+       "a": "sb",
+       "q": {
+        "zh": "篮 B 多重？",
+        "en": "Basket B?"
+       }
+      },
+      {
+       "q": {
+        "zh": "差的一半是交换的两个盒子之差。篮 B 拿出 {y}，篮 A 该拿出重几的盒子？",
+        "en": "Half the difference is the gap between the swapped boxes. B gives {y}; which box should A give?"
+       },
+       "a": "x",
+       "fam": "algebra"
+      }
+     ],
+     "show": {
+      "who": 2
+     },
+     "win": {
+      "text": {
+       "zh": "两篮一样重，两人走得稳稳当当。",
+       "en": "Balanced baskets, steady steps."
+      }
+     }
+    },
+    {
+     "at": 0.8,
+     "icon": "🚚",
+     "intro": {
+      "zh": "外卖每百克收 {f}{money}运费。",
+      "en": "Delivery costs {f} per 100 g."
+     },
+     "steps": [
+      {
+       "calc": "({sa} + {sb}) × {f}",
+       "a": "(sa+sb)*f",
+       "q": {
+        "zh": "两篮一共运费多少？",
+        "en": "Total delivery charge?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "运费收好了。",
+       "en": "Delivery paid."
+      },
+      "do": [
+       [
+        "cash",
+        "(sa+sb)*f"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "fruit_lock",
+   "src": "JMC 2020 Q19 / 2023 Q22：符号代表数的方程组",
+   "p": 1,
+   "vars": {
+    "s": [
+     2,
+     9
+    ],
+    "l": [
+     2,
+     9
+    ],
+    "g": [
+     1,
+     9
+    ],
+    "A": "2*s",
+    "Bv": "s+l",
+    "Cv": "2*l+g",
+    "s2": [
+     2,
+     6
+    ],
+    "e": [
+     1,
+     4
+    ],
+    "l2": "s2+e",
+    "P": "s2*l2",
+    "S": "s2+l2"
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "🔐",
+     "intro": {
+      "zh": "仓库门上的密码锁画着水果算式：🍓 + 🍓 = {A}，🍓 + 🍋 = {Bv}，🍋 + 🍋 + 🍇 = {Cv}。密码就是 🍓、🍋、🍇 代表的数。",
+      "en": "The storeroom lock shows: 🍓 + 🍓 = {A}, 🍓 + 🍋 = {Bv}, 🍋 + 🍋 + 🍇 = {Cv}. The code is the numbers for 🍓, 🍋, 🍇."
+     },
+     "steps": [
+      {
+       "calc": "{A} ÷ 2",
+       "a": "s",
+       "q": {
+        "zh": "🍓 是几？",
+        "en": "What is 🍓?"
+       }
+      },
+      {
+       "q": {
+        "zh": "🍋 是几？",
+        "en": "What is 🍋?"
+       },
+       "a": "l",
+       "fam": "algebra"
+      },
+      {
+       "q": {
+        "zh": "🍇 是几？",
+        "en": "What is 🍇?"
+       },
+       "a": "g",
+       "fam": "algebra"
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "咔哒！门开了，里面有一袋面粉。",
+       "en": "Click! Inside is a sack of flour."
+      },
+      "do": [
+       [
+        "stock",
+        "2"
+       ]
+      ]
+     }
+    },
+    {
+     "at": 0.4,
+     "icon": "🔒",
+     "intro": {
+      "zh": "第二天{who}把锁换了：🍓 × 🍋 = {P}，🍓 + 🍋 = {S}，🍋 比 🍓 大。",
+      "en": "Next day {who} changes the lock: 🍓 × 🍋 = {P}, 🍓 + 🍋 = {S}, and 🍋 is bigger."
+     },
+     "steps": [
+      {
+       "q": {
+        "zh": "🍓 是几？",
+        "en": "What is 🍓?"
+       },
+       "a": "s2",
+       "fam": "algebra"
+      },
+      {
+       "q": {
+        "zh": "🍋 是几？",
+        "en": "What is 🍋?"
+       },
+       "a": "l2",
+       "fam": "algebra"
+      }
+     ],
+     "day": 1,
+     "win": {
+      "text": {
+       "zh": "又打开了！{who}服气地竖起大拇指。",
+       "en": "Open again! {who} gives a thumbs-up."
+      },
+      "do": [
+       [
+        "cash",
+        "S"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "bike_delivery",
+   "src": "JMC 2021 Q5：路程百分数之差求全程",
+   "p": 1,
+   "vars": {
+    "k": [
+     1,
+     6
+    ],
+    "T": "500*k",
+    "d": "300*k",
+    "t": [
+     0,
+     1
+    ],
+    "v": "100+150*t"
+   },
+   "beats": [
+    {
+     "at": 0.3,
+     "icon": "🚲",
+     "intro": {
+      "zh": "{who}骑车送蛋糕。走完 20% 的路时，剩下的路比“只剩 20%”时多 {d} 米。",
+      "en": "{who} cycles a delivery. After 20% of the way, there is {d} m more to go than when only 20% is left."
+     },
+     "steps": [
+      {
+       "q": {
+        "zh": "这 {d} 米占全程的百分之几？（80% − 20%）",
+        "en": "What percent of the way is {d} m? (80% − 20%)"
+       },
+       "a": "60",
+       "fam": "percent"
+      },
+      {
+       "calc": "{d} ÷ 60 × 100",
+       "a": "T",
+       "q": {
+        "zh": "全程多少米？",
+        "en": "Whole distance in metres?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "{who}把路线画在地图上。",
+       "en": "{who} marks the route on the map."
+      }
+     }
+    },
+    {
+     "at": 0.7,
+     "icon": "⏱️",
+     "intro": {
+      "zh": "{who}每分钟骑 {v} 米。",
+      "en": "{who} rides {v} m per minute."
+     },
+     "steps": [
+      {
+       "calc": "{T} ÷ {v}",
+       "a": "T/v",
+       "q": {
+        "zh": "全程要几分钟？",
+        "en": "Minutes for the whole trip?"
+       }
+      }
+     ],
+     "win": {
+      "text": {
+       "zh": "蛋糕准时送到！",
+       "en": "Delivered on time!"
+      },
+      "do": [
+       [
+        "cash",
+        "5"
+       ]
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

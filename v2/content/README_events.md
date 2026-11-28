@@ -55,3 +55,11 @@
 - 加水果、表面图案、顶饰、口味、装饰方式：在 cakes.json 加一行（SVG 片段，{c}{d}{l} 为随机点缀色）。表面图案可引用场景装饰（from: scene）、怪兽（from: monster）、数字（from: number）。
 - 加形状：在 cakes.json shapes 登记（含 cap = 顶上最多数得清的水果数），并在 mq_cake.js SHAPES 写一个画法函数。
 - 样张：`tests/cake_gallery.html?seed=1&n=24&shapes=layer,heart`。
+
+## 故事线（content/arcs.json，v010d 起）
+- 一条线 = `vars`（开线时抽一次，全线共用）+ `beats`（2–3 拍，每拍就是一个事件，字段同上表；`at` 0–1 = 放在一天的早/中/晚，`day` = 第几天，跨天的线写 1；`scene` 默认 shop；`show.who` 画角色，2 = 两个）。
+- `{who}` `{who2}` 是开线时从 `cast` × `names` 抽的角色（如“狐狸皮皮 / Pip the Fox”），画面时按语言拼；`defaults` 是没写 win/lose 时的默认结算。
+- `src` 记题型套路出处（目前取自 UKMT JMC 2020–2023），题面与数自编；一条线围绕一类题，拍与拍之间有因果（下单 → 取货付钱等）。
+- 纯算式步写成 `{calc, a, q}`：q 是故事里的引子，calc 是算式；test_events 会核对算式与答案一致。
+- 导演（planDay）先放故事拍（全部新增、不挤掉原有类别），再排怪兽与换场景，保底间隔把故事拍算在内；关门前没讲完的拍按顺序出完。节奏参数在 tuning.json → arcs。
+- 加一条线：照抄一条改文字与 vars，跑 `node tests/test_events.js` 与 `node tests/check_requirements.js`（R18a/b：每天有故事、30 天里 ≥15 条不同的线）。

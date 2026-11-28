@@ -1,6 +1,6 @@
 {
- "date": "2026-11-27T22:38:26.880Z",
- "hard": 1,
+ "date": "2026-11-28T00:05:50.924Z",
+ "hard": 0,
  "rows": [
   {
    "id": "R1",
@@ -15,7 +15,7 @@
    "id": "R2a",
    "ok": true,
    "target": false,
-   "got": "[0.3,0.3,0.308]",
+   "got": "[0.272,0.268,0.285]",
    "want": "between [0.15,0.35]",
    "note": "",
    "said": "怪兽要有，但不压过场景（比例差不多）"
@@ -33,7 +33,7 @@
    "id": "R3a",
    "ok": true,
    "target": false,
-   "got": "0.433",
+   "got": "0.356",
    "want": ">= 0.3",
    "note": "",
    "said": "特殊场景要经常出现——孩子不烦的关键"
@@ -42,7 +42,7 @@
    "id": "R3b",
    "ok": true,
    "target": false,
-   "got": "2",
+   "got": "3",
    "want": "<= 3",
    "note": "",
    "said": "特殊场景保底：最多隔 3 个事件"
@@ -51,7 +51,7 @@
    "id": "R3c",
    "ok": true,
    "target": false,
-   "got": "2.35",
+   "got": "2.56",
    "want": ">= 2",
    "note": "",
    "said": "特殊场景保底：每天都有、每天几次"
@@ -69,7 +69,7 @@
    "id": "R4a",
    "ok": true,
    "target": false,
-   "got": "39",
+   "got": "56",
    "want": "<= 60",
    "note": "",
    "said": "各类新奇事件都要轮到（不靠道具的事件 60 天内都出现过）"
@@ -105,7 +105,7 @@
    "id": "R6a",
    "ok": true,
    "target": false,
-   "got": "0.521",
+   "got": "0.514",
    "want": ">= 0.33",
    "note": "",
    "said": "纯算式至少 1/3（底线，按实际答题数）"
@@ -114,7 +114,7 @@
    "id": "R6b",
    "ok": false,
    "target": true,
-   "got": "0.521",
+   "got": "0.514",
    "want": ">= 0.65",
    "note": "",
    "said": "纯算式目标 65–70%"
@@ -193,11 +193,11 @@
   },
   {
    "id": "R15",
-   "ok": false,
+   "ok": true,
    "target": false,
    "got": "",
    "want": "lang_switch",
-   "note": "R15 失败 1 项",
+   "note": "R15 全部通过（29 项）",
    "said": "中英切换是同一份内容换语言，内容和进度不变"
   },
   {
@@ -217,6 +217,24 @@
    "want": "static_tuning",
    "note": "ok",
    "said": "调节参数只在一处，不到处乱动"
+  },
+  {
+   "id": "R18a",
+   "ok": true,
+   "target": false,
+   "got": "1.8",
+   "want": ">= 1.5",
+   "note": "",
+   "said": "每天都有故事线，故事线不挤掉原有事件（加新东西不能让旧的消失）"
+  },
+  {
+   "id": "R18b",
+   "ok": true,
+   "target": false,
+   "got": "20",
+   "want": ">= 15",
+   "note": "",
+   "said": "每天的故事都不一样（30 天里至少 15 条不同的线）"
   }
  ],
  "sims": [
@@ -224,88 +242,12004 @@
    "days": 200,
    "seed": 7,
    "acc": 0.75,
-   "q_per_day": 38.2,
-   "pure_share": 0.521,
-   "beats_per_day": 7.86,
-   "events_per_day": 5.5,
-   "trips_per_day": 2.41,
-   "monsters_per_day": 2.36,
-   "monster_share": 0.3,
-   "trip_share": 0.439,
+   "q_per_day": 42,
+   "pure_share": 0.519,
+   "beats_per_day": 9.8,
+   "events_per_day": 7.13,
+   "trips_per_day": 2.58,
+   "monsters_per_day": 2.67,
+   "monster_share": 0.272,
+   "trip_share": 0.362,
    "days_without_trip": 0,
-   "max_trip_gap_events": 2,
+   "max_trip_gap_events": 3,
    "max_monster_gap_beats": 5,
    "max_beat_gap_questions": 4,
    "same_cat_repeats": 0,
    "repeat_detail": {},
    "cat_share": {
-    "story": 0.284,
-    "trip": 0.439,
-    "cake": 0.117,
-    "market": 0.062,
-    "drill": 0.098
+    "story": 0.206,
+    "drill": 0.067,
+    "trip": 0.362,
+    "arc": 0.254,
+    "cake": 0.069,
+    "market": 0.041
    },
+   "arc_beats_per_day": 1.81,
+   "arc_days_with_beat": 198,
+   "arcs_started": 178,
+   "arc_distinct_per_30d": 20.8,
+   "arc_same_as_yesterday_days": 22,
    "free_events": 38,
    "never_seen": [],
-   "last_first_seen_day": 30
+   "last_first_seen_day": 56,
+   "perDay": [
+    {
+     "q": 43,
+     "pure": 21.5005328005328,
+     "trips": 4,
+     "events": 10,
+     "monsters": 1,
+     "seq": [
+      "story",
+      "drill",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "trip*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.43832278832279,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "cake*",
+      "trip",
+      "arc",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.226634476634477,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "market",
+      "trip",
+      "arc",
+      "M",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 22.895465645465645,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 15.583777333777336,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "market",
+      "arc",
+      "trip",
+      "M",
+      "story",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 20.976634476634473,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 25.583777333777327,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 20.698063048063048,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.083777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "market",
+      "trip",
+      "arc",
+      "M",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.765595515595514,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 15.850444000444002,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 25.58377733377733,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "drill",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 22.429881229881225,
+     "trips": 2,
+     "events": 5,
+     "monsters": 5,
+     "seq": [
+      "trip",
+      "M",
+      "story",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 17.083777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "market",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 18.583777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story",
+      "arc",
+      "trip",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 18.29806304806305,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 18.676085026085026,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "story",
+      "trip",
+      "M",
+      "story*",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 21.499861249861247,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 26.347513597513597,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "trip",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 36,
+     "pure": 19.698063048063045,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip*",
+      "cake*",
+      "trip",
+      "M",
+      "arc",
+      "cake",
+      "trip",
+      "story",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 58,
+     "pure": 28.616744366744364,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 18.97771672771673,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "trip",
+      "drill",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 50,
+     "pure": 24.155205905205907,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "market",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 16.164729714729717,
+     "trips": 3,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 21.38377733377733,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 23.183777333777332,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "market",
+      "trip",
+      "M",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "trip*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 25.650444000443997,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "cake*",
+      "M",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 18.96839271839272,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 24.49286824286824,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "trip",
+      "arc",
+      "trip",
+      "cake",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 18.083777333777334,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "market",
+      "trip",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 43,
+     "pure": 25.733777333777333,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story",
+      "trip",
+      "arc",
+      "drill",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 24.983777333777333,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "drill",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip*",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 20.250444000444,
+     "trips": 3,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "cake*",
+      "trip",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "story",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 21.067293817293816,
+     "trips": 3,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "market",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 43,
+     "pure": 19.21234876234876,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "drill",
+      "trip",
+      "arc",
+      "story",
+      "M",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 37,
+     "pure": 16.333777333777334,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "cake",
+      "arc",
+      "trip",
+      "trip*",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 54,
+     "pure": 32.53982128982129,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "cake*",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.364729714729712,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 14.583777333777336,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 23.688172938172936,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "story",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 20.765595515595514,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 51,
+     "pure": 26.847513597513597,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "cake",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 23.347413697413693,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "M",
+      "market",
+      "trip",
+      "arc",
+      "M",
+      "cake",
+      "trip",
+      "arc",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 22.953008103008102,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "drill",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 32,
+     "pure": 13.498063048063049,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 45,
+     "pure": 21.3530081030081,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "cake",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 42,
+     "pure": 23.226634476634477,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "trip*",
+      "cake*",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 20.13377733377733,
+     "trips": 2,
+     "events": 5,
+     "monsters": 5,
+     "seq": [
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.86839271839272,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "story",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 16.350444000444,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 18.014818514818515,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "trip",
+      "story",
+      "M",
+      "trip",
+      "story*",
+      "M",
+      "arc"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 44,
+     "pure": 21.783777333777337,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 20.333777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "market",
+      "trip",
+      "M",
+      "arc",
+      "cake",
+      "trip",
+      "story",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.81105006105006,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "drill",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 21.63386613386613,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "market",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 19.333777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "market",
+      "trip",
+      "cake"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 43,
+     "pure": 23.882478632478634,
+     "trips": 4,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "trip*",
+      "cake*",
+      "trip",
+      "story",
+      "trip",
+      "M"
+     ]
+    },
+    {
+     "q": 48,
+     "pure": 28.339821289821288,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "cake",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 39,
+     "pure": 20.333777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 20.968392718392717,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 18.583777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "cake",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "drill"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 47,
+     "pure": 29.267094017094017,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "market",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 42,
+     "pure": 17.583777333777334,
+     "trips": 4,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "story",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "cake",
+      "trip*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 22.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake*",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 14.183777333777336,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 17.88377733377733,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "arc",
+      "cake",
+      "trip",
+      "market",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 17.504656454656455,
+     "trips": 2,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "story",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "cake",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 18.51105006105006,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip*",
+      "cake*",
+      "trip",
+      "M",
+      "market",
+      "trip",
+      "arc",
+      "cake",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 44,
+     "pure": 21.183777333777336,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "drill",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 49,
+     "pure": 27.86949161949162,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "cake",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 49,
+     "pure": 28.355205905205906,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "cake",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 23.3005328005328,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip*",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "cake*",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 22.983777333777333,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.483777333777333,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "market",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 17.983777333777333,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "drill",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 24.919441669441667,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "trip",
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 18.150444000444,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "drill"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 41,
+     "pure": 25.39330114330114,
+     "trips": 2,
+     "events": 5,
+     "monsters": 4,
+     "seq": [
+      "cake",
+      "M",
+      "trip",
+      "drill",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 23.38377733377733,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "drill",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 20.164818514818514,
+     "trips": 4,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "trip*",
+      "cake*",
+      "M",
+      "M",
+      "trip",
+      "story*",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 19.183777333777332,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "story",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 18.762348762348765,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.8005328005328,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 18.9005328005328,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip*",
+      "cake*",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "market",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 48,
+     "pure": 25.082478632478633,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 19.968392718392717,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "cake",
+      "trip",
+      "M",
+      "market"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 50,
+     "pure": 26.391441891441886,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 39,
+     "pure": 23.083777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "trip",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "market",
+      "cake",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.99037074037074,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 26.583777333777334,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 20.417110667110666,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "trip",
+      "market",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 57,
+     "pure": 32.53862803862803,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 49,
+     "pure": 26.06949161949162,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "trip*",
+      "arc",
+      "trip",
+      "cake*",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 23.297064047064044,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 22.595682095682093,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 27.644383394383397,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "cake",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 21.60941835941836,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 22.886807636807635,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "drill",
+      "trip",
+      "story",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 25.955205905205908,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 42,
+     "pure": 19.583777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 25.267110667110668,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story",
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "market",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 39,
+     "pure": 19.276085026085028,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "M",
+      "trip",
+      "story*",
+      "trip",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 42,
+     "pure": 21.383777333777335,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "market",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 16.776085026085028,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 22.01234876234876,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "trip",
+      "story*",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 23.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story",
+      "drill",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 19.850444000444,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 16.511050061050064,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 48,
+     "pure": 27.911249861249857,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "drill",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 27.367110667110662,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "cake",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 19.098063048063047,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 23.665595515595513,
+     "trips": 2,
+     "events": 5,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "trip",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "M",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 41,
+     "pure": 19.698063048063045,
+     "trips": 4,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 16.583777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 55,
+     "pure": 32.36949161949162,
+     "trips": 2,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "cake",
+      "story",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "M",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 23.660700410700407,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "story",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "cake",
+      "trip",
+      "arc",
+      "market",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 24.633866133866128,
+     "trips": 2,
+     "events": 9,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "cake",
+      "trip",
+      "arc",
+      "story"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 35,
+     "pure": 21.260700410700412,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "drill",
+      "market",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 23.168192918192915,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 25.476634476634473,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 20.155205905205907,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "drill",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 18.783777333777333,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "trip",
+      "cake",
+      "story",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 24.926634476634476,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "drill",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 21.87165612165612,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 20.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "drill",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 21.983777333777333,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "cake",
+      "trip",
+      "arc",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 19.49806304806305,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 16.783777333777337,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 21.49286824286824,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 21.29806304806305,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 21.276085026085024,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "story",
+      "trip",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "market",
+      "cake",
+      "trip",
+      "story"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 44,
+     "pure": 25.5530081030081,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "trip",
+      "drill",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 42,
+     "pure": 21.583777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "trip",
+      "market",
+      "story",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 15.660700410700413,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "story",
+      "story*",
+      "M",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 16.644383394383397,
+     "trips": 4,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "cake",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "M",
+      "trip*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 43,
+     "pure": 19.583777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "cake*",
+      "drill",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 22.78377733377733,
+     "trips": 2,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "trip",
+      "arc",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "cake",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 15.660700410700413,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "market",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 48,
+     "pure": 21.717110667110667,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story",
+      "drill",
+      "trip",
+      "arc",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 18.660700410700407,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "market",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.31105006105006,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "trip*",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 15.683777333777336,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 25.333777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 19.083777333777334,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "cake",
+      "trip",
+      "arc",
+      "M",
+      "market",
+      "trip",
+      "arc",
+      "story",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 34,
+     "pure": 18.276085026085028,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 39,
+     "pure": 18.059967809967812,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "cake",
+      "trip",
+      "M",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 17.96839271839272,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 34,
+     "pure": 16.025335775335776,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "market",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 25.059967809967805,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "drill",
+      "trip",
+      "M",
+      "market",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 21.60355755355755,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "M",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "arc",
+      "story",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 20.083777333777334,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "trip",
+      "drill",
+      "story",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "cake",
+      "trip",
+      "market"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 47,
+     "pure": 28.596764346764346,
+     "trips": 4,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 24.38377733377733,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "market",
+      "trip",
+      "M",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "market"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 50,
+     "pure": 28.832128982128978,
+     "trips": 2,
+     "events": 5,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "story*",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 21.333777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "trip",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 23.51234876234876,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 23.083777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "M",
+      "trip*",
+      "arc",
+      "trip",
+      "cake*",
+      "M",
+      "arc",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.06105006105006,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "market",
+      "cake",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 30,
+     "pure": 14.79806304806305,
+     "trips": 2,
+     "events": 5,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "cake",
+      "trip",
+      "drill",
+      "M"
+     ]
+    },
+    {
+     "q": 40,
+     "pure": 18.250444000444002,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "trip",
+      "market",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 41,
+     "pure": 17.81105006105006,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 21.583777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 23.488322788322787,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "market",
+      "trip",
+      "cake",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 28.08377733377733,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 22.33762348762349,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 26.609751359751357,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 23.162348762348756,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "market",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "M",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 18.083777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "story",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 22.083777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 39,
+     "pure": 20.01234876234876,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "M",
+      "trip",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 30.505205905205905,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "trip",
+      "market",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.695665445665448,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 47,
+     "pure": 28.655205905205904,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "story*",
+      "trip",
+      "arc",
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 20.768392718392718,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 15.726634476634478,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 16.526085026085028,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 22.726634476634473,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "trip*",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 20.450444000444,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "cake*",
+      "arc",
+      "M",
+      "trip",
+      "market",
+      "story",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.583777333777334,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "drill",
+      "cake",
+      "trip",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 22.583777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "market",
+      "cake",
+      "trip",
+      "arc",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 19.583777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 21.160700410700407,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "market",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 56,
+     "pure": 33.97663447663447,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "drill",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "cake",
+      "trip",
+      "M",
+      "story"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 43,
+     "pure": 21.98377733377733,
+     "trips": 4,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "trip",
+      "drill",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "market",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 41,
+     "pure": 20.276085026085028,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "cake",
+      "trip*",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "cake*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 51,
+     "pure": 29.155205905205904,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 51,
+     "pure": 29.86949161949162,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 22.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip*",
+      "cake*",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "drill",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 51,
+     "pure": 28.21234876234876,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "market",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 18.993301143301142,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 18.494033744033743,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 17.833777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 28.78247863247863,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 19.117110667110666,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 25.276085026085028,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 24.58377733377733,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 26.405205905205904,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "market",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 25.726634476634473,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "M",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "cake",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 26.08853923853924,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip*",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 18.750444000444002,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "arc",
+      "cake*",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "arc",
+      "M"
+     ],
+     "arcB": 3
+    }
+   ]
   },
   {
    "days": 200,
    "seed": 11,
    "acc": 0.75,
-   "q_per_day": 38.4,
-   "pure_share": 0.523,
-   "beats_per_day": 7.76,
-   "events_per_day": 5.43,
-   "trips_per_day": 2.35,
-   "monsters_per_day": 2.33,
-   "monster_share": 0.3,
-   "trip_share": 0.433,
+   "q_per_day": 42.2,
+   "pure_share": 0.518,
+   "beats_per_day": 9.84,
+   "events_per_day": 7.2,
+   "trips_per_day": 2.56,
+   "monsters_per_day": 2.63,
+   "monster_share": 0.268,
+   "trip_share": 0.356,
    "days_without_trip": 0,
-   "max_trip_gap_events": 2,
+   "max_trip_gap_events": 3,
    "max_monster_gap_beats": 5,
    "max_beat_gap_questions": 4,
    "same_cat_repeats": 0,
    "repeat_detail": {},
    "cat_share": {
-    "story": 0.298,
-    "trip": 0.433,
-    "cake": 0.109,
-    "market": 0.054,
-    "drill": 0.105
+    "story": 0.212,
+    "drill": 0.063,
+    "trip": 0.356,
+    "cake": 0.069,
+    "arc": 0.26,
+    "market": 0.04
    },
+   "arc_beats_per_day": 1.88,
+   "arc_days_with_beat": 197,
+   "arcs_started": 183,
+   "arc_distinct_per_30d": 21.5,
+   "arc_same_as_yesterday_days": 16,
    "free_events": 38,
    "never_seen": [],
-   "last_first_seen_day": 39
+   "last_first_seen_day": 41,
+   "perDay": [
+    {
+     "q": 36,
+     "pure": 19.583777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "story",
+      "drill",
+      "trip",
+      "cake",
+      "arc",
+      "M",
+      "trip",
+      "market",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 20.026085026085024,
+     "trips": 3,
+     "events": 9,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 48,
+     "pure": 28.48853923853924,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 18.41070041070041,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 23.378649128649126,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "trip",
+      "arc",
+      "story",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 48,
+     "pure": 22.5005328005328,
+     "trips": 3,
+     "events": 8,
+     "monsters": 4,
+     "seq": [
+      "cake",
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "trip*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 23.31105006105006,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "cake*",
+      "trip",
+      "story",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "trip",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 23.204656454656455,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "trip",
+      "market",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.41711066711067,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 49,
+     "pure": 29.24611499611499,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 26.425535575535577,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 33,
+     "pure": 16.41894216894217,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "market",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 32.04751359751359,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "drill",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 15.479881229881231,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 22.99403374403374,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.583777333777334,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "cake",
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 21.000444000444,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "cake",
+      "trip",
+      "arc",
+      "story",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 20.768192918192916,
+     "trips": 2,
+     "events": 6,
+     "monsters": 6,
+     "seq": [
+      "M",
+      "story",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 53,
+     "pure": 29.660700410700407,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "market",
+      "arc",
+      "trip",
+      "story",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 29.755205905205905,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "cake",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 18.91711066711067,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "story",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 51,
+     "pure": 25.300532800532796,
+     "trips": 3,
+     "events": 9,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "market",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "drill",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 17.003357753357754,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 20.91711066711067,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.012348762348765,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "cake",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 33,
+     "pure": 16.29806304806305,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 20.5528083028083,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "market",
+      "trip",
+      "arc",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 20.670662670662672,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "story*",
+      "trip*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 47,
+     "pure": 27.676085026085026,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "cake*",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 19.63832278832279,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 20.346547896547897,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.78377733377733,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 48,
+     "pure": 27.5505328005328,
+     "trips": 3,
+     "events": 10,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "market",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "story",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 20.276085026085024,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "drill",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 18.583777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "drill",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 24.768392718392715,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 18.333777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "cake",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 22.538322788322787,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "drill",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 30.455205905205908,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 19.78377733377733,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.383777333777335,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "trip*",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 22.898063048063047,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake*",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 23.226634476634473,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "market",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "story",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.707153957153956,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 22.726634476634473,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 55,
+     "pure": 29.88247863247863,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 19.833777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "trip",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 15.083777333777336,
+     "trips": 3,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "trip*",
+      "cake*",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "trip",
+      "M"
+     ]
+    },
+    {
+     "q": 43,
+     "pure": 21.457903207903207,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "cake",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "drill",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 35,
+     "pure": 16.333777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 52,
+     "pure": 30.555205905205902,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "drill",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 19.850444000444,
+     "trips": 4,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "trip*",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 18.025335775335776,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "cake*",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "story",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 49,
+     "pure": 26.86949161949162,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 15.083777333777336,
+     "trips": 2,
+     "events": 5,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 20.147413697413693,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 27.38377733377733,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 22.683777333777332,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "market",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 18.667110667110666,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "cake",
+      "trip*",
+      "arc",
+      "trip",
+      "M",
+      "cake*",
+      "story",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 18.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "trip",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "cake",
+      "market",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 34,
+     "pure": 18.36839271839272,
+     "trips": 2,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 23.97014097014097,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "drill",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 18.183777333777336,
+     "trips": 4,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "trip*",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.726634476634477,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "cake*",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "cake",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 18.333777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "drill",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 24.774253524253524,
+     "trips": 2,
+     "events": 5,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "story",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 20.53982128982129,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 18.817110667110665,
+     "trips": 2,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "story",
+      "story*",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 19.718392718392717,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 22.89330114330114,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.79806304806305,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.41711066711067,
+     "trips": 2,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "arc",
+      "M",
+      "trip",
+      "market",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 45,
+     "pure": 24.17468642468642,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 23.650444000444,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.29806304806305,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 27.355205905205906,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "drill",
+      "story",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "cake",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 33,
+     "pure": 16.41711066711067,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "market",
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 21.250444000444,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 33,
+     "pure": 14.083777333777336,
+     "trips": 2,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "story"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 19.71105006105006,
+     "trips": 2,
+     "events": 5,
+     "monsters": 4,
+     "seq": [
+      "cake",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 36,
+     "pure": 19.383777333777335,
+     "trips": 3,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "cake",
+      "trip",
+      "trip*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 21.368392718392716,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "cake*",
+      "market",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 22.236124986124985,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 14.250444000444002,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "market",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 15.883777333777337,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 36,
+     "pure": 13.89806304806305,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 33,
+     "pure": 17.79806304806305,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "M",
+      "trip",
+      "market",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 20.58377733377733,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 19.083777333777334,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 51,
+     "pure": 30.821872571872568,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "market",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 21.817110667110665,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 21.41070041070041,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "market",
+      "arc",
+      "trip"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 45,
+     "pure": 23.48235098235098,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.776085026085028,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "market",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 56,
+     "pure": 34.58377733377733,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "story",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 30.255205905205905,
+     "trips": 2,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "cake",
+      "trip",
+      "market",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 23.798063048063046,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 17.483777333777336,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "market",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 20.417110667110666,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "story",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "arc",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 25.160700410700407,
+     "trips": 4,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "trip",
+      "arc",
+      "trip*",
+      "cake*",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.47988122988123,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 22.574786324786324,
+     "trips": 2,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 20.983777333777333,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "cake",
+      "arc",
+      "trip",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 34,
+     "pure": 18.117110667110666,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story",
+      "trip",
+      "arc",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 19.833777333777334,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 22.28074703074703,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "market",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.983777333777333,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "trip",
+      "arc",
+      "M",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 51,
+     "pure": 26.466894216894218,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "market",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 39,
+     "pure": 21.8530081030081,
+     "trips": 2,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 44,
+     "pure": 22.56105006105006,
+     "trips": 2,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "market",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.733777333777333,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "M",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 19.66070041070041,
+     "trips": 3,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "trip",
+      "market",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 18.40941835941836,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 24.038322788322787,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "trip",
+      "market",
+      "arc",
+      "M",
+      "trip",
+      "cake",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 23.083777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "arc",
+      "drill",
+      "M",
+      "trip",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 38,
+     "pure": 21.635059385059385,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "market",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 15.811050061050063,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 20.37165612165612,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "drill",
+      "trip",
+      "M",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 16.583777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "trip",
+      "trip*",
+      "arc",
+      "M",
+      "trip",
+      "cake*",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 22.695665445665444,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "market",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 19.583777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 22.443389943389942,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 19.038322788322787,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "market",
+      "trip",
+      "arc",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 15.476085026085027,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 22.440920190920192,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 16.583777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 22.11124986124986,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip*",
+      "cake*",
+      "M",
+      "trip",
+      "M",
+      "story",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 51,
+     "pure": 28.155205905205904,
+     "trips": 2,
+     "events": 7,
+     "monsters": 1,
+     "seq": [
+      "market",
+      "trip",
+      "cake",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "drill"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 21.083777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "market",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 53,
+     "pure": 33.3552059052059,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "cake",
+      "trip",
+      "story",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 20.917110667110666,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.667110667110666,
+     "trips": 2,
+     "events": 5,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 34,
+     "pure": 17.326634476634478,
+     "trips": 3,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "trip*",
+      "arc",
+      "M",
+      "trip",
+      "cake*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 52,
+     "pure": 30.655205905205904,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "story",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.393301143301144,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "M",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 24.361050061050058,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 16.442751692751692,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 21.117110667110666,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "market",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 21.01234876234876,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 17.083777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "cake",
+      "arc",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 37,
+     "pure": 16.29806304806305,
+     "trips": 4,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "trip*",
+      "cake*",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 20.983777333777333,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "drill",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 16.39806304806305,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.917110667110666,
+     "trips": 2,
+     "events": 5,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 59,
+     "pure": 32.655205905205904,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 24.70465645465645,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "drill",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 17.012348762348765,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "story",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 22.311050061050057,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "drill",
+      "cake",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story*",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 24.183777333777336,
+     "trips": 4,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "trip*",
+      "M",
+      "arc",
+      "trip",
+      "cake*",
+      "story",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 16.383777333777335,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story",
+      "trip",
+      "arc",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 20.483777333777333,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "arc",
+      "market",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 22.561799311799312,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 29.005205905205905,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 18.01234876234876,
+     "trips": 2,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "market",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 24.668392718392717,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 23.220140970140967,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "market",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 54,
+     "pure": 30.821872571872568,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 24.609751359751357,
+     "trips": 4,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "trip*",
+      "M",
+      "cake*",
+      "trip",
+      "M",
+      "M",
+      "cake",
+      "trip"
+     ]
+    },
+    {
+     "q": 40,
+     "pure": 17.583777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 21.183777333777332,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "drill",
+      "trip",
+      "cake"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 23.965595515595513,
+     "trips": 4,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "trip*",
+      "cake*",
+      "trip",
+      "drill",
+      "trip",
+      "M",
+      "cake"
+     ]
+    },
+    {
+     "q": 43,
+     "pure": 25.227133977133974,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "drill",
+      "trip",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "story",
+      "drill"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 20.027805527805526,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "market",
+      "cake",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 17.583777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 20.583777333777334,
+     "trips": 4,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "trip*",
+      "arc",
+      "M",
+      "trip",
+      "arc",
+      "cake*",
+      "trip",
+      "cake",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 27.083777333777334,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "trip*",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "cake*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 20.42993117993118,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 20.940920190920192,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip*",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "cake*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 34,
+     "pure": 15.583777333777336,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "cake",
+      "market",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 24.33377733377733,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "M",
+      "story",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 30.832128982128978,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "drill",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 30.074786324786324,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story",
+      "drill",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "cake",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 26.98247863247863,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 25.86949161949162,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "story",
+      "trip",
+      "M",
+      "arc",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.632262182262185,
+     "trips": 2,
+     "events": 5,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "M",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 44,
+     "pure": 22.183777333777332,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "trip",
+      "story",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 46,
+     "pure": 28.355205905205906,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 23.083777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 20.245115995115995,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "cake",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.333777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "drill",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 18.91711066711067,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 19.58377733377733,
+     "trips": 3,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "drill",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 17.683777333777336,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "market",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "story",
+      "story*",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 22.750444000444,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 24.092868242868242,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip*",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake*",
+      "M",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 53,
+     "pure": 28.667094017094016,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 22.083777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 58,
+     "pure": 34.712315462315466,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "drill",
+      "cake",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 29.29806304806305,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "drill",
+      "cake",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 55,
+     "pure": 37.36472971472971,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "drill",
+      "M",
+      "market",
+      "arc",
+      "trip",
+      "cake",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 23.100444000444,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "drill",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "cake",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 21.726634476634477,
+     "trips": 4,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip*",
+      "cake*",
+      "trip",
+      "drill",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 42,
+     "pure": 17.783777333777333,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "market",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 46,
+     "pure": 18.583777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "M",
+      "story",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 20.660700410700407,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 35,
+     "pure": 14.583777333777336,
+     "trips": 3,
+     "events": 7,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "trip",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 48,
+     "pure": 25.522238872238873,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "M",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 20.29806304806305,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "trip",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 20.88377733377733,
+     "trips": 4,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "trip*",
+      "cake*",
+      "trip",
+      "M",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 1
+    }
+   ]
   },
   {
    "days": 200,
    "seed": 13,
    "acc": 0.75,
-   "q_per_day": 38.5,
-   "pure_share": 0.525,
-   "beats_per_day": 7.87,
-   "events_per_day": 5.44,
-   "trips_per_day": 2.35,
-   "monsters_per_day": 2.42,
-   "monster_share": 0.308,
-   "trip_share": 0.433,
+   "q_per_day": 42,
+   "pure_share": 0.514,
+   "beats_per_day": 9.85,
+   "events_per_day": 7.04,
+   "trips_per_day": 2.56,
+   "monsters_per_day": 2.81,
+   "monster_share": 0.285,
+   "trip_share": 0.363,
    "days_without_trip": 0,
-   "max_trip_gap_events": 2,
+   "max_trip_gap_events": 3,
    "max_monster_gap_beats": 5,
    "max_beat_gap_questions": 4,
    "same_cat_repeats": 0,
    "repeat_detail": {},
    "cat_share": {
-    "story": 0.298,
-    "trip": 0.433,
-    "drill": 0.105,
-    "cake": 0.109,
-    "market": 0.055
+    "story": 0.211,
+    "arc": 0.256,
+    "trip": 0.363,
+    "cake": 0.076,
+    "market": 0.032,
+    "drill": 0.061
    },
+   "arc_beats_per_day": 1.8,
+   "arc_days_with_beat": 200,
+   "arcs_started": 177,
+   "arc_distinct_per_30d": 20,
+   "arc_same_as_yesterday_days": 23,
    "free_events": 38,
    "never_seen": [],
-   "last_first_seen_day": 38
+   "last_first_seen_day": 23,
+   "perDay": [
+    {
+     "q": 40,
+     "pure": 18.990370740370743,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "cake",
+      "market",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 36,
+     "pure": 14.964729714729716,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 41,
+     "pure": 25.083777333777334,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 24.674686424686424,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "story",
+      "drill",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 18.983777333777333,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "market",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 21.947413697413694,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 19.504656454656455,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "drill",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 21.500444000444,
+     "trips": 2,
+     "events": 6,
+     "monsters": 6,
+     "seq": [
+      "M",
+      "story*",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 24.726634476634477,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 22.917110667110666,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.51105006105006,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 15.250444000444002,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "story",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 55,
+     "pure": 29.821872571872568,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 13.383777333777335,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "trip*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 22.61234876234876,
+     "trips": 3,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "cake*",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 18.250444000444,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 42,
+     "pure": 23.583777333777334,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "story",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "story",
+      "trip",
+      "arc",
+      "drill",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 20.326634476634474,
+     "trips": 2,
+     "events": 5,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "market",
+      "M",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 44,
+     "pure": 19.55767565767566,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 37,
+     "pure": 15.783777333777335,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip*",
+      "M",
+      "story*",
+      "trip",
+      "cake*",
+      "trip",
+      "story",
+      "M",
+      "arc"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 33,
+     "pure": 18.850444000444,
+     "trips": 3,
+     "events": 5,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 18.704656454656455,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 20.276085026085028,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "trip*",
+      "arc",
+      "trip",
+      "cake*",
+      "M",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 20.833777333777334,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "trip*",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 22.807553557553554,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "cake*",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 57,
+     "pure": 34.155205905205904,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 21.33377733377733,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "market",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 21.183777333777336,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "trip",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 18.31105006105006,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.983777333777333,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "story",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 26.16619491619491,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 17.933777333777336,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "cake",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 57,
+     "pure": 31.20369075369075,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "market",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "story",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 19.968392718392717,
+     "trips": 3,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.883777333777335,
+     "trips": 2,
+     "events": 5,
+     "monsters": 5,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 24.38377733377733,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "market",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 17.49806304806305,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 30.594366744366745,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "cake",
+      "trip",
+      "trip*",
+      "arc",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 38,
+     "pure": 16.583777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "cake*",
+      "trip",
+      "cake",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 18.250444000444,
+     "trips": 2,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "trip",
+      "drill",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "cake"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 33,
+     "pure": 18.898063048063047,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "trip",
+      "market",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 23.500444000444002,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "M",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 26.019674769674765,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "market",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 23.862348762348763,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 22.317293817293816,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 16.983777333777336,
+     "trips": 2,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "trip*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 39,
+     "pure": 21.58377733377733,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "cake*",
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "cake",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 24.31711066711066,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "market",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 23.38377733377733,
+     "trips": 4,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "trip*",
+      "M",
+      "cake*",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "story",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 37,
+     "pure": 17.86949161949162,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "trip*",
+      "M",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 41,
+     "pure": 20.350444000444003,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "cake*",
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 46,
+     "pure": 21.583777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 18.512348762348765,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "M",
+      "story",
+      "trip",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "story",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 22.39330114330114,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 54,
+     "pure": 29.155205905205904,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 29.155205905205904,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "cake",
+      "arc",
+      "trip",
+      "trip*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.983777333777333,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "cake*",
+      "story",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 28.91711066711067,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "market",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 28.955205905205908,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 51,
+     "pure": 28.574037074037072,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 19.753008103008106,
+     "trips": 4,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "story",
+      "trip",
+      "M",
+      "story*",
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 37,
+     "pure": 14.917110667110668,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "market",
+      "story",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 37,
+     "pure": 23.265595515595514,
+     "trips": 2,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "market",
+      "trip",
+      "arc",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 37,
+     "pure": 15.183777333777336,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 27.05996780996781,
+     "trips": 3,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 49,
+     "pure": 25.688539238539242,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "trip",
+      "market"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 47,
+     "pure": 24.781579531579528,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 47,
+     "pure": 22.059301809301807,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 19.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "market",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 51,
+     "pure": 30.12663447663447,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 22.909534909534905,
+     "trips": 2,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "drill",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 23.88377733377733,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "trip",
+      "drill"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 32,
+     "pure": 13.250444000444002,
+     "trips": 3,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 42,
+     "pure": 22.333777333777334,
+     "trips": 4,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "trip*",
+      "arc",
+      "M",
+      "trip",
+      "cake*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 21.098063048063047,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "story",
+      "M",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 22.226634476634477,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "market",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 22.417110667110663,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 19.81105006105006,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 16.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "trip*",
+      "M",
+      "story*",
+      "trip",
+      "cake*",
+      "trip",
+      "M",
+      "arc",
+      "story"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 20.31105006105006,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "cake"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 45,
+     "pure": 26.08377733377733,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "drill",
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 18.29806304806305,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 20.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "story",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 17.533777333777333,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 44,
+     "pure": 25.366894216894217,
+     "trips": 2,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "drill",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 48,
+     "pure": 26.853008103008104,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "drill",
+      "trip",
+      "market",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 20.083777333777334,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "cake",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 21.393301143301144,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 27.155205905205904,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 17.964729714729714,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 21.528582528582525,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 21.517843267843265,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 51,
+     "pure": 26.905205905205904,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "trip*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 26.983777333777333,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "cake*",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "story",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 19.083777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "story",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 54,
+     "pure": 30.155205905205904,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 29.23312798312798,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "cake",
+      "trip",
+      "market",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 22.183777333777332,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "story*",
+      "trip",
+      "drill"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 18.67901542901543,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "story",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 39,
+     "pure": 17.250444000444002,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "trip",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 18.583777333777338,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "cake",
+      "trip",
+      "trip*",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 32,
+     "pure": 15.704656454656456,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "cake*",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 22.968392718392717,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "trip*",
+      "arc",
+      "trip",
+      "M",
+      "cake*",
+      "story",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 25.52993117993118,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 48,
+     "pure": 25.183777333777332,
+     "trips": 2,
+     "events": 9,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 49,
+     "pure": 28.79806304806305,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "cake",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 20.298063048063046,
+     "trips": 3,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "trip",
+      "drill",
+      "market",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 19.83832278832279,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "drill",
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "drill",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 48,
+     "pure": 26.609751359751357,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "cake",
+      "market",
+      "M",
+      "M",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 18.783777333777333,
+     "trips": 2,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 22.515595515595514,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "drill"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 15.625335775335776,
+     "trips": 2,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "cake",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 19.895465645465645,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip*",
+      "cake*",
+      "trip",
+      "M",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 37,
+     "pure": 18.06105006105006,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "drill",
+      "M",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 46,
+     "pure": 20.155205905205904,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 16.04806304806305,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 19.012348762348765,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "market",
+      "story",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 16.450444000444,
+     "trips": 2,
+     "events": 5,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 26.583777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "M",
+      "story*",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 20.926634476634476,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "story",
+      "trip",
+      "drill",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 15.16839271839272,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 38,
+     "pure": 20.42293817293817,
+     "trips": 4,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 45,
+     "pure": 22.18377733377733,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 25.718392718392714,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 48,
+     "pure": 26.934598734598733,
+     "trips": 2,
+     "events": 8,
+     "monsters": 4,
+     "seq": [
+      "drill",
+      "market",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 20.07728382728383,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 17.083777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 19.683777333777336,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "story",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 20.911050061050062,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "drill",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 49,
+     "pure": 28.578582528582523,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "story",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 20.81105006105006,
+     "trips": 2,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "drill",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "trip*",
+      "cake*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 31,
+     "pure": 16.56105006105006,
+     "trips": 2,
+     "events": 5,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "cake",
+      "trip",
+      "M",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 51,
+     "pure": 29.43212898212898,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "story*",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 34,
+     "pure": 16.983777333777336,
+     "trips": 2,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "trip*",
+      "cake*",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story",
+      "drill"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 37,
+     "pure": 21.176085026085023,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "cake",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 48,
+     "pure": 27.48096348096348,
+     "trips": 3,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story*",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 18.660700410700407,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "story",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 35,
+     "pure": 18.583777333777334,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 21.31234876234876,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 21.73063048063048,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "arc",
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "cake"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 48,
+     "pure": 25.91169941169941,
+     "trips": 2,
+     "events": 5,
+     "monsters": 6,
+     "seq": [
+      "trip",
+      "market",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 39,
+     "pure": 20.317110667110665,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "trip",
+      "drill",
+      "arc",
+      "M",
+      "trip",
+      "cake",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.276085026085024,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "trip*",
+      "M",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 18.583777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "cake*",
+      "arc",
+      "M",
+      "trip",
+      "drill",
+      "story",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 19.43832278832279,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 22.398063048063044,
+     "trips": 3,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 17.783777333777333,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "market"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 55,
+     "pure": 30.238539238539232,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "story*",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 22.695665445665444,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip*",
+      "M",
+      "cake*",
+      "trip",
+      "story",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 36,
+     "pure": 18.765595515595518,
+     "trips": 2,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "story*",
+      "cake",
+      "trip",
+      "arc",
+      "market",
+      "M",
+      "trip",
+      "story*",
+      "drill"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 46,
+     "pure": 23.01234876234876,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "drill",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 16.276085026085028,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 39,
+     "pure": 21.08377733377733,
+     "trips": 2,
+     "events": 5,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "trip*",
+      "cake*",
+      "trip",
+      "arc",
+      "drill",
+      "M",
+      "M",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 43,
+     "pure": 21.083777333777334,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "market",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 22.183777333777332,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 49,
+     "pure": 24.447413697413694,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "drill",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.7530081030081,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "story*",
+      "M",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 21.19416694416694,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 48,
+     "pure": 28.450444000444,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "cake",
+      "arc",
+      "trip",
+      "trip*",
+      "cake*",
+      "M",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 23.358452658452656,
+     "trips": 2,
+     "events": 6,
+     "monsters": 5,
+     "seq": [
+      "M",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "story*",
+      "trip",
+      "arc",
+      "cake",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 15.583777333777336,
+     "trips": 3,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "trip",
+      "story",
+      "story*",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 32,
+     "pure": 14.72663447663448,
+     "trips": 2,
+     "events": 6,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 16.994033744033747,
+     "trips": 3,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "trip*",
+      "cake*",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 45,
+     "pure": 22.917110667110666,
+     "trips": 3,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 53,
+     "pure": 33.88247863247863,
+     "trips": 3,
+     "events": 7,
+     "monsters": 4,
+     "seq": [
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 15.765595515595518,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "M",
+      "story*",
+      "cake",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 52,
+     "pure": 28.9475135975136,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "story*",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "story*",
+      "M",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 22.08377733377733,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "drill",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 24.583777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "drill",
+      "trip",
+      "arc",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "story*"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 39,
+     "pure": 21.239621489621488,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "cake",
+      "arc",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.583777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "drill",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 38,
+     "pure": 20.917110667110663,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 49,
+     "pure": 29.855205905205906,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "story",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 40,
+     "pure": 16.765595515595518,
+     "trips": 3,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "M",
+      "story*",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 37,
+     "pure": 19.983777333777333,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "market",
+      "trip",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "cake",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 22.650444000443997,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip*",
+      "arc",
+      "trip",
+      "M",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 44,
+     "pure": 22.445665445665444,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "drill",
+      "M",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "cake",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 20.045315795315794,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "market",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 15.968392718392721,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip",
+      "market",
+      "M",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 41,
+     "pure": 19.583777333777334,
+     "trips": 4,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "trip",
+      "story",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "trip",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 36,
+     "pure": 17.083777333777334,
+     "trips": 2,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "story",
+      "story*",
+      "trip",
+      "arc",
+      "cake",
+      "M",
+      "trip",
+      "arc",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 47,
+     "pure": 26.917110667110666,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 16.083777333777334,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "story",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 19.583777333777334,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 17.238322788322787,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "arc",
+      "M",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.083777333777334,
+     "trips": 3,
+     "events": 8,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "trip",
+      "drill",
+      "arc",
+      "trip",
+      "M",
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.58377733377733,
+     "trips": 4,
+     "events": 9,
+     "monsters": 1,
+     "seq": [
+      "trip*",
+      "cake*",
+      "trip",
+      "arc",
+      "drill",
+      "M",
+      "trip",
+      "arc",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 36,
+     "pure": 21.238322788322787,
+     "trips": 2,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "story",
+      "M",
+      "drill",
+      "arc",
+      "trip",
+      "market",
+      "M",
+      "arc",
+      "trip",
+      "cake"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.083777333777334,
+     "trips": 4,
+     "events": 8,
+     "monsters": 2,
+     "seq": [
+      "trip*",
+      "cake*",
+      "M",
+      "trip",
+      "story*",
+      "M",
+      "trip",
+      "arc",
+      "story",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 40,
+     "pure": 25.726634476634473,
+     "trips": 2,
+     "events": 6,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "M",
+      "cake",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "market",
+      "trip"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 43,
+     "pure": 23.117110667110662,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "M",
+      "trip",
+      "arc",
+      "trip",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 43,
+     "pure": 24.038322788322787,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "trip",
+      "M",
+      "story",
+      "arc",
+      "trip",
+      "drill",
+      "M",
+      "arc",
+      "M",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 50,
+     "pure": 23.882478632478634,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "story*",
+      "M",
+      "arc",
+      "trip",
+      "cake",
+      "M",
+      "story",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 41,
+     "pure": 18.265595515595514,
+     "trips": 2,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "story*",
+      "trip",
+      "M",
+      "story*",
+      "arc",
+      "trip",
+      "cake",
+      "arc",
+      "M"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 33,
+     "pure": 15.583777333777336,
+     "trips": 3,
+     "events": 8,
+     "monsters": 1,
+     "seq": [
+      "trip",
+      "market",
+      "arc",
+      "trip",
+      "M",
+      "arc",
+      "story",
+      "trip",
+      "arc"
+     ],
+     "arcB": 3
+    },
+    {
+     "q": 40,
+     "pure": 19.468392718392717,
+     "trips": 2,
+     "events": 7,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "M",
+      "arc",
+      "trip",
+      "story",
+      "arc",
+      "trip",
+      "M",
+      "story*"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 22.327367077367075,
+     "trips": 4,
+     "events": 9,
+     "monsters": 2,
+     "seq": [
+      "cake",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip",
+      "M",
+      "arc",
+      "trip"
+     ],
+     "arcB": 2
+    },
+    {
+     "q": 42,
+     "pure": 21.17993117993118,
+     "trips": 3,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "drill",
+      "trip",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "story*",
+      "trip",
+      "M",
+      "story*"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 41,
+     "pure": 23.076634476634474,
+     "trips": 2,
+     "events": 6,
+     "monsters": 4,
+     "seq": [
+      "drill",
+      "trip",
+      "story",
+      "M",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "cake",
+      "M"
+     ],
+     "arcB": 1
+    },
+    {
+     "q": 45,
+     "pure": 18.276085026085028,
+     "trips": 4,
+     "events": 7,
+     "monsters": 3,
+     "seq": [
+      "M",
+      "trip",
+      "arc",
+      "M",
+      "trip",
+      "M",
+      "arc",
+      "trip",
+      "story*",
+      "trip"
+     ],
+     "arcB": 2
+    }
+   ]
   }
  ]
 }

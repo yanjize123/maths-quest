@@ -61,6 +61,26 @@ ED.events.forEach(e => e.needsItem && ok(sources.has(e.needsItem), `event ${e.id
 const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8'), build = C('build.json').build;
 ok((html.match(/const BUILD = '(\w+)'/) || [])[1] === build, `index.html BUILD ≠ build.json ${build}`);
 (html.match(/<script src="[^"]+"/g) || []).forEach(t => ok(t.includes('?b=' + build), '脚本缺版本号 ' + t));
+// ---- 故事线 arcs.json（v10）：字段、动作、占位符、500 组随机数下答案为非负整数、拍的顺序 ----
+{ const AR = C('arcs.json'), aids = new Set(); ok(AR.cast.length >= 2 && AR.names.length >= 2, 'arcs 角色或名字少于 2');
+  for (const L of ['win', 'lose']) acts((AR.defaults[L] || {}).do, 'arcs.defaults.' + L);
+  for (const a of AR.arcs) {
+    const w = 'arc ' + a.id; ok(!aids.has(a.id), w + ' id 重复'); aids.add(a.id); ok(a.src, w + ' 缺 src（题型出处）'); ok(a.beats.length >= 2, w + ' 少于 2 拍');
+    let lastKey = -1; a.beats.forEach((b, k) => { const key = (b.day || 0) * 10 + (b.at ?? 0.5); ok(key >= lastKey, `${w} 拍 ${k} 顺序（day, at）倒退`); lastKey = key; ok(b.at >= 0 && b.at <= 1, `${w} 拍 ${k} at 不在 0–1`); ok(SD.scenes[b.scene || 'shop'], `${w} 拍 ${k} 无场景`); ok((b.steps || []).length, `${w} 拍 ${k} 没有题`); acts((b.win || {}).do, `${w}.${k}.win`); acts((b.lose || {}).do, `${w}.${k}.lose`);
+      (b.steps || []).forEach((s, i) => { if (s.gen) ok(GD.families[s.gen], `${w}.${k} 步 ${i} 题型族不存在`); else ok(s.a != null && (s.q || s.calc), `${w}.${k} 步 ${i} 缺 q/calc 或 a`); }); });
+    for (let n = 0; n < 500; n++) {
+      const v0 = {}; for (const [k, d] of Object.entries(a.vars || {})) v0[k] = Array.isArray(d) ? d[0] + Math.floor(Math.random() * (d[1] - d[0] + 1)) : E.evalExpr(d, v0);
+      let bad = false;
+      a.beats.forEach((b, k) => { if (bad) return; const v = { ...v0 }; for (const [kk, d] of Object.entries(b.vars || {})) v[kk] = Array.isArray(d) ? d[0] + Math.floor(Math.random() * (d[1] - d[0] + 1)) : E.evalExpr(d, v); Object.assign(v, { who: 'W', who2: 'V', place: 'X', money: 'Y' });
+        const win = b.win || AR.defaults.win, lose = b.lose || AR.defaults.lose, texts = [b.intro, win.text, lose.text, ...(b.steps || []).filter(s => s.q).map(s => s.q), ...(b.steps || []).filter(s => s.calc).map(s => ({ en: s.calc, zh: s.calc }))];
+        for (const t of texts) for (const L of ['en', 'zh']) { const f = String(t[L] || '').replace(/\{(\w+)\}/g, (m, kk) => (kk in v ? v[kk] : m)); if (/\{\w+\}/.test(f) || !t[L]) { ok(false, `${w}.${k} ${L} 占位符未填或缺文字: ${f.slice(0, 60)}`); bad = true; } }
+        for (const s of (b.steps || []).filter(s => !s.gen)) { const x = E.evalExpr(s.a, v); if (!(Number.isInteger(x) && x >= 0)) { ok(false, `${w}.${k} 答案 ${s.a}=${x} 不是非负整数 ${JSON.stringify(v)}`); bad = true; } }
+        for (const s of (b.steps || []).filter(s => s.calc)) { const shown = s.calc.replace(/\{(\w+)\}/g, (m, kk) => v[kk]).replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-'); let x; try { x = E.evalExpr(shown, {}); } catch (er) { x = NaN; } if (x !== E.evalExpr(s.a, v)) { ok(false, `${w}.${k} 算式 ${shown} = ${x} 与答案 ${s.a} 不符`); bad = true; } }
+        for (const d of [...(win.do || []), ...(lose.do || [])]) if ((d[0] === 'cash' || d[0] === 'stock') && !Number.isInteger(E.evalExpr(d[1], v))) { ok(false, `${w}.${k} 动作 ${d[1]} 不是整数`); bad = true; } });
+      if (bad) break;
+    }
+  }
+  console.log(`故事线：${AR.arcs.length} 条、${AR.arcs.reduce((t, a) => t + a.beats.length, 0)} 拍；纯算式题步 ${AR.arcs.reduce((t, a) => t + a.beats.reduce((u, b) => u + b.steps.filter(s => s.calc || s.gen).length, 0), 0)} / ${AR.arcs.reduce((t, a) => t + a.beats.reduce((u, b) => u + b.steps.length, 0), 0)}`); }
 // ---- 导演节奏：真实数据下模拟答 200 题，节拍间隔不超过 gap 上限，怪兽不超过 monsterMaxGap 拍不来 ----
 const PD = C('tuning.json').pacing, vm = require('vm');
 const ctx = { ST: { flags: {}, states: {}, cust: [], items: {}, seed: 5 }, T: {}, LANG: 'zh', pickMonster: () => 0, MQEngine: E, MQScene: S, read: f => Promise.resolve(fs.readFileSync(path.join(__dirname, '..', f), 'utf8')), console };
